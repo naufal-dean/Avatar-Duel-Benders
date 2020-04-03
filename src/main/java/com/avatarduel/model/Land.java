@@ -1,19 +1,16 @@
 package com.avatarduel.model;
 
-public class Land {
-  private String name;
-  private String description;
-  private Element element;
-
+public class Land extends Card {
   public Land() {
-    this.name = "";
-    this.description = "";
-    this.element = Element.AIR;
+    super();
   }
 
-  public Land(String name, String description, Element element) {
-    this.name = name;
-    this.description = description;
-    this.element = element;
+  public Land(int id, String name, Element element, String description, String imagepath) {
+    super(id, name, element, description, imagepath);
+  }
+
+  @Override
+  public CardType getCardType() {
+    return CardType.LAND;
   }
 }
