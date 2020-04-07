@@ -12,8 +12,8 @@ public class Character extends Card {
         this.power = 0;
     }
 
-    public Character(int id, String name, Element element, String description, String imagepath, int attack, int defense, int power) {
-        super(id, name, element, description, imagepath);
+    public Character(int id, String name, Element element, String description, String imagePath, int attack, int defense, int power) {
+        super(id, name, element, description, imagePath);
         this.attack = attack;
         this.defense = defense;
         this.power = power;
@@ -29,6 +29,11 @@ public class Character extends Card {
 
     public int getPower() {
         return this.power;
+    }
+
+    @Override
+    public String getImagePath() {
+        return "com/avatarduel/card/image/character/" + super.getImagePath();
     }
 
     @Override

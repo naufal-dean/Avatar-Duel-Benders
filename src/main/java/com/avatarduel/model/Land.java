@@ -5,8 +5,13 @@ public class Land extends Card {
     super();
   }
 
-  public Land(int id, String name, Element element, String description, String imagepath) {
-    super(id, name, element, description, imagepath);
+  public Land(int id, String name, Element element, String description, String imagePath) {
+    super(id, name, element, description, imagePath);
+  }
+
+  @Override
+  public String getImagePath() {
+      return "com/avatarduel/card/image/land/" + super.getImagePath();
   }
 
   @Override

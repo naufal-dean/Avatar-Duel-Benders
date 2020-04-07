@@ -8,13 +8,18 @@ public abstract class Skill extends Card {
         this.power = 0;
     }
 
-    public Skill(int id, String name, Element element, String description, String imagepath, int power) {
-        super(id, name, element, description, imagepath);
+    public Skill(int id, String name, Element element, String description, String imagePath, int power) {
+        super(id, name, element, description, imagePath);
         this.power = power;
     }
 
     public int getPower() {
         return this.power;
+    }
+
+    @Override
+    public String getImagePath() {
+        return "com/avatarduel/card/image/skill/" + super.getImagePath();
     }
 
     @Override

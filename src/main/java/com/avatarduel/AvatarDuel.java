@@ -7,19 +7,16 @@ import java.util.*;
 
 import javafx.application.Application;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
 
-import com.avatarduel.model.Card;
-import com.avatarduel.model.CardType;
+import com.avatarduel.controller.*;
+import com.avatarduel.model.*;
 import com.avatarduel.model.Character;
-import com.avatarduel.model.Effect;
-import com.avatarduel.model.Element;
-import com.avatarduel.model.Land;
-import com.avatarduel.model.Skill;
-import com.avatarduel.model.SkillAura;
-import com.avatarduel.util.CSVReader;
+import com.avatarduel.util.*;
 
 public class AvatarDuel extends Application {
   private static final String LAND_CSV_FILE_PATH = "card/data/land.csv";
@@ -65,21 +62,32 @@ public class AvatarDuel extends Application {
     text.setX(50);
     text.setY(50);
 
-    Group root = new Group();
-    root.getChildren().add(text);
-
-    Scene scene = new Scene(root, 1280, 720);
-
-    stage.setTitle("Avatar Duel");
-    stage.setScene(scene);
-    stage.show();
-
     try {
       this.loadCards();
       text.setText("Avatar Duel!");
     } catch (Exception e) {
       text.setText("Failed to load cards: " + e);
     }
+
+    FXMLLoader loader = new FXMLLoader();
+    Parent root2 = new Parent() {};
+    try {
+      CardController cardController = new CardController(cardList.get(0));
+      loader.setController(cardController);
+      loader.setLocation(getClass().getResource("view/Card.fxml"));
+      root2 = loader.load();
+    } catch (IOException e) {
+      System.out.println(e);
+    }
+
+    Group root = new Group();
+    root.getChildren().add(text);
+
+    Scene scene = new Scene(root2, 1280, 720);
+
+    stage.setTitle("Avatar Duel");
+    stage.setScene(scene);
+    stage.show();
   }
 
   public static void main(String[] args) {
