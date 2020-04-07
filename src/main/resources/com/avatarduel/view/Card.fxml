@@ -28,7 +28,7 @@
                </font>
             </TextArea>
             <Label fx:id="name" layoutX="20.0" layoutY="13.0" text="Label" />
-            <ImageView fx:id="element" fitHeight="18.0" fitWidth="18.0" layoutX="159.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="element" fitHeight="18.0" fitWidth="18.0" layoutX="163.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../card/template/element_air.png" />
                </image></ImageView>

@@ -72,7 +72,7 @@ public class AvatarDuel extends Application {
     FXMLLoader loader = new FXMLLoader();
     Parent root2 = new Parent() {};
     try {
-      CardController cardController = new CardController(cardList.get(0));
+      CardController cardController = new CardController(cardList.get(68));
       loader.setController(cardController);
       loader.setLocation(getClass().getResource("view/Card.fxml"));
       root2 = loader.load();

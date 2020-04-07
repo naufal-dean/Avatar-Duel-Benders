@@ -89,7 +89,12 @@ public class CardController implements Initializable {
             elementPath = "card/template/element_water.png";
         this.element.setImage(new Image(AvatarDuel.class.getResource(elementPath).toString()));
         // Set name
-        this.name.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 12));
+        double nameTextSize = 13;
+        if (this.card.getName().length() <= 20)
+            nameTextSize -= Math.max((this.card.getName().length() - 17), 0);
+        else
+            nameTextSize = 8.5;
+        this.name.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), nameTextSize));
         this.name.setText(this.card.getName().toUpperCase());
         if (this.card.getCardType() != CardType.CHARACTER)
             this.name.setTextFill(Color.WHITE);
@@ -99,7 +104,11 @@ public class CardController implements Initializable {
         // Set description
         this.description.setDisable(true);
         this.description.setWrapText(true);
-        this.description.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), 9));
+        double descTextSize = 9;
+        if (this.card.getDescription().length() > 120) descTextSize--;
+        if (this.card.getDescription().length() > 135) descTextSize--;
+        if (this.card.getDescription().length() > 150) descTextSize -= 0.5;
+        this.description.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), descTextSize));
         this.description.setText(this.card.getDescription());
     }
 }
