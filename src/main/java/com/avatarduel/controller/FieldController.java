@@ -27,7 +27,7 @@ public class FieldController implements Initializable {
     /**
      * CardController list
      */
-    private List<List<SummonedCharacterCardController>> cardControllerList;
+    private List<List<CardController>> cardControllerList;
 
     /**
      * Constructor
@@ -39,10 +39,20 @@ public class FieldController implements Initializable {
     }
 
     /**
+     * Getter for card controller
+     * @param x The grid column index
+     * @param y The grid row index
+     * @return Controller for the (x, y) Card
+     */
+    public CardController getCardController(int x, int y) {
+        return this.cardControllerList.get(x).get(y);
+    }
+
+    /**
      * Set card on the cell x, y in field
      * @param card The card to be displayed
-     * @param x The col grid index
-     * @param y The row grid index
+     * @param x The grid column index
+     * @param y The grid row index
      */
     public void setCardOnField(Card card, boolean isAttack, int x, int y) throws IOException {
         if (this.cardControllerList.get(x).get(y) != null) {
@@ -74,8 +84,8 @@ public class FieldController implements Initializable {
 
     /**
      * Remove card on the cell x, y in field
-     * @param x The col grid index
-     * @param y The row grid index
+     * @param x The grid column index
+     * @param y The grid row index
      */
     public void removeCardOnField(int x, int y) {
         for (Node node : this.field.getChildren()) {
@@ -92,6 +102,6 @@ public class FieldController implements Initializable {
     /**
      * {@inheritDoc}
      */
-    @Override
+    @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {}
 }

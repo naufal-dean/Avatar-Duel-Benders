@@ -66,25 +66,23 @@ public class AvatarDuel extends Application {
    */
   @Override
   public void start(Stage stage) {
-    Text text = new Text();
-    text.setText("Loading...");
-    text.setX(50);
-    text.setY(50);
-
+    // Load cards
     try {
       this.loadCards();
-      text.setText("Avatar Duel!");
     } catch (Exception e) {
-      text.setText("Failed to load cards: " + e);
+      System.out.println("Failed to load cards: " + e);
     }
-
-    FXMLLoader loader = new FXMLLoader();
-    Parent root2 = new Parent() {};
+    // Load main UI
+    Parent root = new Parent() {};
     try {
-      FieldController fieldController = new FieldController();
-      loader.setLocation(getClass().getResource("view/Field.fxml"));
-      loader.setController(fieldController);
-      root2 = loader.load();
+      // Load
+      FXMLLoader loader = new FXMLLoader();
+      MainController mainController = new MainController();
+      loader.setLocation(getClass().getResource("view/Main.fxml"));
+      loader.setController(mainController);
+      root = loader.load();
+      // Get field controller
+      FieldController fieldController = mainController.getFieldController();
       fieldController.setCardOnField(cardList.get(20), true, 0, 0);
       for (int i = 0; i < 8; i++)
         for (int j = 0; j < 4; j++)
@@ -92,15 +90,27 @@ public class AvatarDuel extends Application {
     } catch (Exception e) {
       System.out.println(e);
     }
-
-    Group root = new Group();
-    root.getChildren().add(text);
-
-    Scene scene = new Scene(root2);
-
+    // Present
+    Scene scene = new Scene(root);
     stage.setTitle("Avatar Duel");
     stage.setScene(scene);
     stage.show();
+
+
+//    Parent root2 = new Parent() {};
+//    try {
+//      FXMLLoader loader = new FXMLLoader();
+//      FieldController fieldController = new FieldController();
+//      loader.setLocation(getClass().getResource("view/Field.fxml"));
+//      loader.setController(fieldController);
+//      root2 = loader.load();
+//      fieldController.setCardOnField(cardList.get(20), true, 0, 0);
+//      for (int i = 0; i < 8; i++)
+//        for (int j = 0; j < 4; j++)
+//          fieldController.setCardOnField(cardList.get(i * 4 + j), true, i, j);
+//    } catch (Exception e) {
+//      System.out.println(e);
+//    }
   }
 
   /**

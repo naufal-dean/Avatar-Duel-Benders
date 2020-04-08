@@ -5,16 +5,15 @@
 <?import javafx.scene.image.*?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="228.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="mainAnchor" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane layoutY="2.0" prefHeight="228.0" prefWidth="600.0">
+      <HBox fx:id="mainHBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1400.0">
          <children>
-            <ImageView fx:id="mainBackground" fitHeight="260.0" fitWidth="600.0" layoutX="2.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../background/main_background.png" />
-               </image>
-            </ImageView>
+<!--            <Pane fx:id="cardDetail" prefHeight="200.0" prefWidth="200.0" />-->
+<!--            <Pane fx:id="sideFieldLeft" prefHeight="200.0" prefWidth="200.0" />-->
+            <StackPane fx:id="field" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1000.0" />
+<!--            <Pane fx:id="sideFieldRight" prefHeight="200.0" prefWidth="200.0" />-->
          </children>
-      </Pane>
+      </HBox>
    </children>
 </AnchorPane>
