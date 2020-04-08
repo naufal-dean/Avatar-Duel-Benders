@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
@@ -59,9 +60,9 @@ public class FieldController implements Initializable {
             Scale scale = new Scale();
             scale.setX(0.4);
             scale.setY(0.4);
-            scale.setPivotX(0);
+            scale.setPivotX(((this.field.getColumnConstraints().get(0).getPrefWidth() - 200 * 0.4) / 2d) + 7.5);
             double padShift = this.field.getPadding().getTop();
-            scale.setPivotY((this.field.getPrefHeight() - padShift) / 4d * 1.2);
+            scale.setPivotY(((this.field.getPrefHeight()) / 4d  - padShift) * 1.2);
             // Set scale for ancPane
             ancPane.getTransforms().add(scale);
             // Set ancPane as field children node

@@ -3,6 +3,7 @@ package com.avatarduel.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -17,6 +18,10 @@ public class SummonedCharacterCardController extends CardController {
      * is monster in attack position
      */
     boolean isAttack;
+    /**
+     * Rotate transition object
+     */
+    RotateTransition rotate;
 
     /**
      * Constructor
@@ -26,6 +31,7 @@ public class SummonedCharacterCardController extends CardController {
     public SummonedCharacterCardController(Card card, boolean isAttack) {
         super(card);
         this.isAttack = isAttack;
+        rotate = new RotateTransition();
     }
 
     /**
@@ -43,7 +49,9 @@ public class SummonedCharacterCardController extends CardController {
      */
     public void rotate() {
         // Create rotate transition
-        RotateTransition rotate = new RotateTransition();
+        if (rotate.getStatus() == Animation.Status.RUNNING)
+            return;
+        rotate = new RotateTransition();
         rotate.setAxis(Rotate.Z_AXIS);
         rotate.setByAngle((this.isAttack) ? (90) : (-90));
         rotate.setCycleCount(1);

@@ -7,18 +7,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane minHeight="490.6" minWidth="690.0" prefHeight="490.6" prefWidth="690.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane minHeight="490.6" minWidth="981.2" prefHeight="490.6" prefWidth="981.2" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <GridPane fx:id="field" hgap="5.0" minHeight="490.6" minWidth="690.0" prefHeight="490.6" prefWidth="690.0" vgap="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+      <GridPane fx:id="field" hgap="5.0" minHeight="490.6" minWidth="981.2" prefHeight="490.6" prefWidth="981.2" vgap="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="116.4" prefWidth="116.4" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="116.4" prefWidth="116.4" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="116.4" prefWidth="116.4" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="116.4" prefWidth="116.4" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="116.4" prefWidth="116.4" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="116.4" prefWidth="116.4" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="116.4" prefWidth="116.4" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="116.4" prefWidth="116.4" />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints minHeight="116.4" prefHeight="116.4" vgrow="SOMETIMES" />
