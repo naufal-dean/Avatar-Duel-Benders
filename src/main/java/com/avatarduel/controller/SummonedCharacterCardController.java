@@ -22,7 +22,10 @@ public class SummonedCharacterCardController extends CardController {
      * Rotate transition object
      */
     RotateTransition rotate;
-
+    /**
+     * is first time monster has summoned
+     */
+    boolean isFirstTime;
     /**
      * Constructor
      * @param card The Card
@@ -32,6 +35,7 @@ public class SummonedCharacterCardController extends CardController {
         super(card);
         this.isAttack = isAttack;
         rotate = new RotateTransition();
+        isFirstTime=true;
     }
 
     /**
