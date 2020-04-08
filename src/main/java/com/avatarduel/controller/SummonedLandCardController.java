@@ -12,7 +12,7 @@ import javafx.util.Duration;
 
 import com.avatarduel.model.Card;
 public class SummonedLandCardController extends CardController{
-    SummonedLandCardController(Land card){
+    public SummonedLandCardController(Land card){
         super(card);
     }
 }
