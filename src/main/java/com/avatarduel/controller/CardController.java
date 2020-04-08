@@ -3,60 +3,49 @@ package com.avatarduel.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.avatarduel.AvatarDuel;
-import com.avatarduel.model.CardType;
-import com.avatarduel.model.Element;
-import com.sun.javafx.scene.control.skin.Utils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import com.avatarduel.AvatarDuel;
 import com.avatarduel.model.Card;
+import com.avatarduel.model.CardType;
+import com.avatarduel.model.Element;
 
 public class CardController implements Initializable {
     /**
      * Card model
      */
     private Card card;
-
     /**
      * Display background
      */
-    @FXML
-    private ImageView background;
-
+    @FXML public ImageView background;
     /**
      * Display name
      */
-    @FXML
-    private Label name;
-
+    @FXML private Label name;
     /**
      * Display element
      */
-    @FXML
-    private ImageView element;
-
+    @FXML private ImageView element;
     /**
      * Display image
      */
-    @FXML
-    private ImageView image;
-
+    @FXML private ImageView image;
     /**
      * Display description
      */
-    @FXML
-    private TextArea description;
+    @FXML private TextArea description;
 
     /**
      * Constructor
-     *
      * @param card The Card
      */
     public CardController(Card card) {
@@ -64,10 +53,26 @@ public class CardController implements Initializable {
     }
 
     /**
-     * Initialize controller
+     * Setter for Card model
+     * @param card The new Card
      */
-    @Override
-    public void initialize(URL url, ResourceBundle resources) {
+    public void setCard(Card card) {
+        this.card = card;
+        this.init();
+    }
+
+    /**
+     * Getter for Card model
+     * @return this.card
+     */
+    public Card getCard() {
+        return this.card;
+    }
+
+    /**
+     * Update FXML using current this.card
+     */
+    public void init() {
         // Set background
         String templatePath;
         if (this.card.getCardType() == CardType.CHARACTER)
@@ -110,5 +115,16 @@ public class CardController implements Initializable {
         if (this.card.getDescription().length() > 150) descTextSize -= 0.5;
         this.description.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), descTextSize));
         this.description.setText(this.card.getDescription());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override @FXML
+    public void initialize(URL url, ResourceBundle resources) {
+        init();
+    }
+    public void test() {
+        System.out.println("test st ed");
     }
 }

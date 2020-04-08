@@ -6,12 +6,13 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
-import javafx.fxml.FXMLLoader;
 
 import com.avatarduel.controller.*;
 import com.avatarduel.model.*;
@@ -24,6 +25,11 @@ public class AvatarDuel extends Application {
   private static final String SKILL_AURA_CSV_FILE_PATH = "card/data/skill_aura.csv";
   private List<Card> cardList;
 
+  /**
+   * Function to load card from csv
+   * @throws IOException
+   * @throws URISyntaxException
+   */
   public void loadCards() throws IOException, URISyntaxException {
     this.cardList = new ArrayList<>();
 
@@ -55,6 +61,9 @@ public class AvatarDuel extends Application {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void start(Stage stage) {
     Text text = new Text();
@@ -72,24 +81,32 @@ public class AvatarDuel extends Application {
     FXMLLoader loader = new FXMLLoader();
     Parent root2 = new Parent() {};
     try {
-      CardController cardController = new CardController(cardList.get(68));
-      loader.setController(cardController);
-      loader.setLocation(getClass().getResource("view/Card.fxml"));
+      FieldController fieldController = new FieldController();
+      loader.setLocation(getClass().getResource("view/Field.fxml"));
+      loader.setController(fieldController);
       root2 = loader.load();
-    } catch (IOException e) {
+      fieldController.setCardOnField(cardList.get(20), 0, 0);
+      for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 4; j++)
+          fieldController.setCardOnField(cardList.get(i + j), i, j);
+    } catch (Exception e) {
       System.out.println(e);
     }
 
     Group root = new Group();
     root.getChildren().add(text);
 
-    Scene scene = new Scene(root2, 1280, 720);
+    Scene scene = new Scene(root2);
 
     stage.setTitle("Avatar Duel");
     stage.setScene(scene);
     stage.show();
   }
 
+  /**
+   * Main function
+   * @param args The arguments
+   */
   public static void main(String[] args) {
     launch();
   }
