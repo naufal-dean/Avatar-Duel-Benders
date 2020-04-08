@@ -3,13 +3,15 @@ package com.avatarduel.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -23,6 +25,10 @@ public class CardController implements Initializable {
      * Card model
      */
     private Card card;
+    /**
+     * Card fxml anchor pane
+     */
+    @FXML protected AnchorPane cardAncPane;
     /**
      * Display background
      */
@@ -53,8 +59,8 @@ public class CardController implements Initializable {
     }
 
     /**
-     * Setter for Card model
-     * @param card The new Card
+     * Replace with new card then render
+     * @param card The Card
      */
     public void setCard(Card card) {
         this.card = card;
@@ -124,9 +130,11 @@ public class CardController implements Initializable {
      */
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
-        init();
-    }
-    public void test() {
-        System.out.println("test st ed");
+        // Set on click handler
+        this.cardAncPane.addEventFilter(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {}
+        });
+        this.init();
     }
 }

@@ -85,10 +85,10 @@ public class AvatarDuel extends Application {
       loader.setLocation(getClass().getResource("view/Field.fxml"));
       loader.setController(fieldController);
       root2 = loader.load();
-      fieldController.setCardOnField(cardList.get(20), 0, 0);
+      fieldController.setCardOnField(cardList.get(20), true, 0, 0);
       for (int i = 0; i < 8; i++)
         for (int j = 0; j < 4; j++)
-          fieldController.setCardOnField(cardList.get(64 + i * 4 + j), i, j);
+          fieldController.setCardOnField(cardList.get(64 + i * 4 + j), true, i, j);
     } catch (Exception e) {
       System.out.println(e);
     }

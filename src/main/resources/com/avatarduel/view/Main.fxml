@@ -9,9 +9,9 @@
    <children>
       <Pane layoutY="2.0" prefHeight="228.0" prefWidth="600.0">
          <children>
-            <ImageView fitHeight="260.0" fitWidth="600.0" layoutX="2.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="mainBackground" fitHeight="260.0" fitWidth="600.0" layoutX="2.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../background/layout1.png" />
+                  <Image url="@../background/main_background.png" />
                </image>
             </ImageView>
          </children>

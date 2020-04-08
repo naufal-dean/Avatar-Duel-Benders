@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,7 +26,7 @@ public class FieldController implements Initializable {
     /**
      * CardController list
      */
-    private List<List<CardController>> cardControllerList;
+    private List<List<SummonedCharacterCardController>> cardControllerList;
 
     /**
      * Constructor
@@ -44,32 +43,31 @@ public class FieldController implements Initializable {
      * @param x The col grid index
      * @param y The row grid index
      */
-    public void setCardOnField(Card card, int x, int y) throws IOException {
+    public void setCardOnField(Card card, boolean isAttack, int x, int y) throws IOException {
         if (this.cardControllerList.get(x).get(y) != null) {
             // setCard via cardController
             this.cardControllerList.get(x).get(y).setCard(card);
         } else { // Controller not exist
             // Create loader
             FXMLLoader loader = new FXMLLoader();
-            CardController cardController = new CardController(card);
+            SummonedCharacterCardController scCardController = new SummonedCharacterCardController(card, isAttack);
             loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
-            loader.setController(cardController);
+            loader.setController(scCardController);
             // Create ancPane
             AnchorPane ancPane = loader.load();
             // Create scale for ancPane
             Scale scale = new Scale();
-            scale.setX(0.5);
-            scale.setY(0.5);
+            scale.setX(0.4);
+            scale.setY(0.4);
             scale.setPivotX(0);
-            double padShift = this.field.getPadding().getTop() + this.field.getPadding().getBottom();
-            double gapShift = this.field.getVgap() * 3;
-            scale.setPivotY((this.field.getPrefHeight() - padShift - gapShift) / 4d);
+            double padShift = this.field.getPadding().getTop();
+            scale.setPivotY((this.field.getPrefHeight() - padShift) / 4d * 1.2);
             // Set scale for ancPane
             ancPane.getTransforms().add(scale);
             // Set ancPane as field children node
             this.field.add(ancPane, x, y);
             // Set cardController
-            this.cardControllerList.get(x).set(y, cardController);
+            this.cardControllerList.get(x).set(y, scCardController);
         }
     }
 
