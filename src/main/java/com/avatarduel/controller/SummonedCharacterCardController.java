@@ -12,6 +12,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import com.avatarduel.model.Card;
+import com.avatarduel.model.Character;
 
 public class SummonedCharacterCardController extends CardController {
     /**
@@ -31,7 +32,7 @@ public class SummonedCharacterCardController extends CardController {
      * @param card The Card
      * @param isAttack Is summoned in attack position
      */
-    public SummonedCharacterCardController(Card card, boolean isAttack) {
+    public SummonedCharacterCardController(Character card, boolean isAttack) {
         super(card);
         this.isAttack = isAttack;
         rotate = new RotateTransition();
@@ -43,7 +44,7 @@ public class SummonedCharacterCardController extends CardController {
      * @param card The Card
      * @param isAttack Is summoned in attack position
      */
-    public void setCard(Card card, boolean isAttack) {
+    public void setCard(Character card, boolean isAttack) {
         super.setCard(card);
         this.isAttack = isAttack;
     }

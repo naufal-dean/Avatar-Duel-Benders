@@ -3,6 +3,7 @@ package com.avatarduel.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.avatarduel.model.Skill;
 import javafx.animation.Animation;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -20,7 +21,7 @@ public class SummonedSkillCardController extends CardController{
     /**
      * Constructor
      */
-    public SummonedSkillCardController(Card card, Card targetCard){
+    public SummonedSkillCardController(Skill card, Card targetCard){
         super(card);
         this.targetCard=targetCard;
     }
