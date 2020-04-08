@@ -9,9 +9,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="cardAncPane" prefHeight="291.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:id="cardRootPane" prefHeight="291.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane prefHeight="291.0" prefWidth="200.0">
+      <AnchorPane fx:id="cardAncPane" prefHeight="291.0" prefWidth="200.0">
          <children>
             <ImageView fx:id="image" fitHeight="165.0" fitWidth="163.0" layoutX="17.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -33,6 +33,6 @@
                   <Image url="@../card/template/element_air.png" />
                </image></ImageView>
          </children>
-      </Pane>
+      </AnchorPane>
    </children>
-</AnchorPane>
+</StackPane>

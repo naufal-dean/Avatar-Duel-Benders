@@ -11,12 +11,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.transform.Scale;
 
 import com.avatarduel.AvatarDuel;
 import com.avatarduel.model.Card;
-import javafx.scene.transform.Scale;
 
 public class FieldController implements Initializable {
     /**
@@ -54,7 +54,7 @@ public class FieldController implements Initializable {
             loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
             loader.setController(scCardController);
             // Create ancPane
-            AnchorPane ancPane = loader.load();
+            StackPane ancPane = loader.load();
             // Create scale for ancPane
             Scale scale = new Scale();
             scale.setX(0.4);
@@ -78,9 +78,9 @@ public class FieldController implements Initializable {
      */
     public void removeCardOnField(int x, int y) {
         for (Node node : this.field.getChildren()) {
-            if(node instanceof AnchorPane && this.field.getColumnIndex(node) == x && this.field.getRowIndex(node) == y) {
+            if(node instanceof StackPane && this.field.getColumnIndex(node) == x && this.field.getRowIndex(node) == y) {
                 // Remove field children node
-                this.field.getChildren().remove((AnchorPane) node);
+                this.field.getChildren().remove((StackPane) node);
                 // Remove cardController
                 this.cardControllerList.get(x).set(y, null);
                 break;
