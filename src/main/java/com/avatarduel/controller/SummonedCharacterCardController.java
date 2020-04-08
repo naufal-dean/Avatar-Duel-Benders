@@ -32,7 +32,7 @@ public class SummonedCharacterCardController extends CardController {
      * @param card The Card
      * @param isAttack Is summoned in attack position
      */
-    public SummonedCharacterCardController(Character card, boolean isAttack) {
+    public SummonedCharacterCardController(Card card, boolean isAttack) {
         super(card);
         this.isAttack = isAttack;
         rotate = new RotateTransition();
@@ -44,7 +44,7 @@ public class SummonedCharacterCardController extends CardController {
      * @param card The Card
      * @param isAttack Is summoned in attack position
      */
-    public void setCard(Character card, boolean isAttack) {
+    public void setCard(Card card, boolean isAttack) {
         super.setCard(card);
         this.isAttack = isAttack;
     }

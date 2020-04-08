@@ -66,9 +66,10 @@ public class AvatarDuel extends Application {
    */
   @Override
   public void start(Stage stage) {
+    DeckController deck1 = new DeckController(58);
     // Load cards
     try {
-      this.loadCards();
+      deck1.loadCards();
     } catch (Exception e) {
       System.out.println("Failed to load cards: " + e);
     }
@@ -83,10 +84,10 @@ public class AvatarDuel extends Application {
       root = loader.load();
       // Get field controller
       FieldController fieldController = mainController.getFieldController();
-      fieldController.setCardOnField(cardList.get(20), true, 0, 0);
+      fieldController.setCardOnField(deck1.draw(), true, 0, 0);
       for (int i = 0; i < 8; i++)
         for (int j = 0; j < 4; j++)
-          fieldController.setCardOnField(cardList.get(i * 4 + j), true, i, j);
+          fieldController.setCardOnField(deck1.draw(), true, i, j);
     } catch (Exception e) {
       System.out.println(e);
     }
@@ -95,6 +96,7 @@ public class AvatarDuel extends Application {
     stage.setTitle("Avatar Duel");
     stage.setScene(scene);
     stage.show();
+    stage.setFullScreen(true);
 
 
 //    Parent root2 = new Parent() {};

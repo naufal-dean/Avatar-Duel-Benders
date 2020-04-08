@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.avatarduel.model.CardType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -61,9 +62,21 @@ public class FieldController implements Initializable {
         } else { // Controller not exist
             // Create loader
             FXMLLoader loader = new FXMLLoader();
-            SummonedCharacterCardController scCardController = new SummonedCharacterCardController(card, isAttack);
+            if (card.getCardType().equals(CardType.CHARACTER)) {
+                SummonedCharacterCardController scCardController = new SummonedCharacterCardController(card, isAttack);
+                loader.setController(scCardController);
+                this.cardControllerList.get(x).set(y, scCardController);
+            } else if (card.getCardType().equals(CardType.LAND)) {
+                SummonedLandCardController scCardController = new SummonedLandCardController(card);
+                loader.setController(scCardController);
+                this.cardControllerList.get(x).set(y, scCardController);
+            } else {
+                SummonedSkillCardController scCardController = new SummonedSkillCardController(card, null);
+                loader.setController(scCardController);
+                this.cardControllerList.get(x).set(y, scCardController);
+            }
             loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
-            loader.setController(scCardController);
+
             // Create ancPane
             StackPane ancPane = loader.load();
             // Create scale for ancPane
@@ -78,7 +91,6 @@ public class FieldController implements Initializable {
             // Set ancPane as field children node
             this.field.add(ancPane, x, y);
             // Set cardController
-            this.cardControllerList.get(x).set(y, scCardController);
         }
     }
 

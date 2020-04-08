@@ -21,9 +21,12 @@ public class SummonedSkillCardController extends CardController{
     /**
      * Constructor
      */
-    public SummonedSkillCardController(Skill card, Card targetCard){
+    public SummonedSkillCardController(Card card, Card targetCard){
         super(card);
         this.targetCard=targetCard;
     }
 
+    public void setTargetCard(Card targetCard) {
+        this.targetCard = targetCard;
+    }
 }
