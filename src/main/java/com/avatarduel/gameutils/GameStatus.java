@@ -49,7 +49,8 @@ public class GameStatus {
         this.gameDeck.put(Player.TOP, new GameDeck((60)));
         // Initialize game hand
         this.gameHand = new HashMap<>();
-        // TODO: implement
+        this.gameHand.put(Player.BOTTOM, new GameHand());
+        this.gameHand.put(Player.TOP, new GameHand());
         // Initialize game power
         this.gamePower = new HashMap<>();
         this.gamePower.put(Player.BOTTOM, new GamePower());

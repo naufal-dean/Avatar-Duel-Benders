@@ -1,12 +1,12 @@
 package com.avatarduel.gamephase;
 
+import java.io.IOException;
+
 import com.avatarduel.controller.FieldController;
 import com.avatarduel.controller.PowerController;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
 import com.avatarduel.model.Character;
-
-import java.io.IOException;
 
 public class MainPhase {
     /**

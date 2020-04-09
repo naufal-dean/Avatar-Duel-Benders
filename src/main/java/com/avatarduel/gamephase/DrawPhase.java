@@ -1,11 +1,5 @@
 package com.avatarduel.gamephase;
 
-import com.avatarduel.controller.DeckController;
-import com.avatarduel.gameutils.GameStatus;
-import com.avatarduel.model.Player;
-
-import java.util.HashMap;
-
 public class DrawPhase {
     /**
      * Class singleton instance
