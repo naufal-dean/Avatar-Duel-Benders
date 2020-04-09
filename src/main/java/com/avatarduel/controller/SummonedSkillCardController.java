@@ -1,19 +1,14 @@
 package com.avatarduel.controller;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import com.avatarduel.model.Player;
-import com.avatarduel.model.Skill;
-import javafx.animation.Animation;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.scene.input.MouseEvent;
-import javafx.util.Duration;
-
 import com.avatarduel.model.Card;
+import com.avatarduel.model.Player;
+import com.avatarduel.model.SkillAura;
 
 public class SummonedSkillCardController extends CardController{
+    /**
+     * Skill aura card model
+     */
+    private SkillAura skillAuraCard;
     /**
      * The owner of the card
      */
@@ -25,12 +20,13 @@ public class SummonedSkillCardController extends CardController{
 
     /**
      * Constructor
-     * @param card The Card
+     * @param skillAuraCard The Card
      * @param owner The owner of the card
      * @param targetCard The targetted character card
      */
-    public SummonedSkillCardController(Card card, Player owner, Card targetCard) {
-        super(card);
+    public SummonedSkillCardController(SkillAura skillAuraCard, Player owner, Card targetCard) {
+        super(skillAuraCard);
+        this.skillAuraCard = skillAuraCard;
         this.owner = owner;
         this.targetCard = targetCard;
     }

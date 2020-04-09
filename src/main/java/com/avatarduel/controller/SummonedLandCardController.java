@@ -1,18 +1,13 @@
 package com.avatarduel.controller;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import com.avatarduel.model.Land;
 import com.avatarduel.model.Player;
-import javafx.animation.Animation;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.scene.input.MouseEvent;
-import javafx.util.Duration;
 
-import com.avatarduel.model.Card;
-public class SummonedLandCardController extends CardController{
+public class SummonedLandCardController extends CardController {
+    /**
+     * Land card model
+     */
+    private Land landCard;
     /**
      * The owner of the card
      */
@@ -20,11 +15,12 @@ public class SummonedLandCardController extends CardController{
 
     /**
      * Constructor
-     * @param card The Card
+     * @param landCard The Card
      * @param owner The owner of the card
      */
-    public SummonedLandCardController(Card card, Player owner) {
-        super(card);
+    public SummonedLandCardController(Land landCard, Player owner) {
+        super(landCard);
+        this.landCard = landCard;
         this.owner = owner;
     }
 

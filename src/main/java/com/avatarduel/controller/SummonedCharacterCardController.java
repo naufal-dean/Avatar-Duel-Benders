@@ -3,21 +3,27 @@ package com.avatarduel.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.avatarduel.model.Player;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import com.avatarduel.model.Card;
 import com.avatarduel.model.Character;
+import com.avatarduel.model.Player;
 
 public class SummonedCharacterCardController extends CardController {
+    /**
+     * Character card model
+     */
+    private Character characterCard;
+    /**
+     * Card owner
+     */
+    private Player owner;
     /**
      * is monster in attack position
      */
@@ -27,22 +33,19 @@ public class SummonedCharacterCardController extends CardController {
      */
     private boolean isFirstTime;
     /**
-     * Card owner
-     */
-    private Player owner;
-    /**
      * Rotate transition object
      */
     private RotateTransition rotate;
 
     /**
      * Constructor
-     * @param card The Card
+     * @param characterCard The Card
      * @param owner The owner of the card
      * @param isAttack Is summoned in attack position
      */
-    public SummonedCharacterCardController(Card card, Player owner, boolean isAttack) {
-        super(card);
+    public SummonedCharacterCardController(Character characterCard, Player owner, boolean isAttack) {
+        super(characterCard);
+        this.characterCard = characterCard;
         this.owner = owner;
         this.isAttack = isAttack;
         rotate = new RotateTransition();
@@ -50,13 +53,11 @@ public class SummonedCharacterCardController extends CardController {
     }
 
     /**
-     * Replace with new card then render
-     * @param card The Card
-     * @param isAttack Is summoned in attack position
+     * Return this card attack / defense based on card position
+     * @return This card attack / defense
      */
-    public void setCard(Card card, boolean isAttack) {
-        super.setCard(card);
-        this.isAttack = isAttack;
+    public int getCardValue() {
+        return (this.isAttack) ? (this.characterCard.getAttack()) : (this.characterCard.getDefense());
     }
 
     /**

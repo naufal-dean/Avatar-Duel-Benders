@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.avatarduel.model.CardType;
-import com.avatarduel.model.Player;
+import com.avatarduel.model.*;
+import com.avatarduel.model.Character;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,7 +20,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.transform.Scale;
 
 import com.avatarduel.AvatarDuel;
-import com.avatarduel.model.Card;
 
 public class FieldController implements Initializable {
     public static final int SKILL_ROW_TOP = 0;
@@ -71,28 +70,28 @@ public class FieldController implements Initializable {
         if (this.cardControllerList.get(x).get(y) != null) {
             // Set new card controller
             if (card.getCardType().equals(CardType.CHARACTER)) {
-                SummonedCharacterCardController scCardController = new SummonedCharacterCardController(card, owner, isAttack);
+                SummonedCharacterCardController scCardController = new SummonedCharacterCardController((Character) card, owner, isAttack);
                 this.cardControllerList.get(x).set(y, scCardController);
             } else if (card.getCardType().equals(CardType.LAND)) {
-                SummonedLandCardController scCardController = new SummonedLandCardController(card, owner);
+                SummonedLandCardController scCardController = new SummonedLandCardController((Land) card, owner);
                 this.cardControllerList.get(x).set(y, scCardController);
             } else {
-                SummonedSkillCardController scCardController = new SummonedSkillCardController(card, owner, null);
+                SummonedSkillCardController scCardController = new SummonedSkillCardController((SkillAura) card, owner, null);
                 this.cardControllerList.get(x).set(y, scCardController);
             }
         } else { // Card not exist
             // Create loader
             FXMLLoader loader = new FXMLLoader();
             if (card.getCardType().equals(CardType.CHARACTER)) {
-                SummonedCharacterCardController scCardController = new SummonedCharacterCardController(card, owner, isAttack);
+                SummonedCharacterCardController scCardController = new SummonedCharacterCardController((Character) card, owner, isAttack);
                 loader.setController(scCardController);
                 this.cardControllerList.get(x).set(y, scCardController);
             } else if (card.getCardType().equals(CardType.LAND)) {
-                SummonedLandCardController scCardController = new SummonedLandCardController(card, owner);
+                SummonedLandCardController scCardController = new SummonedLandCardController((Land) card, owner);
                 loader.setController(scCardController);
                 this.cardControllerList.get(x).set(y, scCardController);
             } else {
-                SummonedSkillCardController scCardController = new SummonedSkillCardController(card, owner, null);
+                SummonedSkillCardController scCardController = new SummonedSkillCardController((SkillAura) card, owner, null);
                 loader.setController(scCardController);
                 this.cardControllerList.get(x).set(y, scCardController);
             }
