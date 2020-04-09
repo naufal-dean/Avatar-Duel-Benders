@@ -57,7 +57,7 @@ public class MainPhase {
     public void summonCharCard(Character card, boolean isAttack, int col, FieldController fieldController) {
         int row = (GameStatus.getGameStatus().getGameTurn() == Player.BOTTOM) ? (FieldController.CHAR_ROW_BOT) : (FieldController.CHAR_ROW_TOP);
         try {
-            fieldController.setCardOnField(card, isAttack, col, row);
+            fieldController.setCardOnField(card, GameStatus.getGameStatus().getGameTurn(), isAttack, col, row);
         } catch (IOException e) {
             System.out.println("Summon char card failed: " + e);
             // pass
@@ -72,7 +72,7 @@ public class MainPhase {
     public void summonSkillCard(SkillAura card, int col, FieldController fieldController) {
         int row = (GameStatus.getGameStatus().getGameTurn() == Player.BOTTOM) ? (FieldController.SKILL_ROW_BOT) : (FieldController.SKILL_ROW_TOP);
         try {
-            fieldController.setCardOnField(card, true, col, row);
+            fieldController.setCardOnField(card, GameStatus.getGameStatus().getGameTurn(), true, col, row);
         } catch (IOException e) {
             System.out.println("Summon char card failed: " + e);
             // pass

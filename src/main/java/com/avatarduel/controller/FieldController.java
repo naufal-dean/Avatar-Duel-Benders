@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import com.avatarduel.model.CardType;
+import com.avatarduel.model.Player;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.transform.Scale;
@@ -29,6 +31,10 @@ public class FieldController implements Initializable {
      * Field grid
      */
     @FXML private GridPane field;
+    /**
+     * Field background
+     */
+    @FXML private ImageView fieldBackground;
     /**
      * CardController list
      */
@@ -56,35 +62,37 @@ public class FieldController implements Initializable {
     /**
      * Set card on the cell x, y in field
      * @param card The card to be displayed
+     * @param owner The owner of the card
      * @param x The grid column index
      * @param y The grid row index
+     * @throws IOException From FXML loader
      */
-    public void setCardOnField(Card card, boolean isAttack, int x, int y) throws IOException {
+    public void setCardOnField(Card card, Player owner, boolean isAttack, int x, int y) throws IOException {
         if (this.cardControllerList.get(x).get(y) != null) {
             // Set new card controller
             if (card.getCardType().equals(CardType.CHARACTER)) {
-                SummonedCharacterCardController scCardController = new SummonedCharacterCardController(card, isAttack);
+                SummonedCharacterCardController scCardController = new SummonedCharacterCardController(card, owner, isAttack);
                 this.cardControllerList.get(x).set(y, scCardController);
             } else if (card.getCardType().equals(CardType.LAND)) {
-                SummonedLandCardController scCardController = new SummonedLandCardController(card);
+                SummonedLandCardController scCardController = new SummonedLandCardController(card, owner);
                 this.cardControllerList.get(x).set(y, scCardController);
             } else {
-                SummonedSkillCardController scCardController = new SummonedSkillCardController(card, null);
+                SummonedSkillCardController scCardController = new SummonedSkillCardController(card, owner, null);
                 this.cardControllerList.get(x).set(y, scCardController);
             }
         } else { // Card not exist
             // Create loader
             FXMLLoader loader = new FXMLLoader();
             if (card.getCardType().equals(CardType.CHARACTER)) {
-                SummonedCharacterCardController scCardController = new SummonedCharacterCardController(card, isAttack);
+                SummonedCharacterCardController scCardController = new SummonedCharacterCardController(card, owner, isAttack);
                 loader.setController(scCardController);
                 this.cardControllerList.get(x).set(y, scCardController);
             } else if (card.getCardType().equals(CardType.LAND)) {
-                SummonedLandCardController scCardController = new SummonedLandCardController(card);
+                SummonedLandCardController scCardController = new SummonedLandCardController(card, owner);
                 loader.setController(scCardController);
                 this.cardControllerList.get(x).set(y, scCardController);
             } else {
-                SummonedSkillCardController scCardController = new SummonedSkillCardController(card, null);
+                SummonedSkillCardController scCardController = new SummonedSkillCardController(card, owner, null);
                 loader.setController(scCardController);
                 this.cardControllerList.get(x).set(y, scCardController);
             }
@@ -128,5 +136,7 @@ public class FieldController implements Initializable {
      * {@inheritDoc}
      */
     @Override @FXML
-    public void initialize(URL url, ResourceBundle resources) {}
+    public void initialize(URL url, ResourceBundle resources) {
+        this.fieldBackground.setImage(new Image(AvatarDuel.class.getResource("background/field_background.jpg").toString()));
+    }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -9,6 +10,11 @@
 
 <AnchorPane minHeight="490.6" minWidth="981.2" prefHeight="490.6" prefWidth="981.2" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
+      <ImageView fx:id="fieldBackground" fitHeight="500.6" fitWidth="996.2" pickOnBounds="true">
+         <viewport>
+            <Rectangle2D />
+         </viewport>
+      </ImageView>
       <GridPane fx:id="field" hgap="5.0" minHeight="490.6" minWidth="981.2" prefHeight="490.6" prefWidth="981.2" vgap="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="116.4" prefWidth="116.4" />
