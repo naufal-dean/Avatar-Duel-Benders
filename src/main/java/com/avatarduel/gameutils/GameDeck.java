@@ -34,6 +34,22 @@ public class GameDeck {
     }
 
     /**
+     * Getter for deck capacity
+     * @return this.capacity
+     */
+    public int getCapacity() {
+        return this.capacity;
+    }
+
+    /**
+     * Card quantity in deck
+     * @return The size of cardList
+     */
+    public int getCardQuantity() {
+        return this.cardList.size();
+    }
+
+    /**
      * Load cards to deck
      */
     public void loadCards() throws IOException, URISyntaxException {

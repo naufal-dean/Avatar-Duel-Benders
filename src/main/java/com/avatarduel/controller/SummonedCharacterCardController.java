@@ -7,6 +7,7 @@ import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -73,10 +74,9 @@ public class SummonedCharacterCardController extends CardController {
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
         // Set on click handler
-        this.cardAncPane.addEventFilter(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                rotate();
+        this.cardAncPane.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                this.rotate();
             }
         });
         this.init();

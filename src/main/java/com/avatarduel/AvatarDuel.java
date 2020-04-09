@@ -68,8 +68,8 @@ public class AvatarDuel extends Application {
    * @param gameStatus The Game Status
    # @param stage The Stage
    */
-  void renderGame(Stage stage, GameStatus gameStatus) {
-    GameDeck deck1 = gameStatus.getPlayerDeck();
+  void renderGame(Stage stage, GameStatus gameStatus) throws Exception {
+    GameDeck deck = gameStatus.getOurDeck();
     // Load main UI
     Parent root = new Parent() {};
     try {
@@ -81,10 +81,10 @@ public class AvatarDuel extends Application {
       root = loader.load();
       // Get field controller
       FieldController fieldController = mainController.getFieldController();
-      fieldController.setCardOnField(deck1.draw(), true, 0, 0);
+      fieldController.setCardOnField(deck.draw(), true, 0, 0);
       for (int i = 0; i < 8; i++)
         for (int j = 0; j < 4; j++)
-          fieldController.setCardOnField(deck1.draw(), true, i, j);
+          fieldController.setCardOnField(deck.draw(), true, i, j);
     } catch (Exception e) {
       System.out.println(e);
     }
@@ -99,6 +99,7 @@ public class AvatarDuel extends Application {
   /**
    * Render screen error
    * @param stage The Stage
+   * @param err Error message
    */
   void renderError(Stage stage, String err) {
     // Add error message
@@ -130,10 +131,10 @@ public class AvatarDuel extends Application {
    */
   @Override
   public void start(Stage stage) {
-    // Try to get Game Status
-    GameStatus gameStatus;
+    // Initialize Game Status
     try {
-      gameStatus = GameStatus.getGameStatus();
+      GameStatus.initGameStatus();
+      GameStatus gameStatus = GameStatus.getGameStatus();
       renderGame(stage, gameStatus);
     } catch (Exception err) {
       renderError(stage, err.toString());

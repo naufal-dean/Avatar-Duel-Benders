@@ -21,6 +21,10 @@ import com.avatarduel.AvatarDuel;
 import com.avatarduel.model.Card;
 
 public class FieldController implements Initializable {
+    public static final int SKILL_ROW_TOP = 0;
+    public static final int CHAR_ROW_TOP = 1;
+    public static final int CHAR_ROW_BOT = 2;
+    public static final int SKILL_ROW_BOT = 3;
     /**
      * Field grid
      */
