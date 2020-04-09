@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class MainPhase {
     /**
-     * Class instance
+     * Class singleton instance
      */
     private static MainPhase mainPhase;
     /**
@@ -26,12 +26,20 @@ public class MainPhase {
     }
 
     /**
-     * Getter for mainPhase singleton
+     * Getter for class singleton instance
+     * @return Class singleton instance
      */
     public static MainPhase getMainPhase() {
         if (mainPhase == null)
             mainPhase = new MainPhase();
         return mainPhase;
+    }
+
+    /**
+     * Start main phase
+     */
+    public void startMainPhase() {
+        // TODO: implement
     }
 
     /**
