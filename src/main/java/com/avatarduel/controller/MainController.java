@@ -21,6 +21,10 @@ public class MainController implements Initializable {
      */
     private FieldController fieldController;
     /**
+     * Hand controller
+     */
+    private HandController handBottomController, handTopController;
+    /**
      * Card detail display
      */
     @FXML private Pane mainAnchor;
@@ -33,6 +37,10 @@ public class MainController implements Initializable {
      */
     @FXML private Pane cardDetail;
     /**
+     * Game phase display
+     */
+    @FXML private StackPane phase;
+    /**
      * Main field display
      */
     @FXML private StackPane field;
@@ -41,13 +49,17 @@ public class MainController implements Initializable {
      */
     @FXML private ImageView fieldBackground;
     /**
-     * Left side of the field
+     * Player deck display
      */
-    @FXML private Pane sideFieldLeft;
+    @FXML private Pane deckBottom, deckTop;
     /**
-     * Right side of the field
+     * Player power display
      */
-    @FXML private Pane sideFieldRight;
+    @FXML private Pane powerBottom, powerTop;
+    /**
+     * Player hands display
+     */
+    @FXML private Pane handBottom, handTop;
 
     /**
      * Constructor
@@ -63,10 +75,25 @@ public class MainController implements Initializable {
     }
 
     /**
+     * Getter for handBottomController
+     * @return this.handBottomController
+     */
+    public HandController getHandBottomController() {
+        return this.handBottomController;
+    }
+
+    /**
+     * Getter for handTopController
+     * @return this.handTopController
+     */
+    public HandController getHandTopController() {
+        return this.handTopController;
+    }
+
+    /**
      * Initialize field
      */
     public void initField() {
-        // Initialize field
         // Set background image
         this.fieldBackground.setImage(new Image(AvatarDuel.class.getResource("background/field_background.jpg").toString()));
         // Create loader
@@ -87,10 +114,41 @@ public class MainController implements Initializable {
     }
 
     /**
+     * Initialize hand
+     */
+    public void initHand() {
+        // Initialize hand bottom
+        // Create loader
+        FXMLLoader handBottomLoader = new FXMLLoader();
+        HandController handBottomController = new HandController();
+        handBottomLoader.setLocation(AvatarDuel.class.getResource("view/Hand.fxml"));
+        handBottomLoader.setController(handBottomController);
+
+        FXMLLoader handTopLoader = new FXMLLoader();
+        HandController handTopController = new HandController();
+        handTopLoader.setLocation(AvatarDuel.class.getResource("view/Hand.fxml"));
+        handTopLoader.setController(handTopController);
+
+        // Create and assign pane
+        try {
+            AnchorPane handBottomPane = handBottomLoader.load();
+            this.handBottom.getChildren().add(handBottomPane);
+            AnchorPane handTopPane = handTopLoader.load();
+            this.handTop.getChildren().add(handTopPane);
+        } catch (IOException e) {
+            System.out.println("Error occured: " + e);
+        }
+        // Assign hand controller
+        this.handBottomController = handBottomController;
+        this.handTopController = handTopController;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
         this.initField();
+        this.initHand();
     }
 }

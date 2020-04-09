@@ -3,7 +3,7 @@ package com.avatarduel.controller;
 import com.avatarduel.model.Card;
 import com.avatarduel.model.Player;
 
-public class SummonedCharacterController extends CardController {
+public class SummonedCardController extends CardController {
     /**
      * Card owner
      */
@@ -20,12 +20,12 @@ public class SummonedCharacterController extends CardController {
      * @param x Card x coordinate in field
      * @param y Card y coordinate in field
      */
-    public SummonedCharacterController(Card card, Player owner, int x, int y) {
+    public SummonedCardController(Card card, Player owner, int x, int y) {
         super(card);
     }
 
     /**
-     * Remove character card from field
+     * Remove card from field
      * @param fieldController The FieldController
      */
     public void removeCardFromField(FieldController fieldController) {

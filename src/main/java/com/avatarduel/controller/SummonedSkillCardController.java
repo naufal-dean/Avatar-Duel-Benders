@@ -4,7 +4,7 @@ import com.avatarduel.model.Card;
 import com.avatarduel.model.Player;
 import com.avatarduel.model.SkillAura;
 
-public class SummonedSkillCardController extends SummonedCharacterController {
+public class SummonedSkillCardController extends SummonedCardController {
     /**
      *  Target of Skill Card
      */

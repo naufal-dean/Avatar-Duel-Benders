@@ -87,6 +87,13 @@ public class AvatarDuel extends Application {
         for (int j = 0; j < 4; j++)
           if (!(card = deck.draw()).getCardType().equals(CardType.LAND))
             fieldController.setCardOnField(card, (j > 1) ? (Player.BOTTOM) : (Player.TOP), true, i, j);
+      // Get hand controller
+      HandController handBottomController = mainController.getHandBottomController();
+      HandController handTopController = mainController.getHandTopController();
+      for (int i = 0; i < 4; i++)
+        handBottomController.addCardOnHand(deck.draw(), Player.BOTTOM);
+      for (int i = 0; i < 3; i++)
+        handTopController.addCardOnHand(deck.draw(), Player.TOP);
     } catch (Exception e) {
       System.out.println(e);
     }

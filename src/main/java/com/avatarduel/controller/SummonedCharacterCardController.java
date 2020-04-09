@@ -15,7 +15,7 @@ import javafx.util.Duration;
 import com.avatarduel.model.Character;
 import com.avatarduel.model.Player;
 
-public class SummonedCharacterCardController extends SummonedCharacterController {
+public class SummonedCharacterCardController extends SummonedCardController {
     /**
      * Is monster in attack position
      */

@@ -40,11 +40,11 @@ public class HandController implements Initializable {
      * @param owner The owner of the card
      * @throws IOException From FXML loader
      */
-    public void addCardOnHand(Card card, Player owner, boolean isAttack) throws IOException {
+    public void addCardOnHand(Card card, Player owner) throws IOException {
         // Create loader
         FXMLLoader loader = new FXMLLoader();
         if (card.getCardType().equals(CardType.CHARACTER)) {
-//            HandCardController cardController = new HandCardController((Character) card, owner, this.cardControllerList.size(), isAttack);
+//            HandCardController cardController = new HandCardController((Character) card, owner, this.cardControllerList.size());
 //            loader.setController(cardController);
 //            this.cardControllerList.add(cardController);
         } else if (card.getCardType().equals(CardType.SKILL)) {
