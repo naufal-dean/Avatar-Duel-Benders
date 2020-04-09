@@ -81,7 +81,7 @@ public class AvatarDuel extends Application {
       root = loader.load();
       // Get field controller
       FieldController fieldController = mainController.getFieldController();
-      for (int i = 0; i < 8; i++)
+      for (int i = 0; i < 6; i++)
         for (int j = 0; j < 4; j++)
           fieldController.setCardOnField(deck.draw(), (j > 1) ? (Player.BOTTOM) : (Player.TOP), true, i, j);
     } catch (Exception e) {

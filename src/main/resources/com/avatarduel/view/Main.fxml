@@ -4,33 +4,36 @@
 <?import java.lang.*?>
 <?import javafx.scene.image.*?>
 
-<AnchorPane fx:id="mainAnchor" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="mainAnchor" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox fx:id="mainHBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0">
+      <HBox fx:id="mainHBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1500.0">
          <children>
-            <VBox fx:id="gameDetail" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="200.0">
+            <VBox fx:id="gameDetail" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="300.0">
                <children>
-                  <Pane fx:id="playerDetailTop" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="200.0" />
-                  <Pane fx:id="cardDetail" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="200.0" />
-                  <Pane fx:id="playerDetailBottom" layoutX="10.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="200.0" />
+                  <Pane fx:id="playerDetailTop" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="300.0" />
+                  <Pane fx:id="cardDetail" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="300.0" />
+                  <Pane fx:id="playerDetailBottom" layoutX="10.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="300.0" />
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0">
                <children>
                   <StackPane fx:id="handTop" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="1200.0" />
                   <HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1200.0">
                      <children>
-                        <VBox fx:id="sideFieldLeft" layoutX="1210.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="100.0">
+                        <VBox fx:id="sideFieldLeft" layoutX="1210.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="200.0">
                            <children>
-                              <Pane fx:id="deckTop" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="100.0" />
-                              <Pane fx:id="powerBottom" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="100.0" />
+                              <Pane fx:id="deckTop" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="200.0" />
+                              <Pane fx:id="powerBottom" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="200.0" />
                            </children>
                         </VBox>
-                        <StackPane fx:id="field" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1000.0" />
-                        <VBox fx:id="sideFieldRight" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="100.0">
+                        <StackPane fx:id="field" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0">
                            <children>
-                              <Pane fx:id="powerTop" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="100.0" />
-                              <Pane fx:id="deckBottom" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="100.0" />
+                              <ImageView fx:id="fieldBackground" fitHeight="500.0" fitWidth="800.0" pickOnBounds="true" />
+                           </children></StackPane>
+                        <VBox fx:id="sideFieldRight" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="200.0">
+                           <children>
+                              <Pane fx:id="powerTop" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="200.0" />
+                              <Pane fx:id="deckBottom" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="200.0" />
                            </children>
                         </VBox>
                      </children>

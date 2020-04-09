@@ -7,6 +7,8 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -35,6 +37,10 @@ public class MainController implements Initializable {
      */
     @FXML private StackPane field;
     /**
+     * Field background
+     */
+    @FXML private ImageView fieldBackground;
+    /**
      * Left side of the field
      */
     @FXML private Pane sideFieldLeft;
@@ -61,6 +67,8 @@ public class MainController implements Initializable {
      */
     public void initField() {
         // Initialize field
+        // Set background image
+        this.fieldBackground.setImage(new Image(AvatarDuel.class.getResource("background/field_background.jpg").toString()));
         // Create loader
         FXMLLoader fieldLoader = new FXMLLoader();
         FieldController fieldController = new FieldController();

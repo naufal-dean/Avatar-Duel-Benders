@@ -34,7 +34,7 @@ public class FieldController implements Initializable {
     /**
      * Field background
      */
-    @FXML private ImageView fieldBackground;
+    @FXML private ImageView fieldGrid;
     /**
      * CardController list
      */
@@ -45,7 +45,7 @@ public class FieldController implements Initializable {
      */
     public FieldController() {
         cardControllerList = new ArrayList<>();
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 6; i++)
             cardControllerList.add(Arrays.asList(null, null, null, null));
     }
 
@@ -137,6 +137,6 @@ public class FieldController implements Initializable {
      */
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
-        this.fieldBackground.setImage(new Image(AvatarDuel.class.getResource("background/field_background.jpg").toString()));
+        this.fieldGrid.setImage(new Image(AvatarDuel.class.getResource("background/field_grid.png").toString()));
     }
 }
