@@ -13,7 +13,7 @@
             <Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="1200.0" />
             <StackPane fx:id="handField" prefHeight="130.0" prefWidth="1200.0">
                <children>
-                  <HBox fx:id="hand" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" />
+                  <HBox fx:id="hand" minHeight="-Infinity" prefHeight="150.0" spacing="7.0" />
                </children>
             </StackPane>
          </children>

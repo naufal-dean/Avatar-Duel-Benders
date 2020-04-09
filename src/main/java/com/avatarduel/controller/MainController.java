@@ -149,7 +149,13 @@ public class MainController implements Initializable {
      */
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
+        this.cardDetail.setStyle("-fx-border-color: black");
+        this.phase.setStyle("-fx-border-color: black");
         this.initField();
+        this.deckBottom.setStyle("-fx-border-color: black");
+        this.deckTop.setStyle("-fx-border-color: black");
+        this.powerBottom.setStyle("-fx-border-color: black");
+        this.powerTop.setStyle("-fx-border-color: black");
         this.initHand();
     }
 }

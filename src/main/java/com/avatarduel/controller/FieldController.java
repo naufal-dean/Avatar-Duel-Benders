@@ -7,19 +7,26 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.avatarduel.model.*;
-import com.avatarduel.model.Character;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.transform.Scale;
 
 import com.avatarduel.AvatarDuel;
+import com.avatarduel.model.Card;
+import com.avatarduel.model.CardType;
+import com.avatarduel.model.Character;
+import com.avatarduel.model.Player;
+import com.avatarduel.model.SkillAura;
 
 public class FieldController implements Initializable {
     public static final int SKILL_ROW_TOP = 0;
@@ -90,19 +97,19 @@ public class FieldController implements Initializable {
             }
             loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
 
-            // Create ancPane
-            StackPane ancPane = loader.load();
-            // Create scale for ancPane
-            Scale scale = new Scale();
-            scale.setX(0.4);
-            scale.setY(0.4);
-            scale.setPivotX(((this.field.getColumnConstraints().get(0).getPrefWidth() - 200 * 0.4) / 2d) + 7.5);
-            double padShift = this.field.getPadding().getTop();
-            scale.setPivotY(((this.field.getPrefHeight()) / 4d  - padShift) * 1.2);
-            // Set scale for ancPane
-            ancPane.getTransforms().add(scale);
-            // Set ancPane as field children node
-            this.field.add(ancPane, x, y);
+            // Create root
+            StackPane root = loader.load();
+            // Create scale for root
+            DoubleProperty scale = new SimpleDoubleProperty(0.4);
+            root.scaleXProperty().bind(scale);
+            root.scaleYProperty().bind(scale);
+            root.setPrefWidth(root.getPrefWidth() * scale.doubleValue());
+            root.setPrefHeight(root.getPrefHeight() * scale.doubleValue());
+            // Set child alignment
+            GridPane.setHalignment(root, HPos.CENTER);
+            GridPane.setValignment(root, VPos.CENTER);
+            // Set root as field children node
+            this.field.add(root, x, y);
         }
     }
 
@@ -129,5 +136,6 @@ public class FieldController implements Initializable {
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
         this.fieldGrid.setImage(new Image(AvatarDuel.class.getResource("background/field_grid.png").toString()));
+        this.field.setAlignment(Pos.CENTER);
     }
 }
