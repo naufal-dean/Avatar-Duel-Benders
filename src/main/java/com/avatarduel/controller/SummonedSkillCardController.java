@@ -4,15 +4,7 @@ import com.avatarduel.model.Card;
 import com.avatarduel.model.Player;
 import com.avatarduel.model.SkillAura;
 
-public class SummonedSkillCardController extends CardController{
-    /**
-     * Skill aura card model
-     */
-    private SkillAura skillAuraCard;
-    /**
-     * The owner of the card
-     */
-    private Player owner;
+public class SummonedSkillCardController extends SummonedCharacterController {
     /**
      *  Target of Skill Card
      */
@@ -20,14 +12,13 @@ public class SummonedSkillCardController extends CardController{
 
     /**
      * Constructor
-     * @param skillAuraCard The Card
+     * @param skillAuraCard The Skill Aura Card
      * @param owner The owner of the card
-     * @param targetCard The targetted character card
+     * @param x Card x coordinate in field
+     * @param y Card y coordinate in field
      */
-    public SummonedSkillCardController(SkillAura skillAuraCard, Player owner, Card targetCard) {
-        super(skillAuraCard);
-        this.skillAuraCard = skillAuraCard;
-        this.owner = owner;
+    public SummonedSkillCardController(SkillAura skillAuraCard, Player owner, int x, int y, Card targetCard) {
+        super(skillAuraCard, owner, x, y);
         this.targetCard = targetCard;
     }
 

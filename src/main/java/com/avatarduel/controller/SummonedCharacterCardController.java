@@ -15,21 +15,13 @@ import javafx.util.Duration;
 import com.avatarduel.model.Character;
 import com.avatarduel.model.Player;
 
-public class SummonedCharacterCardController extends CardController {
+public class SummonedCharacterCardController extends SummonedCharacterController {
     /**
-     * Character card model
-     */
-    private Character characterCard;
-    /**
-     * Card owner
-     */
-    private Player owner;
-    /**
-     * is monster in attack position
+     * Is monster in attack position
      */
     private boolean isAttack;
     /**
-     * is first time monster has summoned
+     * Is first time monster has summoned
      */
     private boolean isFirstTime;
     /**
@@ -39,14 +31,14 @@ public class SummonedCharacterCardController extends CardController {
 
     /**
      * Constructor
-     * @param characterCard The Card
+     * @param characterCard The Character Card
      * @param owner The owner of the card
+     * @param x Card x coordinate in field
+     * @param y Card y coordinate in field
      * @param isAttack Is summoned in attack position
      */
-    public SummonedCharacterCardController(Character characterCard, Player owner, boolean isAttack) {
-        super(characterCard);
-        this.characterCard = characterCard;
-        this.owner = owner;
+    public SummonedCharacterCardController(Character characterCard, Player owner, int x, int y, boolean isAttack) {
+        super(characterCard, owner, x, y);
         this.isAttack = isAttack;
         rotate = new RotateTransition();
         isFirstTime = true;
@@ -57,7 +49,7 @@ public class SummonedCharacterCardController extends CardController {
      * @return This card attack / defense
      */
     public int getCardValue() {
-        return (this.isAttack) ? (this.characterCard.getAttack()) : (this.characterCard.getDefense());
+        return (this.isAttack) ? (((Character) this.card).getAttack()) : (((Character) this.card).getDefense());
     }
 
     /**

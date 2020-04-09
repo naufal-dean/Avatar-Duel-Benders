@@ -27,6 +27,10 @@ public class FieldController implements Initializable {
     public static final int CHAR_ROW_BOT = 2;
     public static final int SKILL_ROW_BOT = 3;
     /**
+     * CardController list
+     */
+    private List<List<CardController>> cardControllerList;
+    /**
      * Field grid
      */
     @FXML private GridPane field;
@@ -34,10 +38,6 @@ public class FieldController implements Initializable {
      * Field background
      */
     @FXML private ImageView fieldGrid;
-    /**
-     * CardController list
-     */
-    private List<List<CardController>> cardControllerList;
 
     /**
      * Constructor
@@ -70,28 +70,21 @@ public class FieldController implements Initializable {
         if (this.cardControllerList.get(x).get(y) != null) {
             // Set new card controller
             if (card.getCardType().equals(CardType.CHARACTER)) {
-                SummonedCharacterCardController scCardController = new SummonedCharacterCardController((Character) card, owner, isAttack);
+                SummonedCharacterCardController scCardController = new SummonedCharacterCardController((Character) card, owner, x, y, isAttack);
                 this.cardControllerList.get(x).set(y, scCardController);
-            } else if (card.getCardType().equals(CardType.LAND)) {
-                SummonedLandCardController scCardController = new SummonedLandCardController((Land) card, owner);
-                this.cardControllerList.get(x).set(y, scCardController);
-            } else {
-                SummonedSkillCardController scCardController = new SummonedSkillCardController((SkillAura) card, owner, null);
+            } else if (card.getCardType().equals(CardType.SKILL)) {
+                SummonedSkillCardController scCardController = new SummonedSkillCardController((SkillAura) card, owner, x, y, null);
                 this.cardControllerList.get(x).set(y, scCardController);
             }
         } else { // Card not exist
             // Create loader
             FXMLLoader loader = new FXMLLoader();
             if (card.getCardType().equals(CardType.CHARACTER)) {
-                SummonedCharacterCardController scCardController = new SummonedCharacterCardController((Character) card, owner, isAttack);
+                SummonedCharacterCardController scCardController = new SummonedCharacterCardController((Character) card, owner, x, y, isAttack);
                 loader.setController(scCardController);
                 this.cardControllerList.get(x).set(y, scCardController);
-            } else if (card.getCardType().equals(CardType.LAND)) {
-                SummonedLandCardController scCardController = new SummonedLandCardController((Land) card, owner);
-                loader.setController(scCardController);
-                this.cardControllerList.get(x).set(y, scCardController);
-            } else {
-                SummonedSkillCardController scCardController = new SummonedSkillCardController((SkillAura) card, owner, null);
+            } else if (card.getCardType().equals(CardType.SKILL)) {
+                SummonedSkillCardController scCardController = new SummonedSkillCardController((SkillAura) card, owner, x, y, null);
                 loader.setController(scCardController);
                 this.cardControllerList.get(x).set(y, scCardController);
             }
@@ -110,7 +103,6 @@ public class FieldController implements Initializable {
             ancPane.getTransforms().add(scale);
             // Set ancPane as field children node
             this.field.add(ancPane, x, y);
-            // Set cardController
         }
     }
 

@@ -22,7 +22,7 @@ public class CardController implements Initializable {
     /**
      * Card model
      */
-    private Card card;
+    protected Card card;
     /**
      * Card fxml anchor pane
      */

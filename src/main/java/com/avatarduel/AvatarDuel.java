@@ -67,6 +67,7 @@ public class AvatarDuel extends Application {
    * Render game
    * @param gameStatus The Game Status
    # @param stage The Stage
+   * @throws Exception When exception occurs render error page
    */
   void renderGame(Stage stage, GameStatus gameStatus) throws Exception {
     GameDeck deck = gameStatus.getOurDeck();
@@ -81,9 +82,11 @@ public class AvatarDuel extends Application {
       root = loader.load();
       // Get field controller
       FieldController fieldController = mainController.getFieldController();
+      Card card;
       for (int i = 0; i < 6; i++)
         for (int j = 0; j < 4; j++)
-          fieldController.setCardOnField(deck.draw(), (j > 1) ? (Player.BOTTOM) : (Player.TOP), true, i, j);
+          if (!(card = deck.draw()).getCardType().equals(CardType.LAND))
+            fieldController.setCardOnField(card, (j > 1) ? (Player.BOTTOM) : (Player.TOP), true, i, j);
     } catch (Exception e) {
       System.out.println(e);
     }

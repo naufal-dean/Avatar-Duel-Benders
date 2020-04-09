@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="1200.0" />
+      <StackPane prefHeight="130.0" prefWidth="1200.0">
+         <children>
+            <HBox fx:id="hand" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" />
+         </children>
+      </StackPane>
+   </children>
+</VBox>

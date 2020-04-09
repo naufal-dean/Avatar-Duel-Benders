@@ -4,9 +4,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.image.*?>
 
-<AnchorPane fx:id="mainAnchor" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="mainAnchor" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1550.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox fx:id="mainHBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1500.0">
+      <HBox fx:id="mainHBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1550.0">
          <children>
             <VBox fx:id="gameDetail" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="300.0">
                <children>
@@ -15,6 +15,7 @@
                   <Pane fx:id="playerDetailBottom" layoutX="10.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="300.0" />
                </children>
             </VBox>
+            <StackPane fx:id="phase" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="50.0" />
             <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0">
                <children>
                   <StackPane fx:id="handTop" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="1200.0" />
