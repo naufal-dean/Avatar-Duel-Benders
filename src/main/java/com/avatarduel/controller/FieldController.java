@@ -61,9 +61,18 @@ public class FieldController implements Initializable {
      */
     public void setCardOnField(Card card, boolean isAttack, int x, int y) throws IOException {
         if (this.cardControllerList.get(x).get(y) != null) {
-            // setCard via cardController
-            this.cardControllerList.get(x).get(y).setCard(card);
-        } else { // Controller not exist
+            // Set new card controller
+            if (card.getCardType().equals(CardType.CHARACTER)) {
+                SummonedCharacterCardController scCardController = new SummonedCharacterCardController(card, isAttack);
+                this.cardControllerList.get(x).set(y, scCardController);
+            } else if (card.getCardType().equals(CardType.LAND)) {
+                SummonedLandCardController scCardController = new SummonedLandCardController(card);
+                this.cardControllerList.get(x).set(y, scCardController);
+            } else {
+                SummonedSkillCardController scCardController = new SummonedSkillCardController(card, null);
+                this.cardControllerList.get(x).set(y, scCardController);
+            }
+        } else { // Card not exist
             // Create loader
             FXMLLoader loader = new FXMLLoader();
             if (card.getCardType().equals(CardType.CHARACTER)) {
