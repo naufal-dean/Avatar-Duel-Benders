@@ -28,12 +28,9 @@ public class GameDeck {
      * Constructor
      */
     public GameDeck(int capacity) throws IOException, URISyntaxException {
-        System.out.println("game deck init");
         this.cardList = new ArrayList<>();
         this.capacity = capacity;
-        System.out.println("game deck init 1");
-//        this.loadCards();
-        System.out.println("game deck init 2");
+        this.loadCards();
     }
 
     /**

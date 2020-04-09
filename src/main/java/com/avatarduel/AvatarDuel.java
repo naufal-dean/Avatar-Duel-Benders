@@ -5,19 +5,18 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
 
-import com.avatarduel.exception.GameStatusInitializationFailed;
-import com.avatarduel.gameutils.GameDeck;
-import com.avatarduel.gameutils.GameStatus;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 import com.avatarduel.controller.*;
+import com.avatarduel.gameutils.GameDeck;
+import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
 import com.avatarduel.model.Character;
 import com.avatarduel.util.*;
@@ -94,17 +93,33 @@ public class AvatarDuel extends Application {
     stage.setTitle("Avatar Duel");
     stage.setScene(scene);
     stage.show();
-    stage.setFullScreen(true);
+//    stage.setFullScreen(true);
   }
 
   /**
    * Render screen error
    * @param stage The Stage
    */
-  void renderError(Stage stage) {
-    Parent root = new Parent() {};
+  void renderError(Stage stage, String err) {
+    // Add error message
+    Text title = new Text();
+    title.setText("Welp error happened...");
+    title.setFont(Font.font ("Consolas", 40));
+    title.setX(50);
+    title.setY(50);
+
+    Text error = new Text();
+    error.setText(err);
+    error.setFont(Font.font ("Consolas", 20));
+    error.setX(50);
+    error.setY(90);
+
+    Group root = new Group();
+    root.getChildren().add(title);
+    root.getChildren().add(error);
+
     // Present
-    Scene scene = new Scene(root);
+    Scene scene = new Scene(root, 1280, 720);
     stage.setTitle("Avatar Duel");
     stage.setScene(scene);
     stage.show();
@@ -120,9 +135,8 @@ public class AvatarDuel extends Application {
     try {
       gameStatus = GameStatus.getGameStatus();
       renderGame(stage, gameStatus);
-    } catch (GameStatusInitializationFailed err) {
-      System.out.println(err);
-      renderError(stage);
+    } catch (Exception err) {
+      renderError(stage, err.toString());
     }
   }
 

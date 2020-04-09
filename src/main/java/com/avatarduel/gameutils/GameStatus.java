@@ -34,13 +34,9 @@ public class GameStatus {
         this.gameDeck = new HashMap<>();
         this.gameHand = new HashMap<>();
         // Initialize player turn
-        System.out.println("out init");
         this.gameTurn = Player.BOTTOM;
         // Initialize game deck
-        System.out.println("out init 1");
         this.gameDeck.put(Player.BOTTOM, new GameDeck(60));
-        this.gameDeck.get(Player.BOTTOM).loadCards();
-        System.out.println("out init 2");
         this.gameDeck.put(Player.TOP, new GameDeck((60)));
     }
 
