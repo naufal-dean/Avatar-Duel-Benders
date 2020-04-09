@@ -26,12 +26,28 @@ public class MainPhase {
     }
 
     /**
+     * Getter for mainPhase singleton
+     */
+    public static MainPhase getMainPhase() {
+        if (mainPhase == null)
+            mainPhase = new MainPhase();
+        return mainPhase;
+    }
+
+    /**
+     * Reset land placed counter
+     */
+    public void resetLandPlacedCounter() {
+        this.landCardPlaced = 0;
+    }
+
+    /**
      * Summon character card
      * @param card The character card
      * @param col Target column
      */
-    public void summonCharCard(Character card, boolean isAttack, int col, Player player, FieldController fieldController) {
-        int row = (player == Player.BOTTOM) ? (FieldController.CHAR_ROW_BOT) : (FieldController.CHAR_ROW_TOP);
+    public void summonCharCard(Character card, boolean isAttack, int col, FieldController fieldController) {
+        int row = (GameStatus.getGameStatus().getGameTurn() == Player.BOTTOM) ? (FieldController.CHAR_ROW_BOT) : (FieldController.CHAR_ROW_TOP);
         try {
             fieldController.setCardOnField(card, isAttack, col, row);
         } catch (IOException e) {
@@ -45,8 +61,8 @@ public class MainPhase {
      * @param card The skill card
      * @param col Target column
      */
-    public void summonSkillCard(SkillAura card, int col, Player player, FieldController fieldController) {
-        int row = (player == Player.BOTTOM) ? (FieldController.SKILL_ROW_BOT) : (FieldController.SKILL_ROW_TOP);
+    public void summonSkillCard(SkillAura card, int col, FieldController fieldController) {
+        int row = (GameStatus.getGameStatus().getGameTurn() == Player.BOTTOM) ? (FieldController.SKILL_ROW_BOT) : (FieldController.SKILL_ROW_TOP);
         try {
             fieldController.setCardOnField(card, true, col, row);
         } catch (IOException e) {
