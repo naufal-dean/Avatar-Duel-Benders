@@ -10,27 +10,28 @@ import com.avatarduel.model.Card;
 
 public class CardDetailsController extends CardController{
     /**
-        Card Details Anchor pane
+     * Card Details Anchor pane
      */
     @FXML protected AnchorPane mainCardDetails;
     /**
-
+     * Card Details layout
      */
     @FXML private VBox layoutCardDetails;
     /**
-        Pane for Card
+     * Pane for Card
      */
     @FXML private Pane Card;
     /**
-        Description for card
+     * Description for card
      */
     @FXML private Pane Description;
     /**
-        Description text of card
+     * Description text of card
      */
     @FXML private TextArea DescriptionText;
+
     /**
-        Constructor
+     * Constructor
      */
      public CardDetailsController(Card card){
          super(card);
