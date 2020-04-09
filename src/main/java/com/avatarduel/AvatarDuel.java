@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import com.avatarduel.exception.GameStatusInitializationFailed;
+import com.avatarduel.gameutils.GameDeck;
+import com.avatarduel.gameutils.GameStatus;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -62,17 +65,12 @@ public class AvatarDuel extends Application {
   }
 
   /**
-   * {@inheritDoc}
+   * Render game
+   * @param gameStatus The Game Status
+   # @param stage The Stage
    */
-  @Override
-  public void start(Stage stage) {
-    DeckController deck1 = new DeckController(58);
-    // Load cards
-    try {
-      deck1.loadCards();
-    } catch (Exception e) {
-      System.out.println("Failed to load cards: " + e);
-    }
+  void renderGame(Stage stage, GameStatus gameStatus) {
+    GameDeck deck1 = gameStatus.getPlayerDeck();
     // Load main UI
     Parent root = new Parent() {};
     try {
@@ -97,22 +95,35 @@ public class AvatarDuel extends Application {
     stage.setScene(scene);
     stage.show();
     stage.setFullScreen(true);
+  }
 
+  /**
+   * Render screen error
+   * @param stage The Stage
+   */
+  void renderError(Stage stage) {
+    Parent root = new Parent() {};
+    // Present
+    Scene scene = new Scene(root);
+    stage.setTitle("Avatar Duel");
+    stage.setScene(scene);
+    stage.show();
+  }
 
-//    Parent root2 = new Parent() {};
-//    try {
-//      FXMLLoader loader = new FXMLLoader();
-//      FieldController fieldController = new FieldController();
-//      loader.setLocation(getClass().getResource("view/Field.fxml"));
-//      loader.setController(fieldController);
-//      root2 = loader.load();
-//      fieldController.setCardOnField(cardList.get(20), true, 0, 0);
-//      for (int i = 0; i < 8; i++)
-//        for (int j = 0; j < 4; j++)
-//          fieldController.setCardOnField(cardList.get(i * 4 + j), true, i, j);
-//    } catch (Exception e) {
-//      System.out.println(e);
-//    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void start(Stage stage) {
+    // Try to get Game Status
+    GameStatus gameStatus;
+    try {
+      gameStatus = GameStatus.getGameStatus();
+      renderGame(stage, gameStatus);
+    } catch (GameStatusInitializationFailed err) {
+      System.out.println(err);
+      renderError(stage);
+    }
   }
 
   /**

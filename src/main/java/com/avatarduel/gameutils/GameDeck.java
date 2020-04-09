@@ -28,15 +28,18 @@ public class GameDeck {
      * Constructor
      */
     public GameDeck(int capacity) throws IOException, URISyntaxException {
+        System.out.println("game deck init");
         this.cardList = new ArrayList<>();
         this.capacity = capacity;
-        this.loadCards();
+        System.out.println("game deck init 1");
+//        this.loadCards();
+        System.out.println("game deck init 2");
     }
 
     /**
      * Load cards to deck
      */
-    private void loadCards() throws IOException, URISyntaxException {
+    public void loadCards() throws IOException, URISyntaxException {
         Random rand = new Random();
         int rand_int;
 
