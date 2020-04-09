@@ -75,11 +75,9 @@ public class SummonedCharacterCardController extends SummonedCardController {
     @Override
     public void init() {
         super.init();
-        // Rotate card if owned by Player.TOP
-        if (this.owner == Player.TOP)
-            this.cardAncPane.setRotate(180);
+        // If defense rotate 90
         if (!this.isAttack)
-            this.cardAncPane.setRotate(90);
+            this.cardAncPane.setRotate(this.cardAncPane.getRotate() + 90);
     }
 
     /**

@@ -1,5 +1,13 @@
 package com.avatarduel.controller;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+
+import com.avatarduel.model.Card;
+
 public class CardDetailsController extends CardController{
     /**
         Card Details Anchor pane

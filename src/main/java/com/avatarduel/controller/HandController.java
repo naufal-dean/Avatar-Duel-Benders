@@ -6,21 +6,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.avatarduel.AvatarDuel;
-import com.avatarduel.model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
+
+import com.avatarduel.AvatarDuel;
+import com.avatarduel.model.*;
 
 public class HandController implements Initializable {
     /**
      * Display card in hand
      */
     @FXML private HBox hand;
+    /**
+     * Field to place hand
+     */
+    @FXML private StackPane handField;
+    /**
+     * Wrapper for all of hand display
+     */
+    @FXML private VBox handWrapper;
     /**
      * Card controller list
      */
@@ -43,23 +54,17 @@ public class HandController implements Initializable {
     public void addCardOnHand(Card card, Player owner) throws IOException {
         // Create loader
         FXMLLoader loader = new FXMLLoader();
-        if (card.getCardType().equals(CardType.CHARACTER)) {
-//            HandCardController cardController = new HandCardController((Character) card, owner, this.cardControllerList.size());
-//            loader.setController(cardController);
-//            this.cardControllerList.add(cardController);
-        } else if (card.getCardType().equals(CardType.SKILL)) {
-
-        } else { // card.getCardType().equals(CardType.SKILL)
-
-        }
+        HandCardController cardController = new HandCardController(card, owner, this.cardControllerList.size());
+        loader.setController(cardController);
+        this.cardControllerList.add(cardController);
         loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
 
         // Create root
         StackPane root = loader.load();
         // Create scale for root
         Scale scale = new Scale();
-        scale.setX(0.4);
-        scale.setY(0.4);
+        scale.setX(0.5);
+        scale.setY(0.5);
         scale.setPivotX(0); // TODO: set pivot
         scale.setPivotY(0);
         // Set scale for root
@@ -79,8 +84,18 @@ public class HandController implements Initializable {
     }
 
     /**
+     * Flip the hand display
+     */
+    public void flipHandDisplay() {
+        this.handWrapper.setRotate(180);
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override @FXML
-    public void initialize(URL url, ResourceBundle resourceBundle) {}
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.handField.setAlignment(Pos.CENTER);
+        this.hand.setAlignment(Pos.BASELINE_CENTER);
+    }
 }

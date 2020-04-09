@@ -22,6 +22,9 @@ public class SummonedCardController extends CardController {
      */
     public SummonedCardController(Card card, Player owner, int x, int y) {
         super(card);
+        this.owner = owner;
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -30,5 +33,16 @@ public class SummonedCardController extends CardController {
      */
     public void removeCardFromField(FieldController fieldController) {
         fieldController.removeCardOnField(this.x, this.y);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void init() {
+        super.init();
+        // Rotate card if owned by Player.TOP
+        if (this.owner == Player.TOP)
+            this.cardAncPane.setRotate(this.cardAncPane.getRotate() + 180);
     }
 }

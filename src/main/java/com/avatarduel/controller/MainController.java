@@ -117,7 +117,6 @@ public class MainController implements Initializable {
      * Initialize hand
      */
     public void initHand() {
-        // Initialize hand bottom
         // Create loader
         FXMLLoader handBottomLoader = new FXMLLoader();
         HandController handBottomController = new HandController();
@@ -131,13 +130,15 @@ public class MainController implements Initializable {
 
         // Create and assign pane
         try {
-            AnchorPane handBottomPane = handBottomLoader.load();
+            StackPane handBottomPane = handBottomLoader.load();
             this.handBottom.getChildren().add(handBottomPane);
-            AnchorPane handTopPane = handTopLoader.load();
+            StackPane handTopPane = handTopLoader.load();
             this.handTop.getChildren().add(handTopPane);
         } catch (IOException e) {
             System.out.println("Error occured: " + e);
         }
+        // Flip hand top display
+        handTopController.flipHandDisplay();
         // Assign hand controller
         this.handBottomController = handBottomController;
         this.handTopController = handTopController;

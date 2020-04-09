@@ -21,15 +21,4 @@ public class SummonedSkillCardController extends SummonedCardController {
         super(skillAuraCard, owner, x, y);
         this.targetCard = targetCard;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void init() {
-        super.init();
-        // Rotate card if owned by Player.TOP
-        if (this.owner == Player.TOP)
-            this.cardAncPane.setRotate(180);
-    }
 }
