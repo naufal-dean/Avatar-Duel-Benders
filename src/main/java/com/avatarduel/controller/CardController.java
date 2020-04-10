@@ -97,6 +97,7 @@ public class CardController implements Initializable {
                 templatePath = "card/template/template_skill.png";
         }
         this.background.setImage(new Image(AvatarDuel.class.getResource(templatePath).toString()));
+
         // Set element
         String elementPath;
         if (this.card.getElement() == Element.AIR)
@@ -108,6 +109,7 @@ public class CardController implements Initializable {
         else // this.card.getElement() == Element.WATER
             elementPath = "card/template/element_water.png";
         this.element.setImage(new Image(AvatarDuel.class.getResource(elementPath).toString()));
+
         // Set decorator if any
         String decoratorPath;
         if (this.card.getCardType() == CardType.CHARACTER) {
@@ -124,6 +126,7 @@ public class CardController implements Initializable {
             this.decorator.setImage(new Image(AvatarDuel.class.getResource(decoratorPath).toString()));
             this.decorator.setTranslateY(-3);
         }
+
         // Set name
         double nameTextSize = 13;
         if (this.card.getName().length() <= 20)
@@ -137,8 +140,10 @@ public class CardController implements Initializable {
         if (this.card.getCardType() != CardType.CHARACTER)
             this.name.setTextFill(Color.WHITE);
         this.name.setPrefWidth(this.background.getFitWidth() * 0.7);
+
         // Set image
         this.image.setImage(new Image(this.card.getImagePath()));
+
         // Set description
         this.description.setDisable(true);
         this.description.setWrapText(true);
@@ -148,6 +153,8 @@ public class CardController implements Initializable {
         if (this.card.getDescription().length() > 150) descTextSize -= 0.5;
         this.description.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), descTextSize));
         this.description.setText(this.card.getDescription());
+        this.description.getStylesheets().add(AvatarDuel.class.getResource("css/transparent-bg-text-area.css").toString());
+
         // Set card stats
         if (this.card.getCardType() == CardType.CHARACTER) {
             Character character = (Character) this.card;

@@ -22,9 +22,21 @@ import com.avatarduel.model.*;
 
 public class HandController implements Initializable {
     /**
+     * Card controller list
+     */
+    private List<CardController> cardControllerList;
+    /**
+     * Card back controller list
+     */
+    private List<CardBackController> cardBackControllerList;
+    /**
      * Display card in hand
      */
     @FXML private HBox hand;
+    /**
+     * Display card back in hand
+     */
+    @FXML private HBox handBack;
     /**
      * Field to place hand
      */
@@ -33,17 +45,13 @@ public class HandController implements Initializable {
      * Wrapper for all of hand display
      */
     @FXML private VBox handWrapper;
-    /**
-     * Card controller list
-     */
-    private List<CardController> cardControllerList;
-
 
     /**
      * Constructor
      */
     public HandController() {
         this.cardControllerList = new ArrayList<>();
+        this.cardBackControllerList = new ArrayList<>();
     }
 
     /**
@@ -53,21 +61,39 @@ public class HandController implements Initializable {
      * @throws IOException From FXML loader
      */
     public void addCardOnHand(Card card, Player owner) throws IOException {
+        // Add card back
+        // Create loader
+        FXMLLoader loaderBack = new FXMLLoader();
+        CardBackController cardBackController = new CardBackController();
+        loaderBack.setController(cardBackController);
+        loaderBack.setLocation(AvatarDuel.class.getResource("view/CardBack.fxml"));
+        // Create root
+        StackPane rootBack = loaderBack.load();
+        // Scale card
+        DoubleProperty scale = new SimpleDoubleProperty(0.5);
+        rootBack.scaleXProperty().bind(scale);
+        rootBack.scaleYProperty().bind(scale);
+        rootBack.setPrefWidth(rootBack.getPrefWidth() * scale.doubleValue());
+        rootBack.setPrefHeight(rootBack.getPrefHeight() * scale.doubleValue());
+        // Set rootBack as handBack children node
+        this.handBack.getChildren().add(rootBack);
+        // Add controller to cardControllerList
+        this.cardBackControllerList.add(cardBackController);
+
+        // Add card
         // Create loader
         FXMLLoader loader = new FXMLLoader();
-        HandCardController cardController = new HandCardController(card, owner, this.cardControllerList.size());
+        HandCardController cardController = new HandCardController(card, owner, this.cardControllerList.size(), cardBackController);
         loader.setController(cardController);
         loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
-
         // Create root
         StackPane root = loader.load();
         // Scale card
-        DoubleProperty scale = new SimpleDoubleProperty(0.5);
         root.scaleXProperty().bind(scale);
         root.scaleYProperty().bind(scale);
         root.setPrefWidth(root.getPrefWidth() * scale.doubleValue());
         root.setPrefHeight(root.getPrefHeight() * scale.doubleValue());
-        // Set root as field children node
+        // Set root as hand children node
         this.hand.getChildren().add(root);
         // Add controller to cardControllerList
         this.cardControllerList.add(cardController);
@@ -78,9 +104,14 @@ public class HandController implements Initializable {
      * @param col The HBox column index
      */
     public void removeCardOnHand(int col) {
+        // Remove card
         Node node = this.hand.getChildren().get(col);
         this.hand.getChildren().remove((StackPane) node);
         this.cardControllerList.remove(col);
+        // Remove card back
+        Node nodeBack = this.handBack.getChildren().get(col);
+        this.handBack.getChildren().remove((StackPane) nodeBack);
+        this.cardBackControllerList.remove(col);
     }
 
     /**
@@ -97,5 +128,6 @@ public class HandController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.handField.setAlignment(Pos.CENTER);
         this.hand.setAlignment(Pos.CENTER);
+        this.handBack.setAlignment(Pos.CENTER);
     }
 }
