@@ -14,9 +14,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import com.avatarduel.AvatarDuel;
-import com.avatarduel.model.Card;
-import com.avatarduel.model.CardType;
-import com.avatarduel.model.Element;
+import com.avatarduel.model.*;
+import com.avatarduel.model.Character;
+import javafx.scene.text.TextAlignment;
 
 public class CardController implements Initializable {
     /**
@@ -40,6 +40,10 @@ public class CardController implements Initializable {
      */
     @FXML private ImageView element;
     /**
+     * Display card decorator
+     */
+    @FXML private ImageView decorator;
+    /**
      * Display image
      */
     @FXML private ImageView image;
@@ -47,7 +51,10 @@ public class CardController implements Initializable {
      * Display description
      */
     @FXML private TextArea description;
-
+    /**
+     * Display card stats
+     */
+    @FXML private Label attack, defense, power;
     /**
      * Constructor
      * @param card The Card
@@ -79,12 +86,16 @@ public class CardController implements Initializable {
     public void init() {
         // Set background
         String templatePath;
-        if (this.card.getCardType() == CardType.CHARACTER)
+        if (this.card.getCardType() == CardType.CHARACTER) {
             templatePath = "card/template/template_character.png";
-        else if (this.card.getCardType() == CardType.LAND)
+        } else if (this.card.getCardType() == CardType.LAND) {
             templatePath = "card/template/template_land.png";
-        else // this.card.getCardType() == CardType.SKILL
-            templatePath = "card/template/template_skill.png";
+        } else { // this.card.getCardType() == CardType.SKILL
+            if (((Skill) this.card).getEffect() == Effect.AURA)
+                templatePath = "card/template/template_skill_aura.png";
+            else
+                templatePath = "card/template/template_skill.png";
+        }
         this.background.setImage(new Image(AvatarDuel.class.getResource(templatePath).toString()));
         // Set element
         String elementPath;
@@ -97,6 +108,22 @@ public class CardController implements Initializable {
         else // this.card.getElement() == Element.WATER
             elementPath = "card/template/element_water.png";
         this.element.setImage(new Image(AvatarDuel.class.getResource(elementPath).toString()));
+        // Set decorator if any
+        String decoratorPath;
+        if (this.card.getCardType() == CardType.CHARACTER) {
+            int starCount = (((Character) this.card).getAttack() + ((Character) this.card).getDefense()) / 2;
+            decoratorPath = "card/template/star_" + ((starCount <= 10) ? (starCount) : (10)) +".png";
+            this.decorator.setImage(new Image(AvatarDuel.class.getResource(decoratorPath).toString()));
+        } else if (this.card.getCardType() == CardType.SKILL) {
+            if (((Skill) this.card).getEffect() == Effect.AURA)
+                decoratorPath = "card/template/skill_aura.png";
+            else if (((Skill) this.card).getEffect() == Effect.DESTROY)
+                decoratorPath = "card/template/skill_destroy.png";
+            else // ((Skill) this.card).getEffect() == Effect.POWER_UP
+                decoratorPath = "card/template/skill_power_up.png";
+            this.decorator.setImage(new Image(AvatarDuel.class.getResource(decoratorPath).toString()));
+            this.decorator.setTranslateY(-3);
+        }
         // Set name
         double nameTextSize = 13;
         if (this.card.getName().length() <= 20)
@@ -121,6 +148,29 @@ public class CardController implements Initializable {
         if (this.card.getDescription().length() > 150) descTextSize -= 0.5;
         this.description.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), descTextSize));
         this.description.setText(this.card.getDescription());
+        // Set card stats
+        if (this.card.getCardType() == CardType.CHARACTER) {
+            Character character = (Character) this.card;
+            this.attack.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 8));
+            this.attack.setText(String.valueOf(character.getAttack()));
+            this.defense.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 8));
+            this.defense.setText(String.valueOf(character.getDefense()));
+            this.power.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 8));
+            this.power.setText(String.valueOf(character.getPower()));
+        } else if (this.card.getCardType() == CardType.SKILL) {
+            Skill skill = (Skill) this.card;
+            if (skill.getEffect() == Effect.AURA) {
+                this.attack.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 8));
+                this.attack.setText(String.valueOf((((SkillAura) skill).getAttack())));
+                this.defense.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 8));
+                this.defense.setText(String.valueOf((((SkillAura) skill).getDefense())));
+            }
+            this.power.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 8));
+            this.power.setText(String.valueOf(skill.getPower()));
+        }
+        this.attack.setTextAlignment(TextAlignment.RIGHT);
+        this.defense.setTextAlignment(TextAlignment.RIGHT);
+        this.power.setTextAlignment(TextAlignment.RIGHT);
     }
 
     /**
