@@ -68,9 +68,9 @@ public class MainPhase implements GamePhase {
      * @param col Target column
      */
     public void summonCharCard(Character card, boolean isAttack, int col, FieldController fieldController) {
-        int row = (GameStatus.getGameStatus().getGameTurn() == Player.BOTTOM) ? (FieldController.CHAR_ROW_BOT) : (FieldController.CHAR_ROW_TOP);
+        int row = (GameStatus.getGameStatus().getGameActivePlayer() == Player.BOTTOM) ? (FieldController.CHAR_ROW_BOT) : (FieldController.CHAR_ROW_TOP);
         try {
-            fieldController.setCardOnField(card, GameStatus.getGameStatus().getGameTurn(), isAttack, col, row);
+            fieldController.setCardOnField(card, GameStatus.getGameStatus().getGameActivePlayer(), isAttack, col, row);
         } catch (IOException e) {
             System.out.println("Summon char card failed: " + e);
             // pass
@@ -83,9 +83,9 @@ public class MainPhase implements GamePhase {
      * @param col Target column
      */
     public void summonSkillCard(SkillAura card, int col, FieldController fieldController) {
-        int row = (GameStatus.getGameStatus().getGameTurn() == Player.BOTTOM) ? (FieldController.SKILL_ROW_BOT) : (FieldController.SKILL_ROW_TOP);
+        int row = (GameStatus.getGameStatus().getGameActivePlayer() == Player.BOTTOM) ? (FieldController.SKILL_ROW_BOT) : (FieldController.SKILL_ROW_TOP);
         try {
-            fieldController.setCardOnField(card, GameStatus.getGameStatus().getGameTurn(), true, col, row);
+            fieldController.setCardOnField(card, GameStatus.getGameStatus().getGameActivePlayer(), true, col, row);
         } catch (IOException e) {
             System.out.println("Summon char card failed: " + e);
             // pass

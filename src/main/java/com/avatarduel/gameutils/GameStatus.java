@@ -15,7 +15,7 @@ public class GameStatus {
     /**
      * Player turn
      */
-    private Player gameTurn;
+    private Player gameActivePlayer;
     /**
      * Player health
      */
@@ -38,7 +38,7 @@ public class GameStatus {
      */
     private GameStatus() throws IOException, URISyntaxException {
         // Initialize player turn
-        this.gameTurn = Player.BOTTOM;
+        this.gameActivePlayer = Player.BOTTOM;
         // Initialize game health
         this.gameHealth = new HashMap<>();
         this.gameHealth.put(Player.BOTTOM, 80);
@@ -80,8 +80,8 @@ public class GameStatus {
      * Getter for gameTurn
      * @return Active player now
      */
-    public Player getGameTurn() {
-        return this.gameTurn;
+    public Player getGameActivePlayer() {
+        return this.gameActivePlayer;
     }
 
     /**
@@ -97,7 +97,7 @@ public class GameStatus {
      * @return Our health
      */
     public Integer getOurHealth() {
-        return gameHealth.get(this.gameTurn);
+        return gameHealth.get(this.gameActivePlayer);
     }
 
     /**
@@ -105,7 +105,7 @@ public class GameStatus {
      * @return Enemy health
      */
     public Integer getEnemyHealth() {
-        if (this.gameTurn == Player.BOTTOM)
+        if (this.gameActivePlayer == Player.BOTTOM)
             return gameHealth.get(Player.TOP);
         else
             return gameHealth.get(Player.BOTTOM);
@@ -124,7 +124,7 @@ public class GameStatus {
      * @return Our GameDeck
      */
     public GameDeck getOurDeck() {
-        return this.gameDeck.get(this.gameTurn);
+        return this.gameDeck.get(this.gameActivePlayer);
     }
 
     /**
@@ -132,7 +132,7 @@ public class GameStatus {
      * @return Our GameHand
      */
     public GameHand getOurHand() {
-        return this.gameHand.get(this.gameTurn);
+        return this.gameHand.get(this.gameActivePlayer);
     }
 
     /**
@@ -147,9 +147,9 @@ public class GameStatus {
      * Next Turn
      */
     public void nextTurn() {
-        if (this.gameTurn == Player.BOTTOM)
-            this.gameTurn = Player.TOP;
+        if (this.gameActivePlayer == Player.BOTTOM)
+            this.gameActivePlayer = Player.TOP;
         else
-            this.gameTurn = Player.BOTTOM;
+            this.gameActivePlayer = Player.BOTTOM;
     }
 }
