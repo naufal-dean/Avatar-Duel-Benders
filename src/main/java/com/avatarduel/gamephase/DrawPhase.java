@@ -48,6 +48,8 @@ public class DrawPhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
+        // Update game status
+        GameStatus.getGameStatus().setGamePhase(Phase.DRAW);
         // Add card to hand
         GameDeck deck = GameStatus.getGameStatus().getOurDeck();
         Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
@@ -72,6 +74,8 @@ public class DrawPhase implements GamePhase {
                     handCardController.getCardAncPane().setEffect(null);
             }
         });
+        // End phase
+        this.endPhase(mainController);
     }
 
     /**

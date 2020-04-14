@@ -43,6 +43,8 @@ public class MainPhase implements GamePhase {
     @Override
     public void startPhase(MainController mainController) {
         this.landCardPlaced = 0;
+        // Update game status
+        GameStatus.getGameStatus().setGamePhase(Phase.MAIN);
         // TODO: implement
     }
 

@@ -32,6 +32,7 @@ public class EndPhase implements GamePhase {
     @Override
     public void startPhase(MainController mainController) {
         // Update game status
+        GameStatus.getGameStatus().setGamePhase(Phase.END);
         GameStatus.getGameStatus().nextTurn();
         // Flip card in both hand
         mainController.getHandControllerMap().get(Player.BOTTOM).flipCardInHand();

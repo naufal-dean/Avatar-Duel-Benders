@@ -1,6 +1,7 @@
 package com.avatarduel.gamephase;
 
 import com.avatarduel.controller.MainController;
+import com.avatarduel.gameutils.GameStatus;
 
 public class BattlePhase implements GamePhase {
     /**
@@ -30,6 +31,8 @@ public class BattlePhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
+        // Update game status
+        GameStatus.getGameStatus().setGamePhase(Phase.BATTLE);
         // TODO: implement
     }
 

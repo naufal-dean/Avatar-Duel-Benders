@@ -100,6 +100,14 @@ public class GameStatus {
     }
 
     /**
+     * Setter for gamePhase
+     * @param gamePhase The new game phase
+     */
+    public void setGamePhase(Phase gamePhase) {
+        this.gamePhase = gamePhase;
+    }
+
+    /**
      * Getter for gameHealth
      * @return this.gameHealth
      */
