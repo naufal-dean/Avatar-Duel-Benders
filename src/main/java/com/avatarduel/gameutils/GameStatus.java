@@ -69,7 +69,8 @@ public class GameStatus {
     }
 
     /**
-     * Getter for gameStatus
+     * Getter for gameStatus, must call initGameStatus first
+     * @return This class singleton
      */
     public static GameStatus getGameStatus() {
         return gameStatus;
@@ -77,6 +78,7 @@ public class GameStatus {
 
     /**
      * Getter for gameTurn
+     * @return Active player now
      */
     public Player getGameTurn() {
         return this.gameTurn;
@@ -110,7 +112,16 @@ public class GameStatus {
     }
 
     /**
+     * Getter for gameDeck
+     * @return this.gameDeck
+     */
+    public HashMap<Player, GameDeck> getGameDeck() {
+        return this.gameDeck;
+    }
+
+    /**
      * Getter for our GameDeck
+     * @return Our GameDeck
      */
     public GameDeck getOurDeck() {
         return this.gameDeck.get(this.gameTurn);
@@ -118,13 +129,15 @@ public class GameStatus {
 
     /**
      * Getter for our GameHand
+     * @return Our GameHand
      */
     public GameHand getOurHand() {
         return this.gameHand.get(this.gameTurn);
     }
 
     /**
-     * Getter for our GameHand
+     * Getter for our GamePower
+     * @return Our GamePower
      */
     public GamePower getOurPower() {
         return this.gamePower.get(this.gamePower);

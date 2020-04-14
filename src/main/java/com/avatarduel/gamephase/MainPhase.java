@@ -3,12 +3,13 @@ package com.avatarduel.gamephase;
 import java.io.IOException;
 
 import com.avatarduel.controller.FieldController;
+import com.avatarduel.controller.MainController;
 import com.avatarduel.controller.PowerController;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
 import com.avatarduel.model.Character;
 
-public class MainPhase {
+public class MainPhase implements GamePhase {
     /**
      * Class singleton instance
      */
@@ -37,9 +38,21 @@ public class MainPhase {
 
     /**
      * Start main phase
+     * @param mainController The MainController for the UI
      */
-    public void startMainPhase() {
+    @Override
+    public void startPhase(MainController mainController) {
         // TODO: implement
+        //
+    }
+
+    /**
+     * End the main phase
+     * @param mainController The MainController for the UI
+     */
+    @Override
+    public void endPhase(MainController mainController) {
+        BattlePhase.getBattlePhase().endPhase(mainController);
     }
 
     /**

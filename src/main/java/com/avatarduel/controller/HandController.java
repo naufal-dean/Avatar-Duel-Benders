@@ -8,11 +8,14 @@ import java.util.ResourceBundle;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -24,7 +27,7 @@ public class HandController implements Initializable {
     /**
      * Card controller list
      */
-    private List<CardController> cardControllerList;
+    private List<HandCardController> cardControllerList;
     /**
      * Card back controller list
      */
@@ -117,8 +120,16 @@ public class HandController implements Initializable {
     /**
      * Flip the hand display
      */
-    public void flipHandDisplay() {
+    public void rotateHandDisplay() {
         this.handWrapper.setRotate(180);
+    }
+
+    /**
+     * Flip card in hand
+     */
+    public void flipCardInHand() {
+        for (HandCardController handCardController : this.cardControllerList)
+            handCardController.flipCard();
     }
 
     /**
@@ -129,5 +140,11 @@ public class HandController implements Initializable {
         this.handField.setAlignment(Pos.CENTER);
         this.hand.setAlignment(Pos.CENTER);
         this.handBack.setAlignment(Pos.CENTER);
+        // TODO: this handler is for debugging, remove after use
+        this.handField.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                this.flipCardInHand();
+            }
+        });
     }
 }

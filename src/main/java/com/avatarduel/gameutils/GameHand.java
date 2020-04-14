@@ -6,7 +6,8 @@ import java.util.List;
 import com.avatarduel.model.Card;
 
 public class GameHand {
-    public static final int MAX_CARD_IN_HAND = 10; // TODO: can be changed later
+    // TODO: can be changed later, if at end phase card in hand > MAX -> discard (after draw can be MAX + 1)
+    public static final int MAX_CARD_IN_HAND = 10;
     /**
      * List card in hand
      */

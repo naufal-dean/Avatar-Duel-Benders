@@ -1,8 +1,9 @@
 package com.avatarduel.gamephase;
 
+import com.avatarduel.controller.MainController;
 import com.avatarduel.gameutils.GameStatus;
 
-public class EndPhase {
+public class EndPhase implements GamePhase {
     /**
      * Class singleton instance
      */
@@ -25,11 +26,25 @@ public class EndPhase {
 
     /**
      * Start end phase
+     * @param mainController The MainController for the UI
      */
-    public void startEndPhase() {
+    @Override
+    public void startPhase(MainController mainController) {
         // Update game status
         GameStatus.getGameStatus().nextTurn();
         // Reset land placed counter
         MainPhase.getMainPhase().resetLandPlacedCounter();
+        // Flip card in both hand
+        mainController.getHandBottomController().flipCardInHand();
+        mainController.getHandTopController().flipCardInHand();
+    }
+
+    /**
+     * End end phase
+     * @param mainController The MainController for the UI
+     */
+    @Override
+    public void endPhase(MainController mainController) {
+        DrawPhase.getDrawPhase().startPhase(mainController);
     }
 }

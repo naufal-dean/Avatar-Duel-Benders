@@ -137,8 +137,8 @@ public class MainController implements Initializable {
         } catch (IOException e) {
             System.out.println("Error occured: " + e);
         }
-        // Flip hand top display
-        handTopController.flipHandDisplay();
+        // Rotate hand top display
+        handTopController.rotateHandDisplay();
         // Assign hand controller
         this.handBottomController = handBottomController;
         this.handTopController = handTopController;

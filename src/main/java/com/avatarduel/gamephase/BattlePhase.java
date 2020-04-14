@@ -1,6 +1,8 @@
 package com.avatarduel.gamephase;
 
-public class BattlePhase {
+import com.avatarduel.controller.MainController;
+
+public class BattlePhase implements GamePhase {
     /**
      * Class singleton instance
      */
@@ -24,8 +26,19 @@ public class BattlePhase {
 
     /**
      * Start battle phase
+     * @param mainController The MainController for the UI
      */
-    public void startBattlePhase() {
+    @Override
+    public void startPhase(MainController mainController) {
         // TODO: implement
+    }
+
+    /**
+     * End battle phase
+     * @param mainController The MainController for the UI
+     */
+    @Override
+    public void endPhase(MainController mainController) {
+        EndPhase.getEndPhase().startPhase(mainController);
     }
 }

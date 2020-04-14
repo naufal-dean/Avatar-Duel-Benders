@@ -53,7 +53,7 @@ public class GamePower {
      * @param value Subtract value
      */
     public void subCurrPower(Element element, int value) {
-        assert this.currPowerList.get(element) - value >= 0; // TODO: remove debug
+        assert this.currPowerList.get(element) - value >= 0; // TODO: remove assertion debug
         this.currPowerList.put(element, this.currPowerList.get(element) - value);
     }
 

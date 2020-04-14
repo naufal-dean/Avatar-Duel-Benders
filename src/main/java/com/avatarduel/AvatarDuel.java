@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import com.avatarduel.controller.*;
+import com.avatarduel.gamephase.DrawPhase;
 import com.avatarduel.gameutils.GameDeck;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
@@ -25,8 +26,10 @@ public class AvatarDuel extends Application {
   private static final String LAND_CSV_FILE_PATH = "card/data/land.csv";
   private static final String CHARACTER_CSV_FILE_PATH = "card/data/character.csv";
   private static final String SKILL_AURA_CSV_FILE_PATH = "card/data/skill_aura.csv";
+  private static final int INITIAL_CARD_IN_HAND = 7;
   private List<Card> cardList;
 
+  // TODO: remove loadCards as it is not used
   /**
    * Function to load card from csv
    * @throws IOException
@@ -65,44 +68,57 @@ public class AvatarDuel extends Application {
 
   /**
    * Render game
-   * @param gameStatus The Game Status
    # @param stage The Stage
    * @throws Exception When exception occurs render error page
    */
-  void renderGame(Stage stage, GameStatus gameStatus) throws Exception {
-    GameDeck deck = gameStatus.getOurDeck();
-    // Load main UI
-    Parent root = new Parent() {};
+  void renderGame(Stage stage) throws Exception {
     try {
-      // Load
+      // Load main UI
       FXMLLoader loader = new FXMLLoader();
       MainController mainController = new MainController();
       loader.setLocation(getClass().getResource("view/Main.fxml"));
       loader.setController(mainController);
-      root = loader.load();
-      // Get field controller
-      FieldController fieldController = mainController.getFieldController();
-      Card card;
-      for (int i = 0; i < 6; i++)
-        for (int j = 0; j < 4; j++)
-          if (!(card = deck.draw()).getCardType().equals(CardType.LAND))
-            fieldController.setCardOnField(card, (j > 1) ? (Player.BOTTOM) : (Player.TOP), ((i + j) % 2 == 0) ? (true) : (false), i, j);
-      // Get hand controller
-      HandController handBottomController = mainController.getHandBottomController();
-      HandController handTopController = mainController.getHandTopController();
-      for (int i = 0; i < 2; i++)
-        handBottomController.addCardOnHand(deck.draw(), Player.BOTTOM);
-      for (int i = 0; i < 11; i++)
-        handTopController.addCardOnHand(deck.draw(), Player.TOP);
+      Parent root = loader.load();
+      // Load game
+      loadGame(mainController);
+      // Present game
+      Scene scene = new Scene(root, 1550, 800);
+      stage.setTitle("Avatar Duel");
+      stage.setScene(scene);
+      stage.show();
+      // TODO: stage.setFullScreen(true);
+      // Start the game logic
+      startGame(mainController);
     } catch (Exception e) {
       System.out.println(e);
     }
-    // Present
-    Scene scene = new Scene(root, 1550, 800);
-    stage.setTitle("Avatar Duel");
-    stage.setScene(scene);
-    stage.show();
-//    stage.setFullScreen(true);
+  }
+
+  /**
+   * Main game setup procedure
+   * @param mainController The MainController for the UI
+   * @throws Exception From fieldController.setCardOnField
+   */
+  void loadGame(MainController mainController) throws Exception {
+    // Get game deck
+    GameDeck deckBottom = GameStatus.getGameStatus().getGameDeck().get(Player.BOTTOM);
+    GameDeck deckTop = GameStatus.getGameStatus().getGameDeck().get(Player.TOP);
+    // Load hand
+    HandController handBottomController = mainController.getHandBottomController();
+    HandController handTopController = mainController.getHandTopController();
+    for (int i = 0; i < INITIAL_CARD_IN_HAND; i++)
+      handBottomController.addCardOnHand(deckBottom.draw(), Player.BOTTOM);
+    for (int i = 0; i < INITIAL_CARD_IN_HAND; i++)
+      handTopController.addCardOnHand(deckBottom.draw(), Player.TOP);
+    handTopController.flipCardInHand();
+  }
+
+  /**
+   * Main game logic procedure
+   */
+  void startGame(MainController mainController) {
+    // Start draw phase as entry point in game loop
+    DrawPhase.getDrawPhase().startPhase(mainController);
   }
 
   /**
@@ -143,8 +159,7 @@ public class AvatarDuel extends Application {
     // Initialize Game Status
     try {
       GameStatus.initGameStatus();
-      GameStatus gameStatus = GameStatus.getGameStatus();
-      renderGame(stage, gameStatus);
+      renderGame(stage);
     } catch (Exception err) {
       renderError(stage, err.toString());
     }
