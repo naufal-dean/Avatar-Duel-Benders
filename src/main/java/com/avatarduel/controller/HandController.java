@@ -8,24 +8,19 @@ import java.util.ResourceBundle;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 import com.avatarduel.AvatarDuel;
-import com.avatarduel.gamephase.Phase;
-import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
+import javafx.scene.paint.Color;
 
 public class HandController implements Initializable {
     /**
@@ -91,6 +86,13 @@ public class HandController implements Initializable {
     }
 
     /**
+     * Remove active hand card
+     */
+    public void removeActiveHandCard() {
+        this.activeHandCard = null;
+    }
+
+    /**
      * Add card to player hands
      * @param card The card to be displayed
      * @param owner The owner of the card
@@ -129,12 +131,6 @@ public class HandController implements Initializable {
         root.scaleYProperty().bind(scale);
         root.setPrefWidth(root.getPrefWidth() * scale.doubleValue());
         root.setPrefHeight(root.getPrefHeight() * scale.doubleValue());
-        // Add event handler to hand card
-        cardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-            if (e.getButton() == MouseButton.PRIMARY && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                this.setActiveCard(cardController);
-            }
-        });
         // Set root as hand children node
         this.hand.getChildren().add(root);
         // Add controller to cardControllerList

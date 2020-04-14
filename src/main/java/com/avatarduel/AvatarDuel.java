@@ -33,10 +33,6 @@ public class AvatarDuel extends Application {
   private static final String SKILL_AURA_CSV_FILE_PATH = "card/data/skill_aura.csv";
   private static final int INITIAL_CARD_IN_HAND = 7;
   private List<Card> cardList;
-  /**
-   * Shadow effect
-   */
-  DropShadow hoverShadow;
 
   // TODO: remove loadCards as it is not used
   /**
@@ -118,38 +114,8 @@ public class AvatarDuel extends Application {
     for (int i = 0; i < INITIAL_CARD_IN_HAND; i++)
       handBottomController.addCardOnHand(deckBottom.draw(), Player.BOTTOM);
     for (int i = 0; i < INITIAL_CARD_IN_HAND; i++)
-      handTopController.addCardOnHand(deckBottom.draw(), Player.TOP);
+      handTopController.addCardOnHand(deckTop.draw(), Player.TOP);
     handTopController.flipCardInHand();
-
-    // Setup hover glow effect
-    this.hoverShadow = new DropShadow();
-    this.hoverShadow.setColor(Color.RED);
-    this.hoverShadow.setWidth(70);
-    this.hoverShadow.setHeight(70);
-    // Add hover handler to hand card
-    setupHoverInCardHand(handBottomController);
-    setupHoverInCardHand(handTopController);
-  }
-
-  /**
-   * Setup hover property in initial card hand
-   * @param handController The HandController
-   */
-  public void setupHoverInCardHand(HandController handController) {
-    for (HandCardController handCardController : handController.getCardControllerList()) {
-      handCardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-        if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-          handCardController.getCardAncPane().setEffect(hoverShadow);
-          // TODO: Add show card detail
-        }
-      });
-      handCardController.getCardAncPane().onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-        if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-          if (handCardController != handController.getActiveHandCard())
-            handCardController.getCardAncPane().setEffect(null);
-        }
-      });
-    }
   }
 
   /**

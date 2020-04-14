@@ -18,6 +18,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
 
@@ -38,6 +39,10 @@ public class FieldController implements Initializable {
      */
     private List<List<CardController>> cardControllerList;
     /**
+     * Empty cell object list
+     */
+    private List<List<Pane>> emptyCellObjectList;
+    /**
      * Field grid
      */
     @FXML private GridPane field;
@@ -50,9 +55,12 @@ public class FieldController implements Initializable {
      * Constructor
      */
     public FieldController() {
-        cardControllerList = new ArrayList<>();
+        this.cardControllerList = new ArrayList<>();
         for (int i = 0; i < 6; i++)
-            cardControllerList.add(Arrays.asList(null, null, null, null));
+            this.cardControllerList.add(Arrays.asList(null, null, null, null));
+        this.emptyCellObjectList = new ArrayList<>();;
+        for (int i = 0; i < 6; i++)
+            this.emptyCellObjectList.add(Arrays.asList(null, null, null, null));
     }
 
     /**
@@ -63,6 +71,16 @@ public class FieldController implements Initializable {
      */
     public CardController getCardController(int x, int y) {
         return this.cardControllerList.get(x).get(y);
+    }
+
+    /**
+     * Getter for empty cell object
+     * @param x The grid column index
+     * @param y The grid row index
+     * @return Empty cell object in coordinate (x, y)
+     */
+    public Pane getEmptyCell(int x, int y) {
+        return this.emptyCellObjectList.get(x).get(y);
     }
 
     /**
@@ -137,5 +155,14 @@ public class FieldController implements Initializable {
     public void initialize(URL url, ResourceBundle resources) {
         this.fieldGrid.setImage(new Image(AvatarDuel.class.getResource("background/field_grid.png").toString()));
         this.field.setAlignment(Pos.CENTER);
+        // Fill empty cell with pane
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 6; x++) {
+                Pane emptyCell = new Pane();
+                emptyCell.setStyle("-fx-border-color: black");
+                this.field.add(emptyCell, x, y);
+                this.emptyCellObjectList.get(x).set(y, emptyCell);
+            }
+        }
     }
 }
