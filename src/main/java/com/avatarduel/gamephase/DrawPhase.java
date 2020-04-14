@@ -84,11 +84,6 @@ public class DrawPhase implements GamePhase {
      */
     @Override
     public void endPhase(MainController mainController) {
-        // Clear glow effect from hand card if any
-        Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
-        HandController handController = mainController.getHandControllerMap().get(activePlayer);
-        for (HandCardController handCardController : handController.getCardControllerList())
-            handCardController.getCardAncPane().setEffect(null);
         // Proceed to main phase
         MainPhase.getMainPhase().startPhase(mainController);
     }

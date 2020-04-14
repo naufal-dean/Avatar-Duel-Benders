@@ -2,9 +2,7 @@ package com.avatarduel.gamephase;
 
 import java.io.IOException;
 
-import com.avatarduel.controller.FieldController;
-import com.avatarduel.controller.MainController;
-import com.avatarduel.controller.PowerController;
+import com.avatarduel.controller.*;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
 import com.avatarduel.model.Character;
@@ -54,7 +52,14 @@ public class MainPhase implements GamePhase {
      */
     @Override
     public void endPhase(MainController mainController) {
+        // Clear glow effect from hand card if any
+        Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
+        HandController handController = mainController.getHandControllerMap().get(activePlayer);
+        for (HandCardController handCardController : handController.getCardControllerList())
+            handCardController.getCardAncPane().setEffect(null);
+        // Proceed to battle phase
         BattlePhase.getBattlePhase().endPhase(mainController);
+
     }
 
     /**
