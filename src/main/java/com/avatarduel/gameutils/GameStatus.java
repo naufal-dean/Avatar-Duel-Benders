@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 
 import com.avatarduel.exception.GameStatusInitializationFailed;
+import com.avatarduel.gamephase.Phase;
 import com.avatarduel.model.Player;
 
 public class GameStatus {
@@ -13,9 +14,13 @@ public class GameStatus {
      */
     private static GameStatus gameStatus;
     /**
-     * Player turn
+     * Active player
      */
     private Player gameActivePlayer;
+    /**
+     * Game phase now
+     */
+    private Phase gamePhase;
     /**
      * Player health
      */
@@ -37,8 +42,10 @@ public class GameStatus {
      * Constructor
      */
     private GameStatus() throws IOException, URISyntaxException {
-        // Initialize player turn
+        // Initialize active player
         this.gameActivePlayer = Player.BOTTOM;
+        // Initialize game phase
+        this.gamePhase = Phase.DRAW;
         // Initialize game health
         this.gameHealth = new HashMap<>();
         this.gameHealth.put(Player.BOTTOM, 80);
@@ -82,6 +89,14 @@ public class GameStatus {
      */
     public Player getGameActivePlayer() {
         return this.gameActivePlayer;
+    }
+
+    /**
+     * Getter for gamePhase
+     * @return this.gamePhase
+     */
+    public Phase getGamePhase() {
+        return this.gamePhase;
     }
 
     /**

@@ -28,14 +28,6 @@ public class SummonedCardController extends CardController {
     }
 
     /**
-     * Remove card from field
-     * @param fieldController The FieldController
-     */
-    public void removeCardFromField(FieldController fieldController) {
-        fieldController.removeCardOnField(this.x, this.y);
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override

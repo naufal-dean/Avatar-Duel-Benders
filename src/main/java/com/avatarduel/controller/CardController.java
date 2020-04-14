@@ -81,6 +81,14 @@ public class CardController implements Initializable {
     }
 
     /**
+     * Getter for card anchor pane
+     * @return this.cardAncPane
+     */
+    public AnchorPane getCardAncPane() {
+        return this.cardAncPane;
+    }
+
+    /**
      * Update FXML using current this.card
      */
     public void init() {

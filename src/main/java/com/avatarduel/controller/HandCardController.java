@@ -6,10 +6,7 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
 import com.avatarduel.model.Card;
@@ -21,10 +18,6 @@ public class HandCardController extends CardController implements Flippable {
      * Card owner
      */
     protected Player owner;
-    /**
-     * Card column in hand
-     */
-    private int col;
     /**
      * Is card down
      */
@@ -42,22 +35,13 @@ public class HandCardController extends CardController implements Flippable {
      * Constructor
      * @param card The Card
      * @param owner The owner of the card
-     * @param col Card column in hand
+     * @param cardBackController The card back controller pair
      */
-    public HandCardController(Card card, Player owner, int col, CardBackController cardBackController) {
+    public HandCardController(Card card, Player owner, CardBackController cardBackController) {
         super(card);
         this.owner = owner;
-        this.col = col;
         this.isDown = false;
         this.cardBackController = cardBackController;
-    }
-
-    /**
-     * Remove card from hand
-     * @param handController The HandController
-     */
-    public void removeCardFromHand(HandController handController) {
-        handController.removeCardOnHand(this.col);
     }
 
     /**
@@ -96,12 +80,6 @@ public class HandCardController extends CardController implements Flippable {
     @Override
     public void initialize(URL url, ResourceBundle resources) {
         super.initialize(url, resources);
-        // TODO: this handler is for debugging, remove after use
-        this.cardAncPane.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-            if (e.getButton() == MouseButton.PRIMARY) {
-                this.flipCard();
-            }
-        });
         // Flip animation
         // Set rotation axis
         this.cardAncPane.setRotationAxis(new Point3D(0, 1, 0));

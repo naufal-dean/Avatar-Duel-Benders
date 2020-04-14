@@ -14,13 +14,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import com.avatarduel.AvatarDuel;
+import com.avatarduel.gamephase.Phase;
+import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
 
 public class HandController implements Initializable {
@@ -32,6 +36,14 @@ public class HandController implements Initializable {
      * Card back controller list
      */
     private List<CardBackController> cardBackControllerList;
+    /**
+     * Active card in hand
+     */
+    private HandCardController activeHandCard;
+    /**
+     * Shadow effect
+     */
+    private DropShadow activeShadow;
     /**
      * Display card in hand
      */
@@ -55,6 +67,27 @@ public class HandController implements Initializable {
     public HandController() {
         this.cardControllerList = new ArrayList<>();
         this.cardBackControllerList = new ArrayList<>();
+        // Setup selected shadow effect
+        this.activeShadow = new DropShadow();
+        this.activeShadow.setColor(Color.RED);
+        this.activeShadow.setWidth(70);
+        this.activeShadow.setHeight(70);
+    }
+
+    /**
+     * Get card controller list
+     * @return this.cardControllerList
+     */
+    public List<HandCardController> getCardControllerList() {
+        return this.cardControllerList;
+    }
+
+    /**
+     * Getter for active hand card
+     * @return this.activeHandCard
+     */
+    public HandCardController getActiveHandCard() {
+        return this.activeHandCard;
     }
 
     /**
@@ -86,7 +119,7 @@ public class HandController implements Initializable {
         // Add card
         // Create loader
         FXMLLoader loader = new FXMLLoader();
-        HandCardController cardController = new HandCardController(card, owner, this.cardControllerList.size(), cardBackController);
+        HandCardController cardController = new HandCardController(card, owner, cardBackController);
         loader.setController(cardController);
         loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
         // Create root
@@ -96,6 +129,12 @@ public class HandController implements Initializable {
         root.scaleYProperty().bind(scale);
         root.setPrefWidth(root.getPrefWidth() * scale.doubleValue());
         root.setPrefHeight(root.getPrefHeight() * scale.doubleValue());
+        // Add event handler to hand card
+        cardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+            if (e.getButton() == MouseButton.PRIMARY && GameStatus.getGameStatus().getGamePhase() == Phase.DRAW) {
+                this.setActiveCard(cardController);
+            }
+        });
         // Set root as hand children node
         this.hand.getChildren().add(root);
         // Add controller to cardControllerList
@@ -104,17 +143,20 @@ public class HandController implements Initializable {
 
     /**
      * Remove card on the cell x, y in field
-     * @param col The HBox column index
+     * @param cardController The card controller to be deleted
      */
-    public void removeCardOnHand(int col) {
+    public void removeCardOnHand(CardController cardController) {
+        int idx = this.cardControllerList.indexOf(cardController);
+        // TODO: remove assertion
+        assert this.cardControllerList.indexOf(cardController) == this.cardControllerList.lastIndexOf(cardController);
         // Remove card
-        Node node = this.hand.getChildren().get(col);
+        Node node = this.hand.getChildren().get(idx);
         this.hand.getChildren().remove((StackPane) node);
-        this.cardControllerList.remove(col);
+        this.cardControllerList.remove(idx);
         // Remove card back
-        Node nodeBack = this.handBack.getChildren().get(col);
+        Node nodeBack = this.handBack.getChildren().get(idx);
         this.handBack.getChildren().remove((StackPane) nodeBack);
-        this.cardBackControllerList.remove(col);
+        this.cardBackControllerList.remove(idx);
     }
 
     /**
@@ -133,6 +175,24 @@ public class HandController implements Initializable {
     }
 
     /**
+     * Set active card on hand
+     * @param handCardController The HandCard selected
+     */
+    public void setActiveCard(HandCardController handCardController) {
+        // Remove old effect if any
+        if (this.activeHandCard != null)
+            this.activeHandCard.getCardAncPane().setEffect(null);
+        // Check input
+        if (this.activeHandCard == handCardController) { // Remove active card
+            this.activeHandCard = null;
+            handCardController.getCardAncPane().setEffect(null);
+        } else { // Add active card
+            this.activeHandCard = handCardController;
+            handCardController.getCardAncPane().setEffect(this.activeShadow);
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override @FXML
@@ -140,11 +200,5 @@ public class HandController implements Initializable {
         this.handField.setAlignment(Pos.CENTER);
         this.hand.setAlignment(Pos.CENTER);
         this.handBack.setAlignment(Pos.CENTER);
-        // TODO: this handler is for debugging, remove after use
-        this.handField.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-            if (e.getButton() == MouseButton.PRIMARY) {
-                this.flipCardInHand();
-            }
-        });
     }
 }
