@@ -138,13 +138,13 @@ public class AvatarDuel extends Application {
   public void setupHoverInCardHand(HandController handController) {
     for (HandCardController handCardController : handController.getCardControllerList()) {
       handCardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-        if (GameStatus.getGameStatus().getGamePhase() == Phase.DRAW) {
+        if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
           handCardController.getCardAncPane().setEffect(hoverShadow);
           // TODO: Add show card detail
         }
       });
       handCardController.getCardAncPane().onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-        if (GameStatus.getGameStatus().getGamePhase() == Phase.DRAW) {
+        if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
           if (handCardController != handController.getActiveHandCard())
             handCardController.getCardAncPane().setEffect(null);
         }

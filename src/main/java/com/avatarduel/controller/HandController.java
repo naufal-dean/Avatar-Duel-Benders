@@ -131,7 +131,7 @@ public class HandController implements Initializable {
         root.setPrefHeight(root.getPrefHeight() * scale.doubleValue());
         // Add event handler to hand card
         cardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-            if (e.getButton() == MouseButton.PRIMARY && GameStatus.getGameStatus().getGamePhase() == Phase.DRAW) {
+            if (e.getButton() == MouseButton.PRIMARY && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                 this.setActiveCard(cardController);
             }
         });

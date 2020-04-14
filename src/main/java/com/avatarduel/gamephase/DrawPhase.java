@@ -48,7 +48,6 @@ public class DrawPhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
-        // TODO: implement
         // Add card to hand
         GameDeck deck = GameStatus.getGameStatus().getOurDeck();
         Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
@@ -62,13 +61,13 @@ public class DrawPhase implements GamePhase {
         HandCardController handCardController = handController.getCardControllerList().get(
                                                                     handController.getCardControllerList().size() - 1);
         handCardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-            if (GameStatus.getGameStatus().getGamePhase() == Phase.DRAW) {
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                 handCardController.getCardAncPane().setEffect(hoverShadow);
                 // TODO: Add show card detail
             }
         });
         handCardController.getCardAncPane().onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-            if (GameStatus.getGameStatus().getGamePhase() == Phase.DRAW) {
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                 if (handCardController != handController.getActiveHandCard())
                     handCardController.getCardAncPane().setEffect(null);
             }
