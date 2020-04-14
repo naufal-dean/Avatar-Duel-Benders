@@ -1,7 +1,11 @@
 package com.avatarduel.gamephase;
 
 import com.avatarduel.controller.MainController;
+import com.avatarduel.gameutils.GameDeck;
 import com.avatarduel.gameutils.GameStatus;
+import com.avatarduel.model.Player;
+
+import java.util.concurrent.TimeUnit;
 
 public class DrawPhase implements GamePhase {
     /**
@@ -31,7 +35,7 @@ public class DrawPhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
-        GameStatus.getGameStatus().getGameActivePlayer();
+        // TODO: implement
     }
 
     /**

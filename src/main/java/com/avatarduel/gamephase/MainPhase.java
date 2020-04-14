@@ -42,8 +42,8 @@ public class MainPhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
+        this.landCardPlaced = 0;
         // TODO: implement
-        //
     }
 
     /**
@@ -53,13 +53,6 @@ public class MainPhase implements GamePhase {
     @Override
     public void endPhase(MainController mainController) {
         BattlePhase.getBattlePhase().endPhase(mainController);
-    }
-
-    /**
-     * Reset land placed counter
-     */
-    public void resetLandPlacedCounter() {
-        this.landCardPlaced = 0;
     }
 
     /**

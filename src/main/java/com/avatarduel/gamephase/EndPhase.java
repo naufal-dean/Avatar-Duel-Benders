@@ -2,6 +2,7 @@ package com.avatarduel.gamephase;
 
 import com.avatarduel.controller.MainController;
 import com.avatarduel.gameutils.GameStatus;
+import com.avatarduel.model.Player;
 
 public class EndPhase implements GamePhase {
     /**
@@ -32,11 +33,9 @@ public class EndPhase implements GamePhase {
     public void startPhase(MainController mainController) {
         // Update game status
         GameStatus.getGameStatus().nextTurn();
-        // Reset land placed counter
-        MainPhase.getMainPhase().resetLandPlacedCounter();
         // Flip card in both hand
-        mainController.getHandBottomController().flipCardInHand();
-        mainController.getHandTopController().flipCardInHand();
+        mainController.getHandControllerMap().get(Player.BOTTOM).flipCardInHand();
+        mainController.getHandControllerMap().get(Player.TOP).flipCardInHand();
     }
 
     /**

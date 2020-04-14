@@ -2,6 +2,7 @@ package com.avatarduel.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import com.avatarduel.AvatarDuel;
+import com.avatarduel.model.Player;
 
 public class MainController implements Initializable {
     /**
@@ -23,7 +25,7 @@ public class MainController implements Initializable {
     /**
      * Hand controller
      */
-    private HandController handBottomController, handTopController;
+    private HashMap<Player, HandController> handControllerMap;
     /**
      * Card detail display
      */
@@ -64,7 +66,9 @@ public class MainController implements Initializable {
     /**
      * Constructor
      */
-    public MainController() {}
+    public MainController() {
+        this.handControllerMap = new HashMap<>();
+    }
 
     /**
      * Getter for fieldController
@@ -75,19 +79,11 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Getter for handBottomController
-     * @return this.handBottomController
+     * Getter for handControllerMap
+     * @return this.handControllerMap
      */
-    public HandController getHandBottomController() {
-        return this.handBottomController;
-    }
-
-    /**
-     * Getter for handTopController
-     * @return this.handTopController
-     */
-    public HandController getHandTopController() {
-        return this.handTopController;
+    public HashMap<Player, HandController> getHandControllerMap() {
+        return this.handControllerMap;
     }
 
     /**
@@ -140,8 +136,8 @@ public class MainController implements Initializable {
         // Rotate hand top display
         handTopController.rotateHandDisplay();
         // Assign hand controller
-        this.handBottomController = handBottomController;
-        this.handTopController = handTopController;
+        this.handControllerMap.put(Player.BOTTOM, handBottomController);
+        this.handControllerMap.put(Player.TOP, handTopController);
     }
 
     /**

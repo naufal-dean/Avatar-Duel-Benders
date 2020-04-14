@@ -104,8 +104,8 @@ public class AvatarDuel extends Application {
     GameDeck deckBottom = GameStatus.getGameStatus().getGameDeck().get(Player.BOTTOM);
     GameDeck deckTop = GameStatus.getGameStatus().getGameDeck().get(Player.TOP);
     // Load hand
-    HandController handBottomController = mainController.getHandBottomController();
-    HandController handTopController = mainController.getHandTopController();
+    HandController handBottomController = mainController.getHandControllerMap().get(Player.BOTTOM);
+    HandController handTopController = mainController.getHandControllerMap().get(Player.TOP);
     for (int i = 0; i < INITIAL_CARD_IN_HAND; i++)
       handBottomController.addCardOnHand(deckBottom.draw(), Player.BOTTOM);
     for (int i = 0; i < INITIAL_CARD_IN_HAND; i++)
