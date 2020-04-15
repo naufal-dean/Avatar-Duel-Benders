@@ -45,6 +45,14 @@ public class HandCardController extends CardController implements Flippable {
     }
 
     /**
+     * Getter for the owner of the hand card
+     * @return this.owner
+     */
+    public Player getOwner() {
+        return this.owner;
+    }
+
+    /**
      * Flip the card display
      */
     public void flipCard() {

@@ -7,8 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,18 +19,21 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 import com.avatarduel.AvatarDuel;
-import com.avatarduel.model.Card;
-import com.avatarduel.model.CardType;
+import com.avatarduel.gamephase.Phase;
+import com.avatarduel.gameutils.GameStatus;
+import com.avatarduel.model.*;
 import com.avatarduel.model.Character;
-import com.avatarduel.model.Player;
-import com.avatarduel.model.SkillAura;
 
 public class FieldController implements Initializable {
     public static final int SKILL_ROW_TOP = 0;
@@ -39,9 +45,21 @@ public class FieldController implements Initializable {
      */
     private List<List<CardController>> cardControllerList;
     /**
-     * Empty cell object list
+     * Cell active handler property list
      */
-    private List<List<Pane>> emptyCellObjectList;
+    private List<List<BooleanProperty>> activeHandler;
+    /**
+     * Shadow effect
+     */
+    private DropShadow cellAvailableShadow, cellHoverShadow;
+    /**
+     * Card that waiting to be summoned
+     */
+    private HandCardController waitingHandCard;
+    /**
+     * Card summoned property
+     */
+    private BooleanProperty cardSummoned;
     /**
      * Field grid
      */
@@ -58,9 +76,24 @@ public class FieldController implements Initializable {
         this.cardControllerList = new ArrayList<>();
         for (int i = 0; i < 6; i++)
             this.cardControllerList.add(Arrays.asList(null, null, null, null));
-        this.emptyCellObjectList = new ArrayList<>();;
+        this.activeHandler = new ArrayList<>();;
         for (int i = 0; i < 6; i++)
-            this.emptyCellObjectList.add(Arrays.asList(null, null, null, null));
+            this.activeHandler.add(Arrays.asList(new SimpleBooleanProperty(false), new SimpleBooleanProperty(false),
+                                                 new SimpleBooleanProperty(false), new SimpleBooleanProperty(false)));
+
+        this.cardSummoned = new SimpleBooleanProperty(false);
+        // Cell available shadow
+        this.cellAvailableShadow = new DropShadow();
+        this.cellAvailableShadow.setColor(Color.YELLOW);
+        this.cellAvailableShadow.setWidth(50);
+        this.cellAvailableShadow.setHeight(50);
+        this.cellAvailableShadow.setSpread(0.9);
+        // Cell hover shadow
+        this.cellHoverShadow = new DropShadow();
+        this.cellHoverShadow.setColor(Color.RED);
+        this.cellHoverShadow.setWidth(50);
+        this.cellHoverShadow.setHeight(50);
+        this.cellHoverShadow.setSpread(0.9);
     }
 
     /**
@@ -74,13 +107,40 @@ public class FieldController implements Initializable {
     }
 
     /**
-     * Getter for empty cell object
-     * @param x The grid column index
-     * @param y The grid row index
-     * @return Empty cell object in coordinate (x, y)
+     * Getter for cardSummoned property
+     * @return this.cardSummoned
      */
-    public Pane getEmptyCell(int x, int y) {
-        return this.emptyCellObjectList.get(x).get(y);
+    public BooleanProperty getCardSummonedProperty() {
+        return this.cardSummoned;
+    }
+
+    /**
+     * Getter for waiting hand card
+     * @return
+     */
+    public HandCardController getWaitingHandCard() {
+        return this.waitingHandCard;
+    }
+
+    /**
+     * Setter for waiting hand card
+     * @param waitingHandCard The new waiting hand card (Only CHARACTER and SKILL AURA)
+     */
+    public void setWaitingHandCard(HandCardController waitingHandCard) {
+        this.waitingHandCard = waitingHandCard;
+        this.clearFieldEventHandler();
+
+        // Set target row
+        int row;
+        if (waitingHandCard.getOwner() == Player.BOTTOM) {
+            row = (waitingHandCard.getCard().getCardType() == CardType.CHARACTER) ? (CHAR_ROW_BOT) : (SKILL_ROW_BOT);
+        } else {
+            row = (waitingHandCard.getCard().getCardType() == CardType.CHARACTER) ? (CHAR_ROW_TOP) : (SKILL_ROW_TOP);
+        }
+        for (int col = 0; col < 6; col++) {
+            if (this.cardControllerList.get(col).get(row) == null)
+                this.activateFieldEventHandler(col, row);
+        }
     }
 
     /**
@@ -149,6 +209,35 @@ public class FieldController implements Initializable {
     }
 
     /**
+     * Activate event handler on cell (x, y)
+     * @param x The row coordinate
+     * @param y The column coordinate
+     */
+    public void activateFieldEventHandler(int x, int y) {
+        this.activeHandler.get(x).get(y).setValue(true);
+    }
+
+    /**
+     * Deactivate event handler on cell (x, y)
+     * @param x The row coordinate
+     * @param y The column coordinate
+     */
+    public void deactivateFieldEventHandler(int x, int y) {
+        this.activeHandler.get(x).get(y).setValue(false);
+    }
+
+    /**
+     * Deactivate event handler on entire field
+     */
+    public void clearFieldEventHandler() {
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 6; x++) {
+                this.activeHandler.get(x).get(y).setValue(false);
+            }
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override @FXML
@@ -160,8 +249,62 @@ public class FieldController implements Initializable {
             for (int x = 0; x < 6; x++) {
                 Pane emptyCell = new Pane();
                 emptyCell.setStyle("-fx-border-color: black");
+
+                // Add event handler
+                int row = y, col = x;
+                // On mouse clicked handler
+                emptyCell.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+                    if (this.activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                        CardType cardType = waitingHandCard.getCard().getCardType();
+                        try {
+                            if (cardType == CardType.CHARACTER) {
+                                if (e.getButton() == MouseButton.PRIMARY) {
+                                    setCardOnField(waitingHandCard.getCard(), waitingHandCard.getOwner(), true, col, row);
+                                } else if (e.getButton() == MouseButton.SECONDARY) {
+                                    setCardOnField(waitingHandCard.getCard(), waitingHandCard.getOwner(), false, col, row);
+                                }
+                            } else if (cardType == CardType.SKILL) {
+                                if (e.getButton() == MouseButton.PRIMARY)
+                                    setCardOnField(waitingHandCard.getCard(), waitingHandCard.getOwner(), true, col, row);
+                            }
+                            // Send card summoned signal
+                            cardSummoned.setValue(true);
+                            // Put back to default state
+                            cardSummoned.setValue(false);
+                        } catch (IOException err) {
+                            System.out.println(err.toString());
+                        }
+                        clearFieldEventHandler();
+                    }
+                });
+                // On mouse entered handler
+                emptyCell.onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+                    if (this.activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                        emptyCell.setEffect(this.cellHoverShadow);
+                        // TODO: Add show card detail
+                    }
+                });
+                // On mouse exited handler
+                emptyCell.onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+                    if (this.activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                        emptyCell.setEffect(this.cellAvailableShadow);
+                    }
+                });
+
+                // Add event listener
+                this.activeHandler.get(col).get(row).addListener((observable, oldValue, newValue) -> {
+                    if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                        // Field effect
+                        if (oldValue == false && newValue == true) {
+                            emptyCell.setEffect(this.cellAvailableShadow);
+                        } else {
+                            emptyCell.setEffect(null);
+                        }
+                    }
+                });
+
+                // Add emptyCell object to field
                 this.field.add(emptyCell, x, y);
-                this.emptyCellObjectList.get(x).set(y, emptyCell);
             }
         }
     }

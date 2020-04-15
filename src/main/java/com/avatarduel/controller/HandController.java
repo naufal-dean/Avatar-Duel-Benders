@@ -6,21 +6,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import com.avatarduel.AvatarDuel;
+import com.avatarduel.gamephase.Phase;
+import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
-import javafx.scene.paint.Color;
 
 public class HandController implements Initializable {
     /**
@@ -35,6 +42,10 @@ public class HandController implements Initializable {
      * Active card in hand
      */
     private HandCardController activeHandCard;
+    /**
+     * Active card in hand set property
+     */
+    private BooleanProperty activeHandCardSet;
     /**
      * Shadow effect
      */
@@ -62,6 +73,7 @@ public class HandController implements Initializable {
     public HandController() {
         this.cardControllerList = new ArrayList<>();
         this.cardBackControllerList = new ArrayList<>();
+        this.activeHandCardSet = new SimpleBooleanProperty(false);
         // Setup selected shadow effect
         this.activeShadow = new DropShadow();
         this.activeShadow.setColor(Color.RED);
@@ -86,10 +98,11 @@ public class HandController implements Initializable {
     }
 
     /**
-     * Remove active hand card
+     * Getter for activeHandCardSet property
+     * @return this.activeHandCardSet
      */
-    public void removeActiveHandCard() {
-        this.activeHandCard = null;
+    public BooleanProperty getActiveHandCardSetProperty() {
+        return this.activeHandCardSet;
     }
 
     /**
@@ -131,6 +144,26 @@ public class HandController implements Initializable {
         root.scaleYProperty().bind(scale);
         root.setPrefWidth(root.getPrefWidth() * scale.doubleValue());
         root.setPrefHeight(root.getPrefHeight() * scale.doubleValue());
+        // Add event handler
+        // On mouse clicked handler
+        cardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+            if (e.getButton() == MouseButton.PRIMARY && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN)
+                onHandCardClickedHandler(cardController); // Set active hand card
+        });
+        // On mouse entered handler
+        cardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                cardController.getCardAncPane().setEffect(this.activeShadow);
+                // TODO: set card detail
+            }
+        });
+        // On mouse exited handler
+        cardController.getCardAncPane().onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                if (cardController != activeHandCard)
+                    cardController.getCardAncPane().setEffect(null);
+            }
+        });
         // Set root as hand children node
         this.hand.getChildren().add(root);
         // Add controller to cardControllerList
@@ -156,7 +189,7 @@ public class HandController implements Initializable {
     }
 
     /**
-     * Flip the hand display
+     * Rotate the hand display
      */
     public void rotateHandDisplay() {
         this.handWrapper.setRotate(180);
@@ -171,21 +204,31 @@ public class HandController implements Initializable {
     }
 
     /**
-     * Set active card on hand
+     * On click handler
      * @param handCardController The HandCard selected
      */
-    public void setActiveCard(HandCardController handCardController) {
+    public void onHandCardClickedHandler(HandCardController handCardController) {
         // Remove old effect if any
-        if (this.activeHandCard != null)
+        if (this.activeHandCard != null) {
             this.activeHandCard.getCardAncPane().setEffect(null);
+            this.activeHandCardSet.setValue(false);
+        }
         // Check input
         if (this.activeHandCard == handCardController) { // Remove active card
             this.activeHandCard = null;
-            handCardController.getCardAncPane().setEffect(null);
         } else { // Add active card
             this.activeHandCard = handCardController;
-            handCardController.getCardAncPane().setEffect(this.activeShadow);
+            this.activeHandCard.getCardAncPane().setEffect(this.activeShadow);
+            this.activeHandCardSet.setValue(true);
         }
+    }
+
+    /**
+     * Remove active hand card
+     */
+    public void removeActiveHandCard() {
+        this.activeHandCard = null;
+        this.activeHandCardSet.setValue(false);
     }
 
     /**
