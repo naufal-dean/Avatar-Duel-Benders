@@ -39,6 +39,10 @@ public class HandController implements Initializable {
      */
     private List<CardBackController> cardBackControllerList;
     /**
+     * Card details controller
+     */
+    private CardDetailsController cardDetailsController;
+    /**
      * Active card in hand
      */
     private HandCardController activeHandCard;
@@ -69,11 +73,13 @@ public class HandController implements Initializable {
 
     /**
      * Constructor
+     * @param cardDetailsController The CardDetailsController
      */
-    public HandController() {
+    public HandController(CardDetailsController cardDetailsController) {
         this.cardControllerList = new ArrayList<>();
         this.cardBackControllerList = new ArrayList<>();
         this.activeHandCardSet = new SimpleBooleanProperty(false);
+        this.cardDetailsController = cardDetailsController;
         // Setup selected shadow effect
         this.activeShadow = new DropShadow();
         this.activeShadow.setColor(Color.RED);
@@ -154,7 +160,7 @@ public class HandController implements Initializable {
         cardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                 cardController.getCardAncPane().setEffect(this.activeShadow);
-                // TODO: set card detail
+                cardDetailsController.setCard(cardController.getCard());
             }
         });
         // On mouse exited handler
@@ -162,6 +168,7 @@ public class HandController implements Initializable {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                 if (cardController != activeHandCard)
                     cardController.getCardAncPane().setEffect(null);
+                cardDetailsController.removeCard();
             }
         });
         // Set root as hand children node

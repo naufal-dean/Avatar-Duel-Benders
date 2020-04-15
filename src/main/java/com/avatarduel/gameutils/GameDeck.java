@@ -83,7 +83,7 @@ public class GameDeck {
         CSVReader skillAuraReader = new CSVReader(skillAuraCSVFile, "\t");
         skillAuraReader.setSkipHeader(true);
         List<String[]> skillAuraRows = skillAuraReader.read();
-        for (int i = 0; i <= Math.round(this.capacity/5f); i++) {
+        for (int i = 0; i < Math.round(this.capacity/5f); i++) {
             rand_int = rand.nextInt(skillAuraRows.size());
             String[] row = skillAuraRows.get(rand_int);
             cardList.add(new SkillAura(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4], Integer.valueOf(row[5]), Integer.valueOf(row[6]), Integer.valueOf(row[7])));

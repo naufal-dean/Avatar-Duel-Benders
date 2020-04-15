@@ -1,23 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="mainCardDetails" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="265.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="mainCardDetails" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox fx:id="layoutCardDetails" layoutX="7.0" layoutY="7.0" prefHeight="394.0" prefWidth="256.0">
+      <ImageView fx:id="background" fitHeight="500.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
+      <VBox fx:id="layoutCardDetails" alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="300.0">
          <children>
-            <Pane fx:id="Card" prefHeight="200.0" prefWidth="200.0" />
-            <Pane fx:id="Description" prefHeight="200.0" prefWidth="200.0">
+            <StackPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="345.0" prefWidth="300.0">
                <children>
-                  <TextArea fx:id="DescriptionText" layoutX="-2.0" layoutY="3.0" prefHeight="191.0" prefWidth="256.0">
-                     <font>
-                        <Font size="10.0" />
-                     </font></TextArea>
+                  <StackPane fx:id="card" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="320.1" prefWidth="300.0" />
                </children>
-            </Pane>
+               <padding>
+                  <Insets bottom="10.0" top="15.0" />
+               </padding>
+            </StackPane>
+            <TextArea fx:id="description" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="300.0">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </TextArea>
+            <Label fx:id="stats" alignment="CENTER_RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0">
+               <padding>
+                  <Insets right="10.0" />
+               </padding></Label>
          </children>
       </VBox>
    </children>

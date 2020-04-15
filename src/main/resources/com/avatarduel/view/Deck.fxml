@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -7,23 +12,19 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="291.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:id="deckRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane fx:id="stackofCards" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="200.0">
+      <ImageView fx:id="background" fitHeight="250.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+      <AnchorPane fx:id="deckWrapper" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="130.0" prefWidth="100.0" StackPane.alignment="BOTTOM_LEFT">
          <children>
-            <ImageView fx:id="deckVisual" fitHeight="291.0" fitWidth="200.0" layoutY="105.0" pickOnBounds="true">
+            <ImageView fx:id="deckVisual" fitHeight="116.4" fitWidth="80.0" layoutX="11.0" layoutY="4.0" pickOnBounds="true">
                <image>
-                  <Image url="@../card/template/Deck.png" />
+                  <Image url="@../card/template/deck_below_20.png" />
                </image>
             </ImageView>
-            <Label fx:id="cardsCount" alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="206.0" prefHeight="68.0" prefWidth="80.0" text="Deck_Card" textAlignment="CENTER" textFill="WHITE">
+            <Label fx:id="cardsCount" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="-16.0" prefHeight="20.0" prefWidth="80.0" text="Deck_Card" textAlignment="CENTER">
                <font>
                   <Font name="Palatino Linotype" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="62.0" layoutY="175.0" text="Deck" textFill="WHITE">
-               <font>
-                  <Font name="Palatino Linotype" size="24.0" />
                </font>
             </Label>
          </children>
