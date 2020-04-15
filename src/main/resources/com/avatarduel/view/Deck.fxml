@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="291.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="291.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane fx:id="cardBackAncPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="291.0" prefWidth="200.0">
+      <AnchorPane fx:id="stackofCards" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="200.0">
          <children>
-            <ImageView fitHeight="291.0" fitWidth="200.0" pickOnBounds="true">
+            <ImageView fitHeight="291.0" fitWidth="200.0" layoutY="105.0" pickOnBounds="true">
                <image>
-                  <Image url="@../card/template/card_back.png" />
+                  <Image url="@../card/template/Deck.png" />
                </image>
             </ImageView>
+            <Label fx:id="cardsCount" alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="206.0" prefHeight="68.0" prefWidth="80.0" text="Deck_Card" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Palatino Linotype" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="62.0" layoutY="175.0" text="Deck" textFill="WHITE">
+               <font>
+                  <Font name="Palatino Linotype" size="24.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>
