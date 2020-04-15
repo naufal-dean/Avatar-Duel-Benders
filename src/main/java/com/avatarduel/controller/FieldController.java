@@ -124,18 +124,11 @@ public class FieldController implements Initializable {
 
     /**
      * Setter for waiting hand card
-     * @param waitingHandCard The new waiting hand card
+     * @param waitingHandCard The new waiting hand card (card type CHARACTER or SKILL AURA)
      */
     public void setWaitingHandCard(HandCardController waitingHandCard) {
         this.waitingHandCard = waitingHandCard;
         this.clearFieldEventHandler();
-        // Only CHARACTER and SKILL_AURA card can be summoned
-        if (waitingHandCard.getCard().getCardType() == CardType.LAND) {
-            return;
-        } else if (waitingHandCard.getCard().getCardType() == CardType.SKILL) {
-            if (((Skill) waitingHandCard.getCard()).getEffect() != Effect.AURA)
-                return;
-        }
 
         // Set target row
         int row;
