@@ -21,8 +21,8 @@ public class DeckController {
 
     @FXML private Label cardsCount;
 
-    public DeckController(Player player){
-        this.gameDeck = new GameDeck(GameStatus.getGameStatus().get(player).getCardQuantity());
+    public DeckController(int capacity){
+        this.gameDeck = new GameDeck(capacity]);
     }
 
     public void init() {
