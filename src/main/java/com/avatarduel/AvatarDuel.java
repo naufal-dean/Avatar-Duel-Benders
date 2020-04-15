@@ -116,6 +116,9 @@ public class AvatarDuel extends Application {
     for (int i = 0; i < INITIAL_CARD_IN_HAND; i++)
       handTopController.addCardOnHand(deckTop.draw(), Player.TOP);
     handTopController.flipCardInHand();
+    // Update deck view
+    mainController.getDeckControllerMap().get(Player.BOTTOM).init();
+    mainController.getDeckControllerMap().get(Player.TOP).init();
   }
 
   /**

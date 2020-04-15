@@ -81,7 +81,7 @@ public class MainController implements Initializable {
     public MainController() {
         this.handControllerMap = new HashMap<>();
         this.powerControllerMap = new HashMap<>();
-        this.DeckControllerMap = new HashMap<>(;)
+        this.deckControllerMap = new HashMap<>();
     }
 
     /**
@@ -191,26 +191,29 @@ public class MainController implements Initializable {
         this.handControllerMap.put(Player.TOP, handTopController);
     }
 
-    public void initDeck(int deckCapacityOur, int deckCapacityEnemy){
+    public void initDeck() {
         FXMLLoader deckBottomLoader = new FXMLLoader();
-        DeckController deckBottomController = new DeckController(deckCapacityOur);
+        DeckController deckBottomController = new DeckController();
         deckBottomLoader.setLocation(AvatarDuel.class.getResource("view/Deck.fxml"));
-        deckBottomLoader.setDeck(deckBottomController);
+        deckBottomLoader.setController(deckBottomController);
 
         FXMLLoader deckTopLoader = new FXMLLoader();
-        HandController deckTopController = new HandController(deckCapacityEnemy);
+        DeckController deckTopController = new DeckController();
         deckTopLoader.setLocation(AvatarDuel.class.getResource("view/Deck.fxml"));
         deckTopLoader.setController(deckTopController);
 
         // Create and assign pane
         try {
             StackPane deckBottomPane = deckBottomLoader.load();
-            this.deckBottom.getChildren().add(deckottomPane);
+            this.deckBottom.getChildren().add(deckBottomPane);
             StackPane deckTopPane = deckTopLoader.load();
             this.deckTop.getChildren().add(deckTopPane);
         } catch (IOException e) {
             System.out.println("Error occured: " + e);
         }
+        // Rotate hand top display
+        deckTopController.rotateDeckDisplay();
+        // Assign deck controller
         this.deckControllerMap.put(Player.BOTTOM, deckBottomController);
         this.deckControllerMap.put(Player.TOP, deckTopController);
     }
@@ -226,6 +229,7 @@ public class MainController implements Initializable {
         this.initField();
         this.deckBottom.setStyle("-fx-border-color: black");
         this.deckTop.setStyle("-fx-border-color: black");
+        this.initDeck();
         this.powerBottom.setStyle("-fx-border-color: black");
         this.powerTop.setStyle("-fx-border-color: black");
         this.initHand();

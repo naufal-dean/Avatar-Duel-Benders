@@ -44,6 +44,8 @@ public class DrawPhase implements GamePhase {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
+        // Update game deck
+        mainController.getDeckControllerMap().get(activePlayer).init();
         // End phase
         this.endPhase(mainController);
     }
