@@ -1,5 +1,8 @@
 package com.avatarduel.gamephase;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
 import com.avatarduel.controller.*;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
@@ -14,6 +17,10 @@ public class MainPhase implements GamePhase {
      * Land card placed counter
      */
     private int landCardPlaced;
+    /**
+     * Connector
+     */
+    ChangeListener<Boolean> handToFieldConnector, fieldToHandConnector;
 
     /**
      * Constructor
@@ -41,31 +48,8 @@ public class MainPhase implements GamePhase {
         this.landCardPlaced = 0;
         // Update game status
         GameStatus.getGameStatus().setGamePhase(Phase.MAIN);
-        // Add connector from hand to field
-        Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
-        HandController handController = mainController.getHandControllerMap().get(activePlayer);
-        FieldController fieldController = mainController.getFieldController();
-        handController.getActiveHandCardSetProperty().addListener((observable, oldValue, newValue) -> {
-            // Only CHARACTER and SKILL_AURA card can be summoned
-            if (handController.getActiveHandCard().getCard().getCardType() == CardType.LAND) {
-                return;
-            } else if (handController.getActiveHandCard().getCard().getCardType() == CardType.SKILL) {
-                if (((Skill) handController.getActiveHandCard().getCard()).getEffect() != Effect.AURA)
-                    return;
-            }
-            if (oldValue == false && newValue == true)
-                if (enoughEnergy(handController.getActiveHandCard().getCard()))
-                    fieldController.setWaitingHandCard(handController.getActiveHandCard());
-                else
-                    fieldController.clearFieldEventHandler();
-            else
-                fieldController.clearFieldEventHandler();
-        });
-        // Add connector from field to hand
-        fieldController.getCardSummonedProperty().addListener((observable, oldValue, newValue) -> {
-            if (oldValue == false && newValue == true)
-                handController.removeCardOnHand(fieldController.getWaitingHandCard());
-        });
+        // Add connector between hand and field
+        connectHandAndField(mainController);
     }
 
     /**
@@ -74,17 +58,61 @@ public class MainPhase implements GamePhase {
      */
     @Override
     public void endPhase(MainController mainController) {
-        // Clear glow effect from hand card if any
         Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
         HandController handController = mainController.getHandControllerMap().get(activePlayer);
+        FieldController fieldController = mainController.getFieldController();
+        // Clear glow effect from hand card if any
         for (HandCardController handCardController : handController.getCardControllerList())
             handCardController.getCardAncPane().setEffect(null);
         // Remove active hand card
         handController.removeActiveHandCard();
         // Deactivate event handler in entire field
-        mainController.getFieldController().clearFieldEventHandler();
+        fieldController.clearFieldEventHandler();
+        // Remove hand and field connector
+        handController.getActiveHandCardSetProperty().removeListener(this.handToFieldConnector);
+        fieldController.getCardSummonedProperty().removeListener(this.fieldToHandConnector);
+
         // Proceed to battle phase
         BattlePhase.getBattlePhase().endPhase(mainController);
+    }
+
+    public void connectHandAndField(MainController mainController) {
+        // Add connector from hand to field
+        Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
+        HandController handController = mainController.getHandControllerMap().get(activePlayer);
+        FieldController fieldController = mainController.getFieldController();
+        // Create ChangeListener object
+        this.handToFieldConnector = new ChangeListener<Boolean>(){
+            @Override
+            public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                // Only CHARACTER and SKILL_AURA card can be summoned
+                if (handController.getActiveHandCard().getCard().getCardType() == CardType.LAND) {
+                    return;
+                } else if (handController.getActiveHandCard().getCard().getCardType() == CardType.SKILL) {
+                    if (((Skill) handController.getActiveHandCard().getCard()).getEffect() != Effect.AURA)
+                        return;
+                }
+                // Pass signal to fieldController
+                if ((Boolean) oldValue == false && (Boolean) newValue == true)
+                    if (enoughEnergy(handController.getActiveHandCard().getCard()))
+                        fieldController.setWaitingHandCard(handController.getActiveHandCard());
+                    else
+                        fieldController.clearFieldEventHandler();
+                else
+                    fieldController.clearFieldEventHandler();
+            }
+        };
+        this.fieldToHandConnector = new ChangeListener<Boolean>(){
+            @Override
+            public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                if (oldValue == false && newValue == true)
+                    handController.removeCardOnHand(fieldController.getWaitingHandCard());
+            }
+        };
+
+        // Add connector as listener to property
+        handController.getActiveHandCardSetProperty().addListener(this.handToFieldConnector);
+        fieldController.getCardSummonedProperty().addListener(this.fieldToHandConnector);
     }
 
     /**
