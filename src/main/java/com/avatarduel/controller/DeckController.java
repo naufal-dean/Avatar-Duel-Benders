@@ -17,14 +17,32 @@ import com.avatarduel.gameutils.GameDeck;
 import com.avatarduel.gameutils.GameStatus;
 
 public class DeckController {
+    /*
+    Deck of Cards
+    */
     private GameDeck gameDeck;
-
+    /*
+    Count of cards remain in deck
+    */
     @FXML private Label cardsCount;
 
+    //Ctor
     public DeckController(int capacity){
         this.gameDeck = new GameDeck(capacity]);
     }
 
+      /**
+     * Replace with new GameDeck then render
+     * @param gameDeck The GameDeck
+     */
+    public void setDeck(GameDeck gameDeck) {
+        this.gameDeck = gameDeck;
+        this.init();
+    }
+
+    /**
+     * Update FXML using current this.card
+     */
     public void init() {
         // Set background
         int cardQuantity = this.gameDeck.getCardQuantity();

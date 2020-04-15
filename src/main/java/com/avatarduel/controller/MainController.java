@@ -31,9 +31,13 @@ public class MainController implements Initializable {
      */
     private HashMap<Player, PowerController> powerControllerMap;
     /**
+     * Power controller
+     */
+    private HashMap<Player, DeckController> deckControllerMap;
+    /**
      * Card detail display
      */
-    @FXML private Pane mainAnchor;
+     @FXML private Pane mainAnchor;
     /**
      * Card detail display
      */
@@ -73,6 +77,7 @@ public class MainController implements Initializable {
     public MainController() {
         this.handControllerMap = new HashMap<>();
         this.powerControllerMap = new HashMap<>();
+        this.DeckControllerMap = new HashMap<>(;)
     }
 
     /**
@@ -90,7 +95,7 @@ public class MainController implements Initializable {
     public HashMap<Player, HandController> getHandControllerMap() {
         return this.handControllerMap;
     }
-
+      
     /**
      * Getter for powerControllerMap
      * @return this.powerControllerMap
@@ -98,7 +103,15 @@ public class MainController implements Initializable {
     public HashMap<Player, PowerController> getPowerControllerMap() {
         return this.powerControllerMap;
     }
-
+    
+    /**
+     * Getter for deckControllerMap
+     * @return this.deckControllerMap
+     */
+    public HashMap<Player, DeckController> getDeckControllerMap() {
+        return this.deckControllerMap;
+    }
+  
     /**
      * Initialize field
      */
@@ -153,6 +166,31 @@ public class MainController implements Initializable {
         this.handControllerMap.put(Player.TOP, handTopController);
     }
 
+    public void initDeck(int deckCapacityOur, int deckCapacityEnemy){
+        FXMLLoader deckBottomLoader = new FXMLLoader();
+        DeckController deckBottomController = new DeckController(deckCapacityOur);
+        deckBottomLoader.setLocation(AvatarDuel.class.getResource("view/Deck.fxml"));
+        deckBottomLoader.setDeck(deckBottomController);
+
+        FXMLLoader deckTopLoader = new FXMLLoader();
+        HandController deckTopController = new HandController(deckCapacityEnemy);
+        deckTopLoader.setLocation(AvatarDuel.class.getResource("view/Deck.fxml"));
+        deckTopLoader.setController(deckTopController);
+
+        // Create and assign pane
+        try {
+            StackPane deckBottomPane = deckBottomLoader.load();
+            this.deckBottom.getChildren().add(deckottomPane);
+            StackPane deckTopPane = deckTopLoader.load();
+            this.deckTop.getChildren().add(deckTopPane);
+        } catch (IOException e) {
+            System.out.println("Error occured: " + e);
+        }
+        this.deckControllerMap.put(Player.BOTTOM, deckBottomController);
+        this.deckControllerMap.put(Player.TOP, deckTopController);
+    }
+
+    
     /**
      * {@inheritDoc}
      */
