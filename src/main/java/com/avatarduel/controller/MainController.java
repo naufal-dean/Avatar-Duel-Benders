@@ -193,12 +193,12 @@ public class MainController implements Initializable {
 
     public void initDeck() {
         FXMLLoader deckBottomLoader = new FXMLLoader();
-        DeckController deckBottomController = new DeckController();
+        DeckController deckBottomController = new DeckController(Player.BOTTOM);
         deckBottomLoader.setLocation(AvatarDuel.class.getResource("view/Deck.fxml"));
         deckBottomLoader.setController(deckBottomController);
 
         FXMLLoader deckTopLoader = new FXMLLoader();
-        DeckController deckTopController = new DeckController();
+        DeckController deckTopController = new DeckController(Player.TOP);
         deckTopLoader.setLocation(AvatarDuel.class.getResource("view/Deck.fxml"));
         deckTopLoader.setController(deckTopController);
 
@@ -211,8 +211,6 @@ public class MainController implements Initializable {
         } catch (IOException e) {
             System.out.println("Error occured: " + e);
         }
-        // Rotate hand top display
-        deckTopController.rotateDeckDisplay();
         // Assign deck controller
         this.deckControllerMap.put(Player.BOTTOM, deckBottomController);
         this.deckControllerMap.put(Player.TOP, deckTopController);
