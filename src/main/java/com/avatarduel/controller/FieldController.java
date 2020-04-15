@@ -124,7 +124,7 @@ public class FieldController implements Initializable {
 
     /**
      * Setter for waiting hand card
-     * @param waitingHandCard The new waiting hand card (Only CHARACTER and SKILL AURA)
+     * @param waitingHandCard The new waiting hand card (card type CHARACTER or SKILL AURA)
      */
     public void setWaitingHandCard(HandCardController waitingHandCard) {
         this.waitingHandCard = waitingHandCard;
@@ -141,6 +141,13 @@ public class FieldController implements Initializable {
             if (this.cardControllerList.get(col).get(row) == null)
                 this.activateFieldEventHandler(col, row);
         }
+    }
+
+    /**
+     * Remove waiting hand card
+     */
+    public void removeWaitingHandCard() {
+        this.waitingHandCard = null;
     }
 
     /**
@@ -215,15 +222,6 @@ public class FieldController implements Initializable {
      */
     public void activateFieldEventHandler(int x, int y) {
         this.activeHandler.get(x).get(y).setValue(true);
-    }
-
-    /**
-     * Deactivate event handler on cell (x, y)
-     * @param x The row coordinate
-     * @param y The column coordinate
-     */
-    public void deactivateFieldEventHandler(int x, int y) {
-        this.activeHandler.get(x).get(y).setValue(false);
     }
 
     /**

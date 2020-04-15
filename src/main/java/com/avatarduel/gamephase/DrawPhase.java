@@ -57,6 +57,4 @@ public class DrawPhase implements GamePhase {
         // Proceed to main phase
         MainPhase.getMainPhase().startPhase(mainController);
     }
-
-
 }

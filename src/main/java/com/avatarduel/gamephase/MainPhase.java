@@ -61,13 +61,18 @@ public class MainPhase implements GamePhase {
         Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
         HandController handController = mainController.getHandControllerMap().get(activePlayer);
         FieldController fieldController = mainController.getFieldController();
+
         // Clear glow effect from hand card if any
         for (HandCardController handCardController : handController.getCardControllerList())
             handCardController.getCardAncPane().setEffect(null);
         // Remove active hand card
         handController.removeActiveHandCard();
+
         // Deactivate event handler in entire field
         fieldController.clearFieldEventHandler();
+        // Remove waiting hand card
+        fieldController.removeWaitingHandCard();
+
         // Remove hand and field connector
         handController.getActiveHandCardSetProperty().removeListener(this.handToFieldConnector);
         fieldController.getCardSummonedProperty().removeListener(this.fieldToHandConnector);
@@ -82,9 +87,10 @@ public class MainPhase implements GamePhase {
         HandController handController = mainController.getHandControllerMap().get(activePlayer);
         FieldController fieldController = mainController.getFieldController();
         // Create ChangeListener object
-        this.handToFieldConnector = new ChangeListener<Boolean>(){
+        this.handToFieldConnector = new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                fieldController.clearFieldEventHandler();
                 // Only CHARACTER and SKILL_AURA card can be summoned
                 if (handController.getActiveHandCard().getCard().getCardType() == CardType.LAND) {
                     return;
@@ -93,16 +99,11 @@ public class MainPhase implements GamePhase {
                         return;
                 }
                 // Pass signal to fieldController
-                if ((Boolean) oldValue == false && (Boolean) newValue == true)
-                    if (enoughEnergy(handController.getActiveHandCard().getCard()))
-                        fieldController.setWaitingHandCard(handController.getActiveHandCard());
-                    else
-                        fieldController.clearFieldEventHandler();
-                else
-                    fieldController.clearFieldEventHandler();
+                if (oldValue == false && newValue == true && enoughEnergy(handController.getActiveHandCard().getCard()))
+                    fieldController.setWaitingHandCard(handController.getActiveHandCard());
             }
         };
-        this.fieldToHandConnector = new ChangeListener<Boolean>(){
+        this.fieldToHandConnector = new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
                 if (oldValue == false && newValue == true)
