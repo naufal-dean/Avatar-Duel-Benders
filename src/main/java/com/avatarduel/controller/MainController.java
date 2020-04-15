@@ -27,6 +27,10 @@ public class MainController implements Initializable {
      */
     private HashMap<Player, HandController> handControllerMap;
     /**
+     * Power controller
+     */
+    private HashMap<Player, PowerController> powerControllerMap;
+    /**
      * Card detail display
      */
     @FXML private Pane mainAnchor;
@@ -68,6 +72,7 @@ public class MainController implements Initializable {
      */
     public MainController() {
         this.handControllerMap = new HashMap<>();
+        this.powerControllerMap = new HashMap<>();
     }
 
     /**
@@ -84,6 +89,14 @@ public class MainController implements Initializable {
      */
     public HashMap<Player, HandController> getHandControllerMap() {
         return this.handControllerMap;
+    }
+
+    /**
+     * Getter for powerControllerMap
+     * @return this.powerControllerMap
+     */
+    public HashMap<Player, PowerController> getPowerControllerMap() {
+        return this.powerControllerMap;
     }
 
     /**

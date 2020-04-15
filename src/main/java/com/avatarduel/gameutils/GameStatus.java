@@ -163,7 +163,7 @@ public class GameStatus {
      * @return Our GamePower
      */
     public GamePower getOurPower() {
-        return this.gamePower.get(this.gamePower);
+        return this.gamePower.get(this.gameActivePlayer);
     }
 
     /**
