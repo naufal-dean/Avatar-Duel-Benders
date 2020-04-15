@@ -45,6 +45,10 @@ public class FieldController implements Initializable {
      */
     private List<List<CardController>> cardControllerList;
     /**
+     * Card details controller
+     */
+    private CardDetailsController cardDetailsController;
+    /**
      * Cell active handler property list
      */
     private List<List<BooleanProperty>> activeHandler;
@@ -71,8 +75,9 @@ public class FieldController implements Initializable {
 
     /**
      * Constructor
+     * @param cardDetailsController The CardDetailsController
      */
-    public FieldController() {
+    public FieldController(CardDetailsController cardDetailsController) {
         this.cardControllerList = new ArrayList<>();
         for (int i = 0; i < 6; i++)
             this.cardControllerList.add(Arrays.asList(null, null, null, null));
@@ -82,6 +87,7 @@ public class FieldController implements Initializable {
                                                  new SimpleBooleanProperty(false), new SimpleBooleanProperty(false)));
 
         this.cardSummoned = new SimpleBooleanProperty(false);
+        this.cardDetailsController = cardDetailsController;
         // Cell available shadow
         this.cellAvailableShadow = new DropShadow();
         this.cellAvailableShadow.setColor(Color.YELLOW);
@@ -159,31 +165,33 @@ public class FieldController implements Initializable {
      * @throws IOException From FXML loader
      */
     public void setCardOnField(Card card, Player owner, boolean isAttack, int x, int y) throws IOException {
-        if (this.cardControllerList.get(x).get(y) != null) {
-            // Set new card controller
-            if (card.getCardType().equals(CardType.CHARACTER)) {
-                SummonedCharacterCardController scCardController = new SummonedCharacterCardController((Character) card, owner, x, y, isAttack);
-                this.cardControllerList.get(x).set(y, scCardController);
-            } else if (card.getCardType().equals(CardType.SKILL)) {
-                SummonedSkillCardController scCardController = new SummonedSkillCardController((SkillAura) card, owner, x, y, null);
-                this.cardControllerList.get(x).set(y, scCardController);
-            }
-        } else { // Card not exist
+        if (this.cardControllerList.get(x).get(y) == null) {
             // Create loader
             FXMLLoader loader = new FXMLLoader();
             if (card.getCardType().equals(CardType.CHARACTER)) {
-                SummonedCharacterCardController scCardController = new SummonedCharacterCardController((Character) card, owner, x, y, isAttack);
-                loader.setController(scCardController);
-                this.cardControllerList.get(x).set(y, scCardController);
+                SummonedCharacterCardController cardController = new SummonedCharacterCardController((Character) card, owner, x, y, isAttack);
+                loader.setController(cardController);
+                this.cardControllerList.get(x).set(y, cardController);
             } else if (card.getCardType().equals(CardType.SKILL)) {
-                SummonedSkillCardController scCardController = new SummonedSkillCardController((SkillAura) card, owner, x, y, null);
-                loader.setController(scCardController);
-                this.cardControllerList.get(x).set(y, scCardController);
+                SummonedSkillCardController cardController = new SummonedSkillCardController((SkillAura) card, owner, x, y, null);
+                loader.setController(cardController);
+                this.cardControllerList.get(x).set(y, cardController);
             }
             loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
 
             // Create root
             StackPane root = loader.load();
+            // Add event handler
+            CardController c = this.cardControllerList.get(x).get(y);
+            // Add event handler
+            if (c != null) {
+                c.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+                    cardDetailsController.setCard(c.getCard());
+                });
+                c.getCardAncPane().onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+                    cardDetailsController.removeCard();
+                });
+            }
             // Create scale for root
             DoubleProperty scale = new SimpleDoubleProperty(0.4);
             root.scaleXProperty().bind(scale);
@@ -279,7 +287,6 @@ public class FieldController implements Initializable {
                 emptyCell.onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
                     if (this.activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                         emptyCell.setEffect(this.cellHoverShadow);
-                        // TODO: Add show card detail
                     }
                 });
                 // On mouse exited handler
