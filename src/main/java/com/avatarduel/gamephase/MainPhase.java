@@ -99,7 +99,7 @@ public class MainPhase implements GamePhase {
                         return;
                 }
                 // Pass signal to fieldController
-                if (oldValue == false && newValue == true)
+                if (oldValue == false && newValue == true && enoughEnergy(handController.getActiveHandCard().getCard()))
                     fieldController.setWaitingHandCard(handController.getActiveHandCard());
             }
         };
