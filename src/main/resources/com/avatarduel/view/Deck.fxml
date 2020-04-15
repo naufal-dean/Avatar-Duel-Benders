@@ -11,7 +11,7 @@
    <children>
       <AnchorPane fx:id="stackofCards" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="200.0">
          <children>
-            <ImageView fitHeight="291.0" fitWidth="200.0" layoutY="105.0" pickOnBounds="true">
+            <ImageView fx:id="deckVisual" fitHeight="291.0" fitWidth="200.0" layoutY="105.0" pickOnBounds="true">
                <image>
                   <Image url="@../card/template/Deck.png" />
                </image>
