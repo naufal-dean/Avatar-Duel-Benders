@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import com.avatarduel.gamephase.Phase;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,6 +23,10 @@ public class MainController implements Initializable {
      * Card details controller
      */
     private CardDetailsController cardDetailsController;
+    /**
+     * Phase controller
+     */
+    private PhaseController phaseController;
     /**
      * Field controller
      */
@@ -89,6 +94,14 @@ public class MainController implements Initializable {
     }
 
     /**
+     * Getter for phaseController
+     * @return this.phaseController
+     */
+    public PhaseController getPhaseController() {
+        return this.phaseController;
+    }
+
+    /**
      * Getter for fieldController
      * @return this.fieldController
      */
@@ -121,7 +134,7 @@ public class MainController implements Initializable {
     }
   
     /**
-     * Initialize card details
+     * Initialize card details display
      */
     public void initCardDetails() {
         // Create loader
@@ -142,7 +155,28 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Initialize field, need card details controller
+     * Initialize phase display
+     */
+    public void initPhase() {
+        // Create loader
+        FXMLLoader phaseLoader = new FXMLLoader();
+        PhaseController phaseController = new PhaseController();
+        phaseLoader.setLocation(AvatarDuel.class.getResource("view/Phase.fxml"));
+        phaseLoader.setController(phaseController);
+
+        // Create and assign pane
+        try {
+            AnchorPane phasePane = phaseLoader.load();
+            this.phase.getChildren().add(phasePane);
+        } catch (IOException e) {
+            System.out.println("Error occured: " + e);
+        }
+        // Assign field controller
+        this.phaseController = phaseController;
+    }
+
+    /**
+     * Initialize field display, need card details controller
      */
     public void initField() {
         // Set background image
@@ -165,7 +199,7 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Initialize deck
+     * Initialize deck display
      */
     public void initDeck() {
         FXMLLoader deckBottomLoader = new FXMLLoader();
@@ -193,7 +227,7 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Initialize power
+     * Initialize power display
      */
     public void initPower() {
         // Create loader
@@ -222,7 +256,7 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Initialize hand, need card details controller
+     * Initialize hand display, need card details controller
      */
     public void initHand() {
         // Create loader
@@ -252,8 +286,6 @@ public class MainController implements Initializable {
         this.handControllerMap.put(Player.TOP, handTopController);
     }
 
-
-    
     /**
      * {@inheritDoc}
      */
@@ -262,6 +294,7 @@ public class MainController implements Initializable {
 //        this.mainBackground.setImage(new Image(AvatarDuel.class.getResource("background/main2.png").toString()));
         this.initCardDetails();
         this.phase.setStyle("-fx-border-color: black");
+        this.initPhase();
         this.initField();
         this.deckBottom.setStyle("-fx-border-color: black");
         this.deckTop.setStyle("-fx-border-color: black");

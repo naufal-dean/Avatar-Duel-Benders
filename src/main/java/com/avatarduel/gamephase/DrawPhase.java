@@ -41,7 +41,8 @@ public class DrawPhase implements GamePhase {
         GameDeck deck = GameStatus.getGameStatus().getGameDeckMap().get(activePlayer);
         HandController handController = mainController.getHandControllerMap().get(activePlayer);
         try {
-            handController.addCardOnHand(deck.draw(), activePlayer);
+            if (handController.getCardControllerList().size() < 10) // TODO: discard 1 card if card size = 10 at the end of end phase
+                handController.addCardOnHand(deck.draw(), activePlayer);
         } catch (Exception e) {
             System.out.println(e.toString());
         }

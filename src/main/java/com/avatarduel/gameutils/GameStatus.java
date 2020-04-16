@@ -18,6 +18,10 @@ public class GameStatus {
      */
     private Player gameActivePlayer;
     /**
+     * Is game over yet
+     */
+    private boolean gameOverStatus;
+    /**
      * Game phase now
      */
     private Phase gamePhase;
@@ -40,6 +44,8 @@ public class GameStatus {
     private GameStatus() throws IOException, URISyntaxException {
         // Initialize active player
         this.gameActivePlayer = Player.BOTTOM;
+        // Initialize game over status
+        this.gameOverStatus = false;
         // Initialize game phase
         this.gamePhase = Phase.DRAW;
         // Initialize game health
@@ -89,6 +95,22 @@ public class GameStatus {
      */
     public Player getGameNonActivePlayer() {
         return (this.gameActivePlayer == Player.BOTTOM) ? (Player.TOP) : (Player.BOTTOM);
+    }
+
+    /**
+     * Getter for gameOverStatus
+     * @return this.gameOverStatus
+     */
+    public boolean getGameOverStatus() {
+        return this.gameOverStatus;
+    }
+
+    /**
+     * Setter for gameOverStatus
+     * @param gameOverStatus The new gameOverStatus
+     */
+    public void setGameOverStatus(boolean gameOverStatus) {
+        this.gameOverStatus = gameOverStatus;
     }
 
     /**

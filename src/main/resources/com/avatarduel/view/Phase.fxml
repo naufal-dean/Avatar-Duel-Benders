@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.avatarduel.view.Phase"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="50.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fx:id="background" fitHeight="800.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+      <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="50.0" spacing="60.0">
+         <children>
+            <ImageView fx:id="drawPhase" fitHeight="72.8" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="mainPhase" fitHeight="72.8" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="battlePhase" fitHeight="72.8" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="endPhase" fitHeight="72.8" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </VBox>
+   </children>
 </AnchorPane>

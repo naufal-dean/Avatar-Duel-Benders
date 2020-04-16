@@ -19,7 +19,7 @@ public class MainPhase implements GamePhase {
     /**
      * Connector
      */
-    ChangeListener<Boolean> handToFieldConnector, fieldToHandConnector, handToPowerConnector, powerToHandConnector;
+    ChangeListener<Boolean> handToFieldConnector, fieldToHandConnector, handToPowerConnector, powerToHandConnector, phaseChange;
 
     /**
      * Constructor
@@ -50,6 +50,8 @@ public class MainPhase implements GamePhase {
         // Add connector hand-field, hand-power
         this.connectHandAndField(mainController);
         this.connectHandAndPower(mainController);
+        // Add event listener to phase change
+        this.addPhaseChangeListener(mainController);
     }
 
     /**
@@ -77,8 +79,11 @@ public class MainPhase implements GamePhase {
         this.disconnectHandAndField(mainController);
         this.disconnectHandAndPower(mainController);
 
+        // Disconnect phase change listener
+        this.removePhaseChangeListener(mainController);
+
         // Proceed to battle phase
-        BattlePhase.getBattlePhase().endPhase(mainController);
+        BattlePhase.getBattlePhase().startPhase(mainController);
     }
 
     /**
@@ -209,6 +214,35 @@ public class MainPhase implements GamePhase {
         // Remove listener
         handController.getActiveHandCardSetSignalProperty().removeListener(this.handToFieldConnector);
         powerController.getCardSummonedSignalProperty().removeListener(this.fieldToHandConnector);
+    }
+
+    /**
+     * Connect and listen to phase change event
+     * @param mainController The MainController
+     */
+    public void addPhaseChangeListener(MainController mainController) {
+        // Create ChangeListener object
+        if (this.phaseChange == null) {
+            this.phaseChange = new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                    if (oldValue == false && newValue == true)
+                        endPhase(mainController);
+                }
+            };
+        }
+        // Add listener
+        mainController.getPhaseController().getBattlePhaseSignalProperty().addListener(this.phaseChange);
+        mainController.getPhaseController().getEndPhaseSignalProperty().addListener(this.phaseChange);
+    }
+
+    /**
+     * Disconnect phase change event listener
+     * @param mainController The MainController
+     */
+    public void removePhaseChangeListener(MainController mainController) {
+        mainController.getPhaseController().getBattlePhaseSignalProperty().removeListener(this.phaseChange);
+        mainController.getPhaseController().getEndPhaseSignalProperty().removeListener(this.phaseChange);
     }
 
     /**
