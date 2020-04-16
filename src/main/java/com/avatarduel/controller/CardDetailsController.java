@@ -22,6 +22,10 @@ import com.avatarduel.model.Character;
 
 public class CardDetailsController implements Initializable {
     /**
+     * The Card Controller
+     */
+    private CardController cardController;
+    /**
      * Card display
      */
     @FXML private StackPane card;
@@ -49,24 +53,8 @@ public class CardDetailsController implements Initializable {
      */
      public void setCard(Card card) {
          // Set card display
-         try {
-             // Create loader
-             FXMLLoader loader = new FXMLLoader();
-             CardController cardController = new CardController(card);
-             loader.setController(cardController);
-             loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
-             // Create root
-             StackPane root = loader.load();
-             // Create scale for root
-             DoubleProperty scale = new SimpleDoubleProperty(1.1);
-             root.scaleXProperty().bind(scale);
-             root.scaleYProperty().bind(scale);
-             // Set root as field children node
-             this.card.getChildren().add(root);
-         } catch (Exception err) {
-             System.out.println(err.toString());
-             return;
-         }
+         this.cardController.setCard(card);
+         this.card.setOpacity(100);
 
          // Set description display
          this.description.setText(card.getDescription());
@@ -91,14 +79,36 @@ public class CardDetailsController implements Initializable {
      * Remove card from display
      */
     public void removeCard() {
-        this.card.getChildren().clear();
+        this.card.setOpacity(0);
         this.description.setText("");
         this.stats.setText("");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Setup card display
         this.card.setAlignment(Pos.CENTER);
+        try {
+            // Create loader
+            FXMLLoader loader = new FXMLLoader();
+            CardController cardController = new CardController();
+            loader.setController(cardController);
+            loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
+            // Create root
+            StackPane root = loader.load();
+            // Create scale for root
+            DoubleProperty scale = new SimpleDoubleProperty(1.1);
+            root.scaleXProperty().bind(scale);
+            root.scaleYProperty().bind(scale);
+            // Set root as field children node
+            this.card.getChildren().add(root);
+            // Save card controller
+            this.cardController = cardController;
+        } catch (Exception err) {
+            System.out.println(err.toString());
+        }
+        this.card.setOpacity(0);
+        // Setup desc, stats, and background
         this.description.setDisable(true);
         this.description.setWrapText(true);
         this.description.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), 14));

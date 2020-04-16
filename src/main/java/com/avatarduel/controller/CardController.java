@@ -55,6 +55,12 @@ public class CardController implements Initializable {
      * Display card stats
      */
     @FXML private Label attack, defense, power;
+
+    /**
+     * Default constructor
+     */
+    public CardController() {}
+
     /**
      * Constructor
      * @param card The Card
@@ -133,6 +139,8 @@ public class CardController implements Initializable {
                 decoratorPath = "card/template/skill_power_up.png";
             this.decorator.setImage(new Image(AvatarDuel.class.getResource(decoratorPath).toString()));
             this.decorator.setTranslateY(-3);
+        } else {
+            this.decorator.setImage(null);
         }
 
         // Set name
@@ -182,6 +190,10 @@ public class CardController implements Initializable {
             }
             this.power.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 8));
             this.power.setText(String.valueOf(skill.getPower()));
+        } else {
+            this.attack.setText("");
+            this.defense.setText("");
+            this.power.setText("");
         }
         this.attack.setTextAlignment(TextAlignment.RIGHT);
         this.defense.setTextAlignment(TextAlignment.RIGHT);
@@ -193,6 +205,7 @@ public class CardController implements Initializable {
      */
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
-        this.init();
+        if (this.card != null)
+            this.init();
     }
 }
