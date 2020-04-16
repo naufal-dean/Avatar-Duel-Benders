@@ -32,9 +32,13 @@ public class MainController implements Initializable {
      */
     private FieldController fieldController;
     /**
-     * Power controller
+     * Deck controller
      */
     private HashMap<Player, DeckController> deckControllerMap;
+    /**
+     * Health Bar Controller
+     */
+    private HashMap<Player, Integer> healthBarControllerMap;
     /**
      * Power controller
      */
@@ -285,7 +289,34 @@ public class MainController implements Initializable {
         this.handControllerMap.put(Player.BOTTOM, handBottomController);
         this.handControllerMap.put(Player.TOP, handTopController);
     }
+    /**
+     * Initialize Health Point Display
+     */
+    public void initHealth() {
+        FXMLLoader healthBottomLoader = new FXMLLoader();
+        HealthBarController healthBottomController = new HealthBarController(Player.BOTTOM);
+        healthBottomLoader.setLocation(AvatarDuel.class.getResource("view/HealthBar.fxml"));
+        healthBottomLoader.setController(healthBottomController);
 
+        FXMLLoader healthTopLoader = new FXMLLoader();
+        HealthBarController healthTopController = new HealthBarController(Player.TOP);
+        healthTopLoader.setLocation(AvatarDuel.class.getResource("view/HealthBar.fxml"));
+        healthTopLoader.setController(healthTopController);
+
+        // Create and assign pane
+        try {
+            StackPane healthBottomPane = healthBottomLoader.load();
+            this.healthBottom.getChildren().add(healthBottomPane);
+            StackPane deckTopPane = deckTopLoader.load();
+            this.healthTop.getChildren().add(healthTopPane);
+        } catch (IOException e) {
+            System.out.println("Error occured: " + e);
+        }
+        // Assign health controller
+        this.healthBarControllerMap.put(Player.BOTTOM, healthBottomController);
+        this.healthBarControllerMap.put(Player.TOP, healthTopController);
+    }
+    
     /**
      * {@inheritDoc}
      */
