@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="34.0" layoutY="61.0" text="AIR" />
+      <Label layoutX="34.0" layoutY="88.0" text="EARTH" />
+      <Label layoutX="34.0" layoutY="116.0" text="ENERGY" />
+      <Label layoutX="34.0" layoutY="142.0" text="FIRE" />
+      <Label layoutX="34.0" layoutY="169.0" text="WATER" />
+      <Label fx:id="water" layoutX="101.0" layoutY="169.0" />
+      <Label fx:id="fire" layoutX="101.0" layoutY="142.0" />
+      <Label fx:id="energy" layoutX="101.0" layoutY="116.0" />
+      <Label fx:id="earth" layoutX="101.0" layoutY="88.0" />
+      <Label fx:id="air" layoutX="101.0" layoutY="61.0" />
+   </children>
+</AnchorPane>

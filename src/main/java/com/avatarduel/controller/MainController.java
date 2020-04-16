@@ -27,17 +27,17 @@ public class MainController implements Initializable {
      */
     private FieldController fieldController;
     /**
-     * Hand controller
+     * Power controller
      */
-    private HashMap<Player, HandController> handControllerMap;
+    private HashMap<Player, DeckController> deckControllerMap;
     /**
      * Power controller
      */
     private HashMap<Player, PowerController> powerControllerMap;
     /**
-     * Power controller
+     * Hand controller
      */
-    private HashMap<Player, DeckController> deckControllerMap;
+    private HashMap<Player, HandController> handControllerMap;
     /**
      * Card detail display
      */
@@ -46,6 +46,10 @@ public class MainController implements Initializable {
      * Card detail display
      */
     @FXML private Pane mainHBox;
+    /**
+     * Main background
+     */
+    @FXML private ImageView mainBackground;
     /**
      * Card detail display
      */
@@ -79,9 +83,9 @@ public class MainController implements Initializable {
      * Constructor
      */
     public MainController() {
-        this.handControllerMap = new HashMap<>();
-        this.powerControllerMap = new HashMap<>();
         this.deckControllerMap = new HashMap<>();
+        this.powerControllerMap = new HashMap<>();
+        this.handControllerMap = new HashMap<>();
     }
 
     /**
@@ -161,6 +165,63 @@ public class MainController implements Initializable {
     }
 
     /**
+     * Initialize deck
+     */
+    public void initDeck() {
+        FXMLLoader deckBottomLoader = new FXMLLoader();
+        DeckController deckBottomController = new DeckController(Player.BOTTOM);
+        deckBottomLoader.setLocation(AvatarDuel.class.getResource("view/Deck.fxml"));
+        deckBottomLoader.setController(deckBottomController);
+
+        FXMLLoader deckTopLoader = new FXMLLoader();
+        DeckController deckTopController = new DeckController(Player.TOP);
+        deckTopLoader.setLocation(AvatarDuel.class.getResource("view/Deck.fxml"));
+        deckTopLoader.setController(deckTopController);
+
+        // Create and assign pane
+        try {
+            StackPane deckBottomPane = deckBottomLoader.load();
+            this.deckBottom.getChildren().add(deckBottomPane);
+            StackPane deckTopPane = deckTopLoader.load();
+            this.deckTop.getChildren().add(deckTopPane);
+        } catch (IOException e) {
+            System.out.println("Error occured: " + e);
+        }
+        // Assign deck controller
+        this.deckControllerMap.put(Player.BOTTOM, deckBottomController);
+        this.deckControllerMap.put(Player.TOP, deckTopController);
+    }
+
+    /**
+     * Initialize power
+     */
+    public void initPower() {
+        // Create loader
+        FXMLLoader powerBottomLoader = new FXMLLoader();
+        PowerController powerBottomController = new PowerController(Player.BOTTOM);
+        powerBottomLoader.setLocation(AvatarDuel.class.getResource("view/Power.fxml"));
+        powerBottomLoader.setController(powerBottomController);
+
+        FXMLLoader powerTopLoader = new FXMLLoader();
+        PowerController powerTopController = new PowerController(Player.TOP);
+        powerTopLoader.setLocation(AvatarDuel.class.getResource("view/Power.fxml"));
+        powerTopLoader.setController(powerTopController);
+
+        // Create and assign pane
+        try {
+            AnchorPane powerBottomPane = powerBottomLoader.load();
+            this.powerBottom.getChildren().add(powerBottomPane);
+            AnchorPane powerTopPane = powerTopLoader.load();
+            this.powerTop.getChildren().add(powerTopPane);
+        } catch (IOException e) {
+            System.out.println("Error occured: " + e);
+        }
+        // Assign power controller
+        this.powerControllerMap.put(Player.BOTTOM, powerBottomController);
+        this.powerControllerMap.put(Player.TOP, powerTopController);
+    }
+
+    /**
      * Initialize hand, need card details controller
      */
     public void initHand() {
@@ -191,30 +252,6 @@ public class MainController implements Initializable {
         this.handControllerMap.put(Player.TOP, handTopController);
     }
 
-    public void initDeck() {
-        FXMLLoader deckBottomLoader = new FXMLLoader();
-        DeckController deckBottomController = new DeckController(Player.BOTTOM);
-        deckBottomLoader.setLocation(AvatarDuel.class.getResource("view/Deck.fxml"));
-        deckBottomLoader.setController(deckBottomController);
-
-        FXMLLoader deckTopLoader = new FXMLLoader();
-        DeckController deckTopController = new DeckController(Player.TOP);
-        deckTopLoader.setLocation(AvatarDuel.class.getResource("view/Deck.fxml"));
-        deckTopLoader.setController(deckTopController);
-
-        // Create and assign pane
-        try {
-            StackPane deckBottomPane = deckBottomLoader.load();
-            this.deckBottom.getChildren().add(deckBottomPane);
-            StackPane deckTopPane = deckTopLoader.load();
-            this.deckTop.getChildren().add(deckTopPane);
-        } catch (IOException e) {
-            System.out.println("Error occured: " + e);
-        }
-        // Assign deck controller
-        this.deckControllerMap.put(Player.BOTTOM, deckBottomController);
-        this.deckControllerMap.put(Player.TOP, deckTopController);
-    }
 
     
     /**
@@ -222,6 +259,7 @@ public class MainController implements Initializable {
      */
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
+//        this.mainBackground.setImage(new Image(AvatarDuel.class.getResource("background/main2.png").toString()));
         this.initCardDetails();
         this.phase.setStyle("-fx-border-color: black");
         this.initField();
@@ -230,6 +268,7 @@ public class MainController implements Initializable {
         this.initDeck();
         this.powerBottom.setStyle("-fx-border-color: black");
         this.powerTop.setStyle("-fx-border-color: black");
+        this.initPower();
         this.initHand();
     }
 }

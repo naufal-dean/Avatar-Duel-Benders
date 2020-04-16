@@ -117,19 +117,6 @@ public class MainPhase implements GamePhase {
     }
 
     /**
-     * Summon land card
-     * @param card The land card
-     * @param powerController The PowerController
-     */
-    public void summonLandCard(Land card, PowerController powerController) { // TODO: implement PowerController as param
-        if (this.landCardPlaced > 0)
-            return;
-        this.landCardPlaced++;
-        GameStatus.getGameStatus().getOurPower().incMaxPower(card.getElement());
-        powerController.render();
-    }
-
-    /**
      * Check if current energy enough to summon card
      * @param card The Card (non LAND)
      */

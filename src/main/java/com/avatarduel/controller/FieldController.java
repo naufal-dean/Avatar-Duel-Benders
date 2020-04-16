@@ -254,7 +254,7 @@ public class FieldController implements Initializable {
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 6; x++) {
                 Pane emptyCell = new Pane();
-                emptyCell.setStyle("-fx-border-color: black");
+//                emptyCell.setStyle("-fx-border-color: black");
 
                 // Add event handler
                 int row = y, col = x;

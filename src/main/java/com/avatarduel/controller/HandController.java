@@ -160,16 +160,16 @@ public class HandController implements Initializable {
         cardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                 cardController.getCardAncPane().setEffect(this.activeShadow);
-                cardDetailsController.setCard(cardController.getCard());
             }
+            cardDetailsController.setCard(cardController.getCard());
         });
         // On mouse exited handler
         cardController.getCardAncPane().onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                 if (cardController != activeHandCard)
                     cardController.getCardAncPane().setEffect(null);
-                cardDetailsController.removeCard();
             }
+            cardDetailsController.removeCard();
         });
         // Set root as hand children node
         this.hand.getChildren().add(root);

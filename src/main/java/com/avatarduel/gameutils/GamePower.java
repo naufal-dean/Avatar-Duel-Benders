@@ -21,12 +21,14 @@ public class GamePower {
         this.currPowerList = new HashMap<>();
         this.currPowerList.put(Element.AIR, 0);
         this.currPowerList.put(Element.EARTH, 0);
+        this.currPowerList.put(Element.ENERGY, 0);
         this.currPowerList.put(Element.FIRE, 0);
         this.currPowerList.put(Element.WATER, 0);
 
         this.maxPowerList = new HashMap<>();
         this.maxPowerList.put(Element.AIR, 0);
         this.maxPowerList.put(Element.EARTH, 0);
+        this.currPowerList.put(Element.ENERGY, 0);
         this.maxPowerList.put(Element.FIRE, 0);
         this.maxPowerList.put(Element.WATER, 0);
     }

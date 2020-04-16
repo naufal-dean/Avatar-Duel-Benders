@@ -159,6 +159,14 @@ public class GameStatus {
     }
 
     /**
+     * Getter for gamePower
+     * @return this.gameDeck
+     */
+    public HashMap<Player, GamePower> getGamePower() {
+        return this.gamePower;
+    }
+
+    /**
      * Getter for our GamePower
      * @return Our GamePower
      */
