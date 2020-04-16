@@ -6,8 +6,6 @@ import javafx.beans.value.ObservableValue;
 import com.avatarduel.controller.*;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
-import com.avatarduel.model.Character;
-import jdk.tools.jaotc.Main;
 
 public class MainPhase implements GamePhase {
     /**
@@ -69,11 +67,9 @@ public class MainPhase implements GamePhase {
         for (HandCardController handCardController : handController.getCardControllerList())
             handCardController.getCardAncPane().setEffect(null);
         // Remove active hand card
-        handController.removeActiveHandCard();
+        handController.resetActiveHandCard();
         // Deactivate event handler in entire field
-        fieldController.clearFieldEventHandler();
-        // Remove waiting hand card
-        fieldController.removeWaitingHandCard();
+        fieldController.clearCellEventHandler();
         // Deactivate event handler in power
         powerController.deactivateEventHandler();
 
@@ -98,7 +94,8 @@ public class MainPhase implements GamePhase {
             this.handToFieldConnector = new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-                    fieldController.clearFieldEventHandler();
+                    fieldController.clearCellEventHandler();
+                    // Zeroth check
                     if (handController.getActiveHandCard() == null)
                         return;
                     // Summon CHARACTER and SKILL AURA card
@@ -108,8 +105,8 @@ public class MainPhase implements GamePhase {
                         if (((Skill) handController.getActiveHandCard().getCard()).getEffect() != Effect.AURA)
                             return;
                     }
-                    // Pass signal to fieldController
-                    if (oldValue == false && newValue == true)
+                    // LAND or SKILL AURA card in hand clicked, set waiting card then activate cell event handler in field
+                    if (oldValue == false && newValue == true && enoughEnergy(handController.getActiveHandCard().getCard()))
                         fieldController.setWaitingHandCard(handController.getActiveHandCard());
                 }
             };
@@ -118,15 +115,24 @@ public class MainPhase implements GamePhase {
             this.fieldToHandConnector = new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-                    if (oldValue == false && newValue == true)
-                        handController.removeCardOnHand(fieldController.getWaitingHandCard());
+                    // LAND or SKILL AURA card summon succeed, remove active hand card, remove field waiting card,
+                    // subtract current power, update display, deactivate field event handler
+                    if (oldValue == false && newValue == true) {
+                        HandCardController handCardController = handController.getActiveHandCard();
+                        handController.removeActiveCardFromHand();
+                        GameStatus.getGameStatus().getGamePowerMap().get(activePlayer)
+                                  .subCurrPower(handCardController.getCard().getElement(), handCardController.getCard().getPower());
+                        mainController.getPowerControllerMap().get(activePlayer).init();
+                        fieldController.resetWaitingHandCard();
+                        fieldController.clearCellEventHandler();
+                    }
                 }
             };
         }
 
         // Add connector as listener to property
-        handController.getActiveHandCardSetProperty().addListener(this.handToFieldConnector);
-        fieldController.getCardSummonedProperty().addListener(this.fieldToHandConnector);
+        handController.getActiveHandCardSetSignalProperty().addListener(this.handToFieldConnector);
+        fieldController.getCardSummonedSignalProperty().addListener(this.fieldToHandConnector);
     }
 
     /**
@@ -138,8 +144,8 @@ public class MainPhase implements GamePhase {
         HandController handController = mainController.getHandControllerMap().get(activePlayer);
         FieldController fieldController = mainController.getFieldController();
         // Remove listener
-        handController.getActiveHandCardSetProperty().removeListener(this.handToFieldConnector);
-        fieldController.getCardSummonedProperty().removeListener(this.fieldToHandConnector);
+        handController.getActiveHandCardSetSignalProperty().removeListener(this.handToFieldConnector);
+        fieldController.getCardSummonedSignalProperty().removeListener(this.fieldToHandConnector);
     }
 
     /**
@@ -172,21 +178,23 @@ public class MainPhase implements GamePhase {
             this.powerToHandConnector = new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-                    // LAND card summon succeed, remove card, increment power, update display, increment land counter
+                    // LAND card summon succeed, remove card, increment power, update display, increment land counter,
+                    // deactivate power event handler
                     if (oldValue == false && newValue == true) {
                         HandCardController handCardController = handController.getActiveHandCard();
-                        handController.removeCardOnHand(handCardController);
-                        GameStatus.getGameStatus().getGamePower().get(activePlayer).incMaxPower(handCardController.getCard().getElement());
+                        handController.removeActiveCardFromHand();
+                        GameStatus.getGameStatus().getGamePowerMap().get(activePlayer)
+                                  .incMaxPower(handCardController.getCard().getElement());
                         powerController.init();
                         powerController.deactivateEventHandler();
-                        landCardPlaced++;
+//                        landCardPlaced++;
                     }
                 }
             };
         }
 
         // Add connector as listener to property
-        handController.getActiveHandCardSetProperty().addListener(this.handToPowerConnector);
+        handController.getActiveHandCardSetSignalProperty().addListener(this.handToPowerConnector);
         powerController.getCardSummonedSignalProperty().addListener(this.powerToHandConnector);
     }
 
@@ -199,20 +207,15 @@ public class MainPhase implements GamePhase {
         HandController handController = mainController.getHandControllerMap().get(activePlayer);
         PowerController powerController = mainController.getPowerControllerMap().get(activePlayer);
         // Remove listener
-        handController.getActiveHandCardSetProperty().removeListener(this.handToFieldConnector);
+        handController.getActiveHandCardSetSignalProperty().removeListener(this.handToFieldConnector);
         powerController.getCardSummonedSignalProperty().removeListener(this.fieldToHandConnector);
     }
 
     /**
      * Check if current energy enough to summon card
-     * @param card The Card (non LAND)
+     * @param card The Card
      */
     public boolean enoughEnergy(Card card) {
-        int currPower = GameStatus.getGameStatus().getOurPower().getCurrPowerList().get(card.getElement());
-        if (card.getCardType() == CardType.CHARACTER) {
-            return ((Character) card).getPower() <= currPower;
-        } else{ // card.getCardType() == CardType.SKILL
-            return ((Skill) card).getPower() <= currPower;
-        }
+        return card.getPower() <= GameStatus.getGameStatus().getOurPower().getCurrPowerList().get(card.getElement());
     }
 }

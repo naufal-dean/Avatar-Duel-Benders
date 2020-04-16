@@ -27,6 +27,7 @@ public class Character extends Card {
         return this.defense;
     }
 
+    @Override
     public int getPower() {
         return this.power;
     }

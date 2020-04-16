@@ -49,7 +49,7 @@ public class HandController implements Initializable {
     /**
      * Active card in hand set property
      */
-    private BooleanProperty activeHandCardSet;
+    private BooleanProperty activeHandCardSetSignal;
     /**
      * Shadow effect
      */
@@ -78,7 +78,7 @@ public class HandController implements Initializable {
     public HandController(CardDetailsController cardDetailsController) {
         this.cardControllerList = new ArrayList<>();
         this.cardBackControllerList = new ArrayList<>();
-        this.activeHandCardSet = new SimpleBooleanProperty(false);
+        this.activeHandCardSetSignal = new SimpleBooleanProperty(false);
         this.cardDetailsController = cardDetailsController;
         // Setup selected shadow effect
         this.activeShadow = new DropShadow();
@@ -107,8 +107,8 @@ public class HandController implements Initializable {
      * Getter for activeHandCardSet property
      * @return this.activeHandCardSet
      */
-    public BooleanProperty getActiveHandCardSetProperty() {
-        return this.activeHandCardSet;
+    public BooleanProperty getActiveHandCardSetSignalProperty() {
+        return this.activeHandCardSetSignal;
     }
 
     /**
@@ -178,10 +178,10 @@ public class HandController implements Initializable {
     }
 
     /**
-     * Remove card on the cell x, y in field
+     * Remove card from hand
      * @param cardController The card controller to be deleted
      */
-    public void removeCardOnHand(CardController cardController) {
+    public void removeCardFromHand(CardController cardController) {
         int idx = this.cardControllerList.indexOf(cardController);
         // TODO: remove assertion
         assert this.cardControllerList.indexOf(cardController) == this.cardControllerList.lastIndexOf(cardController);
@@ -193,6 +193,44 @@ public class HandController implements Initializable {
         Node nodeBack = this.handBack.getChildren().get(idx);
         this.handBack.getChildren().remove((StackPane) nodeBack);
         this.cardBackControllerList.remove(idx);
+    }
+
+    /**
+     * Remove active card in hand from hand
+     */
+    public void removeActiveCardFromHand() {
+        if (this.activeHandCard != null) {
+            this.removeCardFromHand(this.activeHandCard);
+            this.resetActiveHandCard();
+        }
+    }
+
+    /**
+     * Reset active hand card back to null, and the set signal back to false
+     */
+    public void resetActiveHandCard() {
+        this.activeHandCard = null;
+        this.activeHandCardSetSignal.setValue(false);
+    }
+
+    /**
+     * On click handler
+     * @param handCardController The HandCard selected
+     */
+    public void onHandCardClickedHandler(HandCardController handCardController) {
+        // Remove old effect if any
+        if (this.activeHandCard != null) {
+            this.activeHandCard.getCardAncPane().setEffect(null);
+            this.activeHandCardSetSignal.setValue(false);
+        }
+        // Check input
+        if (this.activeHandCard == handCardController) { // Remove active card
+            this.activeHandCard = null;
+        } else { // Add active card
+            this.activeHandCard = handCardController;
+            this.activeHandCard.getCardAncPane().setEffect(this.activeShadow);
+            this.activeHandCardSetSignal.setValue(true);
+        }
     }
 
     /**
@@ -208,34 +246,6 @@ public class HandController implements Initializable {
     public void flipCardInHand() {
         for (HandCardController handCardController : this.cardControllerList)
             handCardController.flipCard();
-    }
-
-    /**
-     * On click handler
-     * @param handCardController The HandCard selected
-     */
-    public void onHandCardClickedHandler(HandCardController handCardController) {
-        // Remove old effect if any
-        if (this.activeHandCard != null) {
-            this.activeHandCard.getCardAncPane().setEffect(null);
-            this.activeHandCardSet.setValue(false);
-        }
-        // Check input
-        if (this.activeHandCard == handCardController) { // Remove active card
-            this.activeHandCard = null;
-        } else { // Add active card
-            this.activeHandCard = handCardController;
-            this.activeHandCard.getCardAncPane().setEffect(this.activeShadow);
-            this.activeHandCardSet.setValue(true);
-        }
-    }
-
-    /**
-     * Remove active hand card
-     */
-    public void removeActiveHandCard() {
-        this.activeHandCard = null;
-        this.activeHandCardSet.setValue(false);
     }
 
     /**

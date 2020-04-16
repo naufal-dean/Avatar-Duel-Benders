@@ -63,7 +63,7 @@ public class FieldController implements Initializable {
     /**
      * Card summoned property
      */
-    private BooleanProperty cardSummoned;
+    private BooleanProperty cardSummonedSignal;
     /**
      * Field grid
      */
@@ -86,7 +86,7 @@ public class FieldController implements Initializable {
             this.activeHandler.add(Arrays.asList(new SimpleBooleanProperty(false), new SimpleBooleanProperty(false),
                                                  new SimpleBooleanProperty(false), new SimpleBooleanProperty(false)));
 
-        this.cardSummoned = new SimpleBooleanProperty(false);
+        this.cardSummonedSignal = new SimpleBooleanProperty(false);
         this.cardDetailsController = cardDetailsController;
         // Cell available shadow
         this.cellAvailableShadow = new DropShadow();
@@ -116,16 +116,16 @@ public class FieldController implements Initializable {
      * Getter for cardSummoned property
      * @return this.cardSummoned
      */
-    public BooleanProperty getCardSummonedProperty() {
-        return this.cardSummoned;
+    public BooleanProperty getCardSummonedSignalProperty() {
+        return this.cardSummonedSignal;
     }
 
     /**
-     * Getter for waiting hand card
-     * @return
+     * Card summoned signal emitter
      */
-    public HandCardController getWaitingHandCard() {
-        return this.waitingHandCard;
+    public void emitCardSummonedSignal() {
+        this.cardSummonedSignal.setValue(true);
+        this.cardSummonedSignal.setValue(false);
     }
 
     /**
@@ -134,9 +134,7 @@ public class FieldController implements Initializable {
      */
     public void setWaitingHandCard(HandCardController waitingHandCard) {
         this.waitingHandCard = waitingHandCard;
-        this.clearFieldEventHandler();
-
-        // Set target row
+        // Activate event handler on the right target cells
         int row;
         if (waitingHandCard.getOwner() == Player.BOTTOM) {
             row = (waitingHandCard.getCard().getCardType() == CardType.CHARACTER) ? (CHAR_ROW_BOT) : (SKILL_ROW_BOT);
@@ -145,15 +143,15 @@ public class FieldController implements Initializable {
         }
         for (int col = 0; col < 6; col++) {
             if (this.cardControllerList.get(col).get(row) == null) {
-                this.activateFieldEventHandler(col, row);
+                this.activateCellEventHandler(col, row);
             }
         }
     }
 
     /**
-     * Remove waiting hand card
+     * Reset waiting hand card
      */
-    public void removeWaitingHandCard() {
+    public void resetWaitingHandCard() {
         this.waitingHandCard = null;
     }
 
@@ -212,7 +210,7 @@ public class FieldController implements Initializable {
      * @param x The grid column index
      * @param y The grid row index
      */
-    public void removeCardOnField(int x, int y) {
+    public void removeCardFromField(int x, int y) {
         for (Node node : this.field.getChildren()) {
             if(node instanceof StackPane && this.field.getColumnIndex(node) == x && this.field.getRowIndex(node) == y) {
                 // Remove field children node
@@ -229,14 +227,14 @@ public class FieldController implements Initializable {
      * @param x The row coordinate
      * @param y The column coordinate
      */
-    public void activateFieldEventHandler(int x, int y) {
+    public void activateCellEventHandler(int x, int y) {
         this.activeHandler.get(x).get(y).setValue(true);
     }
 
     /**
      * Deactivate event handler on entire field
      */
-    public void clearFieldEventHandler() {
+    public void clearCellEventHandler() {
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 6; x++) {
                 this.activeHandler.get(x).get(y).setValue(false);
@@ -275,13 +273,10 @@ public class FieldController implements Initializable {
                                     setCardOnField(waitingHandCard.getCard(), waitingHandCard.getOwner(), true, col, row);
                             }
                             // Send card summoned signal
-                            cardSummoned.setValue(true);
-                            // Put back to default state
-                            cardSummoned.setValue(false);
+                            emitCardSummonedSignal();
                         } catch (IOException err) {
                             System.out.println(err.toString());
                         }
-                        clearFieldEventHandler();
                     }
                 });
                 // On mouse entered handler

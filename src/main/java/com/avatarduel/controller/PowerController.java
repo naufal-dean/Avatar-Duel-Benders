@@ -97,7 +97,7 @@ public class PowerController implements Initializable {
      * Init power panel based on GameStatus
      */
     public void init() {
-        GamePower gamePower = GameStatus.getGameStatus().getGamePower().get(this.owner);
+        GamePower gamePower = GameStatus.getGameStatus().getGamePowerMap().get(this.owner);
         this.air.setText(String.valueOf(gamePower.getCurrPowerList().get(Element.AIR)) + "/"
                        + String.valueOf(gamePower.getCurrPowerList().get(Element.AIR)));
         this.earth.setText(String.valueOf(gamePower.getCurrPowerList().get(Element.EARTH)) + "/"

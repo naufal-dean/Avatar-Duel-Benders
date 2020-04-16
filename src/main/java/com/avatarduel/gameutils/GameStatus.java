@@ -24,19 +24,15 @@ public class GameStatus {
     /**
      * Player health
      */
-    private HashMap<Player, Integer> gameHealth;
+    private HashMap<Player, Integer> gameHealthMap;
     /**
      * Player deck
      */
-    private HashMap<Player, GameDeck> gameDeck;
-    /**
-     * Player hand
-     */
-    private HashMap<Player, GameHand> gameHand;
+    private HashMap<Player, GameDeck> gameDeckMap;
     /**
      * Player power
      */
-    private HashMap<Player, GamePower> gamePower;
+    private HashMap<Player, GamePower> gamePowerMap;
 
     /**
      * Constructor
@@ -47,21 +43,17 @@ public class GameStatus {
         // Initialize game phase
         this.gamePhase = Phase.DRAW;
         // Initialize game health
-        this.gameHealth = new HashMap<>();
-        this.gameHealth.put(Player.BOTTOM, 80);
-        this.gameHealth.put(Player.TOP, 80);
+        this.gameHealthMap = new HashMap<>();
+        this.gameHealthMap.put(Player.BOTTOM, 80);
+        this.gameHealthMap.put(Player.TOP, 80);
         // Initialize game deck
-        this.gameDeck = new HashMap<>();
-        this.gameDeck.put(Player.BOTTOM, new GameDeck(60));
-        this.gameDeck.put(Player.TOP, new GameDeck((60)));
-        // Initialize game hand
-        this.gameHand = new HashMap<>();
-        this.gameHand.put(Player.BOTTOM, new GameHand());
-        this.gameHand.put(Player.TOP, new GameHand());
+        this.gameDeckMap = new HashMap<>();
+        this.gameDeckMap.put(Player.BOTTOM, new GameDeck(60));
+        this.gameDeckMap.put(Player.TOP, new GameDeck((60)));
         // Initialize game power
-        this.gamePower = new HashMap<>();
-        this.gamePower.put(Player.BOTTOM, new GamePower());
-        this.gamePower.put(Player.TOP, new GamePower());
+        this.gamePowerMap = new HashMap<>();
+        this.gamePowerMap.put(Player.BOTTOM, new GamePower());
+        this.gamePowerMap.put(Player.TOP, new GamePower());
     }
 
     /**
@@ -84,11 +76,19 @@ public class GameStatus {
     }
 
     /**
-     * Getter for gameTurn
-     * @return Active player now
+     * Getter for current active player
+     * @return Current active player
      */
     public Player getGameActivePlayer() {
         return this.gameActivePlayer;
+    }
+
+    /**
+     * Getter for current non active player
+     * @return Current non active player
+     */
+    public Player getGameNonActivePlayer() {
+        return (this.gameActivePlayer == Player.BOTTOM) ? (Player.TOP) : (Player.BOTTOM);
     }
 
     /**
@@ -111,59 +111,24 @@ public class GameStatus {
      * Getter for gameHealth
      * @return this.gameHealth
      */
-    public HashMap<Player, Integer> getGameHealth() {
-        return this.gameHealth;
-    }
-
-    /**
-     * Getter for our health
-     * @return Our health
-     */
-    public Integer getOurHealth() {
-        return gameHealth.get(this.gameActivePlayer);
-    }
-
-    /**
-     * Getter for enemy health
-     * @return Enemy health
-     */
-    public Integer getEnemyHealth() {
-        if (this.gameActivePlayer == Player.BOTTOM)
-            return gameHealth.get(Player.TOP);
-        else
-            return gameHealth.get(Player.BOTTOM);
+    public HashMap<Player, Integer> getGameHealthMap() {
+        return this.gameHealthMap;
     }
 
     /**
      * Getter for gameDeck
      * @return this.gameDeck
      */
-    public HashMap<Player, GameDeck> getGameDeck() {
-        return this.gameDeck;
-    }
-
-    /**
-     * Getter for our GameDeck
-     * @return Our GameDeck
-     */
-    public GameDeck getOurDeck() {
-        return this.gameDeck.get(this.gameActivePlayer);
-    }
-
-    /**
-     * Getter for our GameHand
-     * @return Our GameHand
-     */
-    public GameHand getOurHand() {
-        return this.gameHand.get(this.gameActivePlayer);
+    public HashMap<Player, GameDeck> getGameDeckMap() {
+        return this.gameDeckMap;
     }
 
     /**
      * Getter for gamePower
      * @return this.gameDeck
      */
-    public HashMap<Player, GamePower> getGamePower() {
-        return this.gamePower;
+    public HashMap<Player, GamePower> getGamePowerMap() {
+        return this.gamePowerMap;
     }
 
     /**
@@ -171,16 +136,13 @@ public class GameStatus {
      * @return Our GamePower
      */
     public GamePower getOurPower() {
-        return this.gamePower.get(this.gameActivePlayer);
+        return this.gamePowerMap.get(this.gameActivePlayer);
     }
 
     /**
      * Next Turn
      */
     public void nextTurn() {
-        if (this.gameActivePlayer == Player.BOTTOM)
-            this.gameActivePlayer = Player.TOP;
-        else
-            this.gameActivePlayer = Player.BOTTOM;
+        this.gameActivePlayer = this.getGameNonActivePlayer();
     }
 }

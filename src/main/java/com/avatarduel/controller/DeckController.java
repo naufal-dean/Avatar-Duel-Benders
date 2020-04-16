@@ -45,7 +45,7 @@ public class DeckController implements Initializable {
      */
     public void init() {
         // Set background
-        int cardQuantity = GameStatus.getGameStatus().getGameDeck().get(this.owner).getCardQuantity();
+        int cardQuantity = GameStatus.getGameStatus().getGameDeckMap().get(this.owner).getCardQuantity();
         String templatePath;
         String midPath = (this.owner == Player.BOTTOM) ? ("bot") : ("top");
         if (40 <= cardQuantity) {

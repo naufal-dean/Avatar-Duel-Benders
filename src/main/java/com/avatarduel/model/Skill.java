@@ -13,6 +13,7 @@ public abstract class Skill extends Card {
         this.power = power;
     }
 
+    @Override
     public int getPower() {
         return this.power;
     }

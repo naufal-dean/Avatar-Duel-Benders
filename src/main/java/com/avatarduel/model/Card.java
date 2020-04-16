@@ -45,5 +45,9 @@ public abstract class Card {
         return this.imagePath;
     }
 
+    public int getPower() {
+        return 0;
+    }
+
     public abstract CardType getCardType();
 }

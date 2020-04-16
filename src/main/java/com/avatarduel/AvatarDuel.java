@@ -5,16 +5,11 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
 
-import com.avatarduel.gamephase.Phase;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -106,8 +101,8 @@ public class AvatarDuel extends Application {
    */
   void loadGame(MainController mainController) throws Exception {
     // Get game deck
-    GameDeck deckBottom = GameStatus.getGameStatus().getGameDeck().get(Player.BOTTOM);
-    GameDeck deckTop = GameStatus.getGameStatus().getGameDeck().get(Player.TOP);
+    GameDeck deckBottom = GameStatus.getGameStatus().getGameDeckMap().get(Player.BOTTOM);
+    GameDeck deckTop = GameStatus.getGameStatus().getGameDeckMap().get(Player.TOP);
     // Load hand
     HandController handBottomController = mainController.getHandControllerMap().get(Player.BOTTOM);
     HandController handTopController = mainController.getHandControllerMap().get(Player.TOP);

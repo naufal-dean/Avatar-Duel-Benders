@@ -33,19 +33,26 @@ public class DrawPhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
+        Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
         // Update game status
         GameStatus.getGameStatus().setGamePhase(Phase.DRAW);
-        // Add card to hand
-        GameDeck deck = GameStatus.getGameStatus().getOurDeck();
-        Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
+
+        // Draw card
+        GameDeck deck = GameStatus.getGameStatus().getGameDeckMap().get(activePlayer);
         HandController handController = mainController.getHandControllerMap().get(activePlayer);
         try {
             handController.addCardOnHand(deck.draw(), activePlayer);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-        // Update game deck
+        // Update game deck display
         mainController.getDeckControllerMap().get(activePlayer).init();
+
+        // Reset power
+        GameStatus.getGameStatus().getGamePowerMap().get(activePlayer).resetCurrPower();
+        // Update power display
+        mainController.getPowerControllerMap().get(activePlayer).init();
+
         // End phase
         this.endPhase(mainController);
     }
