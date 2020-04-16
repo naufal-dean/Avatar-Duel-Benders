@@ -10,15 +10,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 
 import com.avatarduel.gamephase.Phase;
 import com.avatarduel.gameutils.GamePower;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.Element;
 import com.avatarduel.model.Player;
-import javafx.scene.paint.Color;
 
 public class PowerController implements Initializable {
     /**
@@ -126,7 +127,8 @@ public class PowerController implements Initializable {
         // On mouse clicked handler
         this.rootPane.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
             if (activeHandler.get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                turnOnCardSummonedSignal();
+                if (e.getButton() == MouseButton.PRIMARY)
+                    turnOnCardSummonedSignal();
             }
         });
         // On mouse entered handler

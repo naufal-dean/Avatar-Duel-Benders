@@ -271,15 +271,17 @@ public class FieldController implements Initializable {
                             if (cardType == CardType.CHARACTER) {
                                 if (e.getButton() == MouseButton.PRIMARY) {
                                     setCardOnField(waitingHandCard.getCard(), waitingHandCard.getOwner(), true, col, row);
+                                    turnOnCardSummonedSignal();
                                 } else if (e.getButton() == MouseButton.SECONDARY) {
                                     setCardOnField(waitingHandCard.getCard(), waitingHandCard.getOwner(), false, col, row);
+                                    turnOnCardSummonedSignal();
                                 }
                             } else if (cardType == CardType.SKILL) {
-                                if (e.getButton() == MouseButton.PRIMARY)
+                                if (e.getButton() == MouseButton.PRIMARY) {
                                     setCardOnField(waitingHandCard.getCard(), waitingHandCard.getOwner(), true, col, row);
+                                    turnOnCardSummonedSignal();
+                                }
                             }
-                            // Send card summoned signal
-                            turnOnCardSummonedSignal();
                         } catch (IOException err) {
                             System.out.println(err.toString());
                         }

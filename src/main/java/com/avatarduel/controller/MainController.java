@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import com.avatarduel.gamephase.Phase;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,6 +18,10 @@ import com.avatarduel.AvatarDuel;
 import com.avatarduel.model.Player;
 
 public class MainController implements Initializable {
+    /**
+     * Health Bar Controller
+     */
+    private HashMap<Player, HealthController> healthControllerMap;
     /**
      * Card details controller
      */
@@ -35,10 +38,6 @@ public class MainController implements Initializable {
      * Deck controller
      */
     private HashMap<Player, DeckController> deckControllerMap;
-    /**
-     * Health Bar Controller
-     */
-    private HashMap<Player, Integer> healthBarControllerMap;
     /**
      * Power controller
      */
@@ -59,6 +58,10 @@ public class MainController implements Initializable {
      * Main background
      */
     @FXML private ImageView mainBackground;
+    /**
+     * Health display
+     */
+    @FXML private Pane healthBottom, healthTop;
     /**
      * Card detail display
      */
@@ -92,6 +95,7 @@ public class MainController implements Initializable {
      * Constructor
      */
     public MainController() {
+        this.healthControllerMap = new HashMap<>();
         this.deckControllerMap = new HashMap<>();
         this.powerControllerMap = new HashMap<>();
         this.handControllerMap = new HashMap<>();
@@ -136,7 +140,35 @@ public class MainController implements Initializable {
     public HashMap<Player, DeckController> getDeckControllerMap() {
         return this.deckControllerMap;
     }
-  
+
+    /**
+     * Initialize health display
+     */
+    public void initHealth() {
+        FXMLLoader healthBottomLoader = new FXMLLoader();
+        HealthController healthBottomController = new HealthController(Player.BOTTOM);
+        healthBottomLoader.setLocation(AvatarDuel.class.getResource("view/Health.fxml"));
+        healthBottomLoader.setController(healthBottomController);
+
+        FXMLLoader healthTopLoader = new FXMLLoader();
+        HealthController healthTopController = new HealthController(Player.TOP);
+        healthTopLoader.setLocation(AvatarDuel.class.getResource("view/Health.fxml"));
+        healthTopLoader.setController(healthTopController);
+
+        // Create and assign pane
+        try {
+            StackPane healthBottomPane = healthBottomLoader.load();
+            this.healthBottom.getChildren().add(healthBottomPane);
+            StackPane healthTopPane = healthTopLoader.load();
+            this.healthTop.getChildren().add(healthTopPane);
+        } catch (IOException e) {
+            System.out.println("Error occured: " + e);
+        }
+        // Assign health controller
+        this.healthControllerMap.put(Player.BOTTOM, healthBottomController);
+        this.healthControllerMap.put(Player.TOP, healthTopController);
+    }
+
     /**
      * Initialize card details display
      */
@@ -289,33 +321,6 @@ public class MainController implements Initializable {
         this.handControllerMap.put(Player.BOTTOM, handBottomController);
         this.handControllerMap.put(Player.TOP, handTopController);
     }
-    /**
-     * Initialize Health Point Display
-     */
-    public void initHealth() {
-        FXMLLoader healthBottomLoader = new FXMLLoader();
-        HealthBarController healthBottomController = new HealthBarController(Player.BOTTOM);
-        healthBottomLoader.setLocation(AvatarDuel.class.getResource("view/HealthBar.fxml"));
-        healthBottomLoader.setController(healthBottomController);
-
-        FXMLLoader healthTopLoader = new FXMLLoader();
-        HealthBarController healthTopController = new HealthBarController(Player.TOP);
-        healthTopLoader.setLocation(AvatarDuel.class.getResource("view/HealthBar.fxml"));
-        healthTopLoader.setController(healthTopController);
-
-        // Create and assign pane
-        try {
-            StackPane healthBottomPane = healthBottomLoader.load();
-            this.healthBottom.getChildren().add(healthBottomPane);
-            StackPane deckTopPane = deckTopLoader.load();
-            this.healthTop.getChildren().add(healthTopPane);
-        } catch (IOException e) {
-            System.out.println("Error occured: " + e);
-        }
-        // Assign health controller
-        this.healthBarControllerMap.put(Player.BOTTOM, healthBottomController);
-        this.healthBarControllerMap.put(Player.TOP, healthTopController);
-    }
     
     /**
      * {@inheritDoc}
@@ -323,6 +328,7 @@ public class MainController implements Initializable {
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
 //        this.mainBackground.setImage(new Image(AvatarDuel.class.getResource("background/main2.png").toString()));
+        this.initHealth();
         this.initCardDetails();
         this.phase.setStyle("-fx-border-color: black");
         this.initPhase();

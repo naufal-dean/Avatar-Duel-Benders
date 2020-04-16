@@ -15,7 +15,7 @@ import com.avatarduel.AvatarDuel;
 import com.avatarduel.gameutils.GameStatus;
 
 
-public class HealthBarController implements Initializable {
+public class HealthController implements Initializable {
     /**
      * The owner's current health
      */
@@ -36,7 +36,7 @@ public class HealthBarController implements Initializable {
     /**
      * Constructor
      */
-    public HealthBarController(Player owner) {
+    public HealthController(Player owner) {
         this.owner = owner;
     }
 
@@ -46,8 +46,7 @@ public class HealthBarController implements Initializable {
     public void init() {
         // Set background
         int healthPoint = GameStatus.getGameStatus().getGameHealthMap().get(this.owner);
-        String templatePath;
-        templatePath = "card/template/health_bar/health_bar_" + healthPoint + ".png";
+        String templatePath = "card/template/health_bar/health_bar_" + healthPoint + ".png";
         this.healthVisual.setImage(new Image(AvatarDuel.class.getResource(templatePath).toString()));
         this.healthRemain.setText(String.valueOf(healthPoint) + "/80");
     }
