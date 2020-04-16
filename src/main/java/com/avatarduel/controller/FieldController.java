@@ -121,10 +121,16 @@ public class FieldController implements Initializable {
     }
 
     /**
-     * Card summoned signal emitter
+     * Turn on card summoned signal
      */
-    public void emitCardSummonedSignal() {
+    public void turnOnCardSummonedSignal() {
         this.cardSummonedSignal.setValue(true);
+    }
+
+    /**
+     * Turn off card summoned signal
+     */
+    public void turnOffCardSummonedSignal() {
         this.cardSummonedSignal.setValue(false);
     }
 
@@ -273,7 +279,7 @@ public class FieldController implements Initializable {
                                     setCardOnField(waitingHandCard.getCard(), waitingHandCard.getOwner(), true, col, row);
                             }
                             // Send card summoned signal
-                            emitCardSummonedSignal();
+                            turnOnCardSummonedSignal();
                         } catch (IOException err) {
                             System.out.println(err.toString());
                         }

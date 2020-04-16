@@ -72,10 +72,16 @@ public class PowerController implements Initializable {
     }
 
     /**
-     * Card summoned signal emitter
+     * Turn on card summoned signal
      */
-    public void emitCardSummonedSignal() {
+    public void turnOnCardSummonedSignal() {
         this.cardSummonedSignal.setValue(true);
+    }
+
+    /**
+     * Turn off card summoned signal
+     */
+    public void turnOffCardSummonedSignal() {
         this.cardSummonedSignal.setValue(false);
     }
 
@@ -120,7 +126,7 @@ public class PowerController implements Initializable {
         // On mouse clicked handler
         this.rootPane.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
             if (activeHandler.get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                emitCardSummonedSignal();
+                turnOnCardSummonedSignal();
             }
         });
         // On mouse entered handler

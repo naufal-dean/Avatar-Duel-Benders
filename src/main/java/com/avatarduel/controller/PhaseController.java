@@ -47,10 +47,16 @@ public class PhaseController implements Initializable {
     }
 
     /**
-     * Emitter for battlePhaseSignal
+     * Turn on battlePhaseSignal
      */
-    public void emitBattlePhaseSignal() {
+    public void turnOnBattlePhaseSignal() {
         this.battlePhaseSignal.setValue(true);
+    }
+
+    /**
+     * Turn off battlePhaseSignal
+     */
+    public void turnOffBattlePhaseSignal() {
         this.battlePhaseSignal.setValue(false);
     }
 
@@ -63,11 +69,10 @@ public class PhaseController implements Initializable {
     }
 
     /**
-     * Emitter for endPhaseSignal
+     * Turn on endPhaseSignal
      */
-    public void emitEndPhaseSignal() {
+    public void turnOnEndPhaseSignal() {
         this.endPhaseSignal.setValue(true);
-        this.endPhaseSignal.setValue(false);
     }
 
     /**
@@ -92,14 +97,12 @@ public class PhaseController implements Initializable {
         // Add event handler
         this.battlePhase.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                emitBattlePhaseSignal();
+                turnOnBattlePhaseSignal();
             }
         });
         this.endPhase.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-            if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                this.endPhaseSignal.setValue(true);
-            } else if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
-                emitEndPhaseSignal();
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN || GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
+                turnOnEndPhaseSignal();
             }
         });
     }

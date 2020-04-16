@@ -13,7 +13,7 @@ public class BattlePhase implements GamePhase {
     /**
      * Connector
      */
-    ChangeListener<Boolean> phaseChange;
+    ChangeListener<Boolean> endPhaseChange;
 
     /**
      * Constructor
@@ -73,17 +73,17 @@ public class BattlePhase implements GamePhase {
      */
     public void addPhaseChangeListener(MainController mainController) {
         // Create ChangeListener object
-        if (this.phaseChange == null) {
-            this.phaseChange = new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-                    if (oldValue == false && newValue == true)
-                        endPhase(mainController);
+        this.endPhaseChange = new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                if (oldValue == false && newValue == true) {
+                    endPhase(mainController);
+                    mainController.getPhaseController().turnOffEndPhaseSignal();
                 }
-            };
-        }
+            }
+        };
         // Add listener
-        mainController.getPhaseController().getEndPhaseSignalProperty().addListener(this.phaseChange);
+        mainController.getPhaseController().getEndPhaseSignalProperty().addListener(this.endPhaseChange);
     }
 
     /**
@@ -91,7 +91,7 @@ public class BattlePhase implements GamePhase {
      * @param mainController The MainController
      */
     public void removePhaseChangeListener(MainController mainController) {
-        mainController.getPhaseController().getBattlePhaseSignalProperty().removeListener(this.phaseChange);
-        mainController.getPhaseController().getEndPhaseSignalProperty().removeListener(this.phaseChange);
+        mainController.getPhaseController().getBattlePhaseSignalProperty().removeListener(this.endPhaseChange);
+        mainController.getPhaseController().getEndPhaseSignalProperty().removeListener(this.endPhaseChange);
     }
 }

@@ -19,7 +19,8 @@ public class MainPhase implements GamePhase {
     /**
      * Connector
      */
-    ChangeListener<Boolean> handToFieldConnector, fieldToHandConnector, handToPowerConnector, powerToHandConnector, phaseChange;
+    ChangeListener<Boolean> handToFieldConnector, fieldToHandConnector, handToPowerConnector, powerToHandConnector,
+            battlePhaseChange, endPhaseChange;
 
     /**
      * Constructor
@@ -95,45 +96,42 @@ public class MainPhase implements GamePhase {
         HandController handController = mainController.getHandControllerMap().get(activePlayer);
         FieldController fieldController = mainController.getFieldController();
         // Create ChangeListener object
-        if (this.handToFieldConnector == null) {
-            this.handToFieldConnector = new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+        this.handToFieldConnector = new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                fieldController.clearCellEventHandler();
+                // Zeroth check
+                if (handController.getActiveHandCard() == null)
+                    return;
+                // Summon CHARACTER and SKILL AURA card
+                if (handController.getActiveHandCard().getCard().getCardType() == CardType.LAND) {
+                    return;
+                } else if (handController.getActiveHandCard().getCard().getCardType() == CardType.SKILL) {
+                    if (((Skill) handController.getActiveHandCard().getCard()).getEffect() != Effect.AURA)
+                        return;
+                }
+                // LAND or SKILL AURA card in hand clicked, set waiting card then activate cell event handler in field
+                if (oldValue == false && newValue == true && enoughEnergy(handController.getActiveHandCard().getCard()))
+                    fieldController.setWaitingHandCard(handController.getActiveHandCard());
+            }
+        };
+        this.fieldToHandConnector = new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                // LAND or SKILL AURA card summon succeed, remove field waiting card, subtract current power,
+                // update display, deactivate field event handler, remove active hand card
+                if (oldValue == false && newValue == true) {
+                    GameStatus.getGameStatus().getGamePowerMap().get(activePlayer)
+                              .subCurrPower(handController.getActiveHandCard().getCard().getElement(),
+                                            handController.getActiveHandCard().getCard().getPower());
+                    mainController.getPowerControllerMap().get(activePlayer).init();
+                    fieldController.resetWaitingHandCard();
                     fieldController.clearCellEventHandler();
-                    // Zeroth check
-                    if (handController.getActiveHandCard() == null)
-                        return;
-                    // Summon CHARACTER and SKILL AURA card
-                    if (handController.getActiveHandCard().getCard().getCardType() == CardType.LAND) {
-                        return;
-                    } else if (handController.getActiveHandCard().getCard().getCardType() == CardType.SKILL) {
-                        if (((Skill) handController.getActiveHandCard().getCard()).getEffect() != Effect.AURA)
-                            return;
-                    }
-                    // LAND or SKILL AURA card in hand clicked, set waiting card then activate cell event handler in field
-                    if (oldValue == false && newValue == true && enoughEnergy(handController.getActiveHandCard().getCard()))
-                        fieldController.setWaitingHandCard(handController.getActiveHandCard());
+                    handController.removeActiveCardFromHand();
+                    fieldController.turnOffCardSummonedSignal();
                 }
-            };
-        }
-        if (this.fieldToHandConnector == null) {
-            this.fieldToHandConnector = new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-                    // LAND or SKILL AURA card summon succeed, remove active hand card, remove field waiting card,
-                    // subtract current power, update display, deactivate field event handler
-                    if (oldValue == false && newValue == true) {
-                        HandCardController handCardController = handController.getActiveHandCard();
-                        handController.removeActiveCardFromHand();
-                        GameStatus.getGameStatus().getGamePowerMap().get(activePlayer)
-                                  .subCurrPower(handCardController.getCard().getElement(), handCardController.getCard().getPower());
-                        mainController.getPowerControllerMap().get(activePlayer).init();
-                        fieldController.resetWaitingHandCard();
-                        fieldController.clearCellEventHandler();
-                    }
-                }
-            };
-        }
+            }
+        };
 
         // Add connector as listener to property
         handController.getActiveHandCardSetSignalProperty().addListener(this.handToFieldConnector);
@@ -162,41 +160,37 @@ public class MainPhase implements GamePhase {
         HandController handController = mainController.getHandControllerMap().get(activePlayer);
         PowerController powerController = mainController.getPowerControllerMap().get(activePlayer);
         // Create ChangeListener object
-        if (this.handToPowerConnector == null) {
-            this.handToPowerConnector = new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+        this.handToPowerConnector = new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                powerController.deactivateEventHandler();
+                // Zeroth check
+                if (handController.getActiveHandCard() == null || landCardPlaced > 0)
+                    return;
+                // Summon LAND card
+                if (handController.getActiveHandCard().getCard().getCardType() != CardType.LAND)
+                    return;
+                // LAND card in hand clicked, activate event handler in power display
+                if (oldValue == false && newValue == true)
+                    powerController.activateEventHandler();
+            }
+        };
+        this.powerToHandConnector = new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                // LAND card summon succeed, increment power, update display, remove active hand card,
+                // deactivate power event handler, increment land counter
+                if (oldValue == false && newValue == true) {
+                    GameStatus.getGameStatus().getGamePowerMap().get(activePlayer)
+                              .incMaxPower(handController.getActiveHandCard().getCard().getElement());
+                    handController.removeActiveCardFromHand();
                     powerController.deactivateEventHandler();
-                    // Zeroth check
-                    if (handController.getActiveHandCard() == null || landCardPlaced > 0)
-                        return;
-                    // Summon LAND card
-                    if (handController.getActiveHandCard().getCard().getCardType() != CardType.LAND)
-                        return;
-                    // LAND card in hand clicked, activate event handler in power display
-                    if (oldValue == false && newValue == true)
-                        powerController.activateEventHandler();
+                    powerController.init();
+                    landCardPlaced++;
+                    powerController.turnOffCardSummonedSignal();
                 }
-            };
-        }
-        if (this.powerToHandConnector == null) {
-            this.powerToHandConnector = new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-                    // LAND card summon succeed, remove card, increment power, update display, increment land counter,
-                    // deactivate power event handler
-                    if (oldValue == false && newValue == true) {
-                        HandCardController handCardController = handController.getActiveHandCard();
-                        handController.removeActiveCardFromHand();
-                        GameStatus.getGameStatus().getGamePowerMap().get(activePlayer)
-                                  .incMaxPower(handCardController.getCard().getElement());
-                        powerController.init();
-                        powerController.deactivateEventHandler();
-                        landCardPlaced++;
-                    }
-                }
-            };
-        }
+            }
+        };
 
         // Add connector as listener to property
         handController.getActiveHandCardSetSignalProperty().addListener(this.handToPowerConnector);
@@ -222,18 +216,27 @@ public class MainPhase implements GamePhase {
      */
     public void addPhaseChangeListener(MainController mainController) {
         // Create ChangeListener object
-        if (this.phaseChange == null) {
-            this.phaseChange = new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-                    if (oldValue == false && newValue == true)
-                        endPhase(mainController);
+        this.battlePhaseChange = new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                if (oldValue == false && newValue == true) {
+                    mainController.getPhaseController().turnOffBattlePhaseSignal();
+                    endPhase(mainController);
                 }
-            };
-        }
+            }
+        };
+        this.endPhaseChange = new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                // Keep endPhaseSignal, so it can be passed to battlePhase
+                if (oldValue == false && newValue == true) {
+                    endPhase(mainController);
+                }
+            }
+        };
         // Add listener
-        mainController.getPhaseController().getBattlePhaseSignalProperty().addListener(this.phaseChange);
-        mainController.getPhaseController().getEndPhaseSignalProperty().addListener(this.phaseChange);
+        mainController.getPhaseController().getBattlePhaseSignalProperty().addListener(this.battlePhaseChange);
+        mainController.getPhaseController().getEndPhaseSignalProperty().addListener(this.endPhaseChange);
     }
 
     /**
@@ -241,8 +244,8 @@ public class MainPhase implements GamePhase {
      * @param mainController The MainController
      */
     public void removePhaseChangeListener(MainController mainController) {
-        mainController.getPhaseController().getBattlePhaseSignalProperty().removeListener(this.phaseChange);
-        mainController.getPhaseController().getEndPhaseSignalProperty().removeListener(this.phaseChange);
+        mainController.getPhaseController().getBattlePhaseSignalProperty().removeListener(this.battlePhaseChange);
+        mainController.getPhaseController().getEndPhaseSignalProperty().removeListener(this.endPhaseChange);
     }
 
     /**
