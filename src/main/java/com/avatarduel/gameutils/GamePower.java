@@ -28,7 +28,7 @@ public class GamePower {
         this.maxPowerList = new HashMap<>();
         this.maxPowerList.put(Element.AIR, 0);
         this.maxPowerList.put(Element.EARTH, 0);
-        this.currPowerList.put(Element.ENERGY, 0);
+        this.maxPowerList.put(Element.ENERGY, 0);
         this.maxPowerList.put(Element.FIRE, 0);
         this.maxPowerList.put(Element.WATER, 0);
     }
@@ -65,15 +65,17 @@ public class GamePower {
     public void resetCurrPower() {
         this.currPowerList.put(Element.AIR, this.maxPowerList.get(Element.AIR));
         this.currPowerList.put(Element.EARTH, this.maxPowerList.get(Element.EARTH));
+        this.currPowerList.put(Element.ENERGY, this.maxPowerList.get(Element.ENERGY));
         this.currPowerList.put(Element.FIRE, this.maxPowerList.get(Element.FIRE));
         this.currPowerList.put(Element.WATER, this.maxPowerList.get(Element.WATER));
     }
 
     /**
-     * Increment max element power
+     * Increment max and current element power
      * @param element The Element to be set
      */
     public void incMaxPower(Element element) {
         this.maxPowerList.put(element, this.maxPowerList.get(element) + 1);
+        this.currPowerList.put(element, this.currPowerList.get(element) + 1);
     }
 }

@@ -144,8 +144,9 @@ public class FieldController implements Initializable {
             row = (waitingHandCard.getCard().getCardType() == CardType.CHARACTER) ? (CHAR_ROW_TOP) : (SKILL_ROW_TOP);
         }
         for (int col = 0; col < 6; col++) {
-            if (this.cardControllerList.get(col).get(row) == null)
+            if (this.cardControllerList.get(col).get(row) == null) {
                 this.activateFieldEventHandler(col, row);
+            }
         }
     }
 
@@ -254,13 +255,13 @@ public class FieldController implements Initializable {
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 6; x++) {
                 Pane emptyCell = new Pane();
-//                emptyCell.setStyle("-fx-border-color: black");
+                emptyCell.setStyle("-fx-border-color: black");
 
                 // Add event handler
                 int row = y, col = x;
                 // On mouse clicked handler
                 emptyCell.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-                    if (this.activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                    if (activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                         CardType cardType = waitingHandCard.getCard().getCardType();
                         try {
                             if (cardType == CardType.CHARACTER) {
@@ -285,14 +286,14 @@ public class FieldController implements Initializable {
                 });
                 // On mouse entered handler
                 emptyCell.onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-                    if (this.activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                        emptyCell.setEffect(this.cellHoverShadow);
+                    if (activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                        emptyCell.setEffect(cellHoverShadow);
                     }
                 });
                 // On mouse exited handler
                 emptyCell.onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-                    if (this.activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                        emptyCell.setEffect(this.cellAvailableShadow);
+                    if (activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                        emptyCell.setEffect(cellAvailableShadow);
                     }
                 });
 
@@ -301,7 +302,7 @@ public class FieldController implements Initializable {
                     if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                         // Field effect
                         if (oldValue == false && newValue == true) {
-                            emptyCell.setEffect(this.cellAvailableShadow);
+                            emptyCell.setEffect(cellAvailableShadow);
                         } else {
                             emptyCell.setEffect(null);
                         }
