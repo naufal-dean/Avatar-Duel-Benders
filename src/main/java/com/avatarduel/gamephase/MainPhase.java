@@ -187,7 +187,7 @@ public class MainPhase implements GamePhase {
                                   .incMaxPower(handCardController.getCard().getElement());
                         powerController.init();
                         powerController.deactivateEventHandler();
-//                        landCardPlaced++;
+                        landCardPlaced++;
                     }
                 }
             };
