@@ -163,7 +163,7 @@ public class FieldController implements Initializable {
 
     /**
      * Set card on the cell x, y in field
-     * @param card The card to be displayed
+     * @param card The card to be displayed (Card type only CHARACTER and SKILL AURA)
      * @param owner The owner of the card
      * @param x The grid column index
      * @param y The grid row index
@@ -173,27 +173,34 @@ public class FieldController implements Initializable {
         if (this.cardControllerList.get(x).get(y) == null) {
             // Create loader
             FXMLLoader loader = new FXMLLoader();
+            SummonedCardController cardController;
             if (card.getCardType().equals(CardType.CHARACTER)) {
-                SummonedCharacterCardController cardController = new SummonedCharacterCardController((Character) card, owner, x, y, isAttack);
-                loader.setController(cardController);
-                this.cardControllerList.get(x).set(y, cardController);
+                cardController = new SummonedCharacterCardController((Character) card, owner, x, y, isAttack);
             } else if (card.getCardType().equals(CardType.SKILL)) {
-                SummonedSkillCardController cardController = new SummonedSkillCardController((SkillAura) card, owner, x, y, null);
-                loader.setController(cardController);
-                this.cardControllerList.get(x).set(y, cardController);
+                cardController = new SummonedSkillCardController((SkillAura) card, owner, x, y, null);
+            } else {
+                return;
             }
+            loader.setController(cardController);
             loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
-
-            // Create root
             StackPane root = loader.load();
+
             // Add event handler
-            CardController c = this.cardControllerList.get(x).get(y);
-            // Add event handler
-            if (c != null) {
-                c.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-                    cardDetailsController.setCard(c.getCard());
+            if (cardController != null) {
+                if (card.getCardType() == CardType.SKILL) {
+                    // Set on right click remove card from field (on skill card)
+                    cardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+                        if (e.getButton() == MouseButton.SECONDARY && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN &&
+                                GameStatus.getGameStatus().getGameActivePlayer() == cardController.getOwner()) {
+                            if (((Skill) cardController.getCard()).getEffect() == Effect.AURA) // TODO: add skill power up support
+                                removeCardFromField(cardController.getX(), cardController.getY());
+                        }
+                    });
+                }
+                cardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+                    cardDetailsController.setCard(cardController.getCard());
                 });
-                c.getCardAncPane().onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+                cardController.getCardAncPane().onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
                     cardDetailsController.removeCard();
                 });
             }
@@ -208,6 +215,8 @@ public class FieldController implements Initializable {
             GridPane.setValignment(root, VPos.CENTER);
             // Set root as field children node
             this.field.add(root, x, y);
+            // Save controller
+            this.cardControllerList.get(x).set(y, cardController);
         }
     }
 

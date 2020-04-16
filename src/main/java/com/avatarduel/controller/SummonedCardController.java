@@ -28,6 +28,30 @@ public class SummonedCardController extends CardController {
     }
 
     /**
+     * Getter for owner of the card
+     * @return this.owner
+     */
+    public Player getOwner() {
+        return this.owner;
+    }
+
+    /**
+     * Getter for x coordinate
+     * @return this.x
+     */
+    public int getX() {
+        return this.x;
+    }
+
+    /**
+     * Getter for y coordinate
+     * @return this.y
+     */
+    public int getY() {
+        return this.y;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

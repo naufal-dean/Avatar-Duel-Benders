@@ -89,7 +89,8 @@ public class SummonedCharacterCardController extends SummonedCardController {
     public void initialize(URL url, ResourceBundle resources) {
         // Set on click handler
         this.cardAncPane.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-            if (e.getButton() == MouseButton.SECONDARY && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+            if (e.getButton() == MouseButton.SECONDARY && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN &&
+                    GameStatus.getGameStatus().getGameActivePlayer() == this.owner) {
                 this.rotate();
             }
         });
