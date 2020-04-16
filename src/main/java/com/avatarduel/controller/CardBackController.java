@@ -87,7 +87,7 @@ public class CardBackController implements Initializable, Flippable {
                         new KeyValue(this.cardBackAncPane.rotateProperty(), 0)
                 ),
                 new KeyFrame(
-                        Duration.millis(250),
+                        Duration.millis(500),
                         new KeyValue(this.cardBackAncPane.rotateProperty(), 90)
                 )
         );
@@ -99,7 +99,7 @@ public class CardBackController implements Initializable, Flippable {
                         new KeyValue(this.cardBackAncPane.rotateProperty(), 90)
                 ),
                 new KeyFrame(
-                        Duration.millis(250),
+                        Duration.millis(500),
                         new KeyValue(this.cardBackAncPane.rotateProperty(), 0)
                 )
         );

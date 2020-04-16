@@ -14,6 +14,8 @@ import javafx.util.Duration;
 
 import com.avatarduel.model.Character;
 import com.avatarduel.model.Player;
+import com.avatarduel.gamephase.Phase;
+import com.avatarduel.gameutils.GameStatus;
 
 public class SummonedCharacterCardController extends SummonedCardController {
     /**
@@ -87,7 +89,7 @@ public class SummonedCharacterCardController extends SummonedCardController {
     public void initialize(URL url, ResourceBundle resources) {
         // Set on click handler
         this.cardAncPane.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-            if (e.getButton() == MouseButton.SECONDARY) {
+            if (e.getButton() == MouseButton.SECONDARY && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                 this.rotate();
             }
         });

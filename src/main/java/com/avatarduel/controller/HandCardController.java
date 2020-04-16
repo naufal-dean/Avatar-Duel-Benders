@@ -99,7 +99,7 @@ public class HandCardController extends CardController implements Flippable {
                         new KeyValue(this.cardAncPane.rotateProperty(), 0)
                 ),
                 new KeyFrame(
-                        Duration.millis(250),
+                        Duration.millis(500),
                         new KeyValue(this.cardAncPane.rotateProperty(), 90)
                 )
         );
@@ -111,7 +111,7 @@ public class HandCardController extends CardController implements Flippable {
                         new KeyValue(this.cardAncPane.rotateProperty(), 90)
                 ),
                 new KeyFrame(
-                        Duration.millis(250),
+                        Duration.millis(500),
                         new KeyValue(this.cardAncPane.rotateProperty(), 0)
                 )
         );
