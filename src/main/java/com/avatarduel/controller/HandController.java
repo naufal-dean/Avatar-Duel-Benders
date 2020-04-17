@@ -49,11 +49,15 @@ public class HandController implements Initializable {
     /**
      * Active card in hand set property
      */
-    private BooleanProperty activeHandCardSetSignal;
+    private BooleanProperty activeHandCardSetSignal, directAttackLaunchedSignal, activeRootHandler;
     /**
      * Shadow effect
      */
-    private DropShadow activeShadow;
+    private DropShadow shadowRed, shadowYellow;
+    /**
+     * The root pane
+     */
+    @FXML private StackPane rootPane;
     /**
      * Display card in hand
      */
@@ -79,12 +83,19 @@ public class HandController implements Initializable {
         this.cardControllerList = new ArrayList<>();
         this.cardBackControllerList = new ArrayList<>();
         this.activeHandCardSetSignal = new SimpleBooleanProperty(false);
+        this.activeRootHandler = new SimpleBooleanProperty(false);
+        this.directAttackLaunchedSignal = new SimpleBooleanProperty(false);
         this.cardDetailsController = cardDetailsController;
-        // Setup selected shadow effect
-        this.activeShadow = new DropShadow();
-        this.activeShadow.setColor(Color.RED);
-        this.activeShadow.setWidth(70);
-        this.activeShadow.setHeight(70);
+        // Setup red shadow effect
+        this.shadowRed = new DropShadow();
+        this.shadowRed.setColor(Color.RED);
+        this.shadowRed.setWidth(70);
+        this.shadowRed.setHeight(70);
+        // Setup yellow shadow effect
+        this.shadowYellow = new DropShadow();
+        this.shadowYellow.setColor(Color.YELLOW);
+        this.shadowYellow.setWidth(70);
+        this.shadowYellow.setHeight(70);
     }
 
     /**
@@ -109,6 +120,28 @@ public class HandController implements Initializable {
      */
     public BooleanProperty getActiveHandCardSetSignalProperty() {
         return this.activeHandCardSetSignal;
+    }
+
+    /**
+     * Getter for directAttackLaunched property
+     * @return this.directAttackLaunched
+     */
+    public BooleanProperty getDirectAttackLaunchedSignalProperty() {
+        return this.directAttackLaunchedSignal;
+    }
+
+    /**
+     * Turn on direct attack signal
+     */
+    public void turnOnDirectAttackLaunchedSignal() {
+        this.directAttackLaunchedSignal.setValue(true);
+    }
+
+    /**
+     * Turn off direct attack signal
+     */
+    public void turnOffDirectAttackLaunchedSignal() {
+        this.directAttackLaunchedSignal.setValue(false);
     }
 
     /**
@@ -159,7 +192,7 @@ public class HandController implements Initializable {
         // On mouse entered handler
         cardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                cardController.getCardAncPane().setEffect(this.activeShadow);
+                cardController.getCardAncPane().setEffect(this.shadowRed);
             }
             cardDetailsController.setCard(cardController.getCard());
         });
@@ -183,8 +216,6 @@ public class HandController implements Initializable {
      */
     public void removeCardFromHand(CardController cardController) {
         int idx = this.cardControllerList.indexOf(cardController);
-        // TODO: remove assertion
-        assert this.cardControllerList.indexOf(cardController) == this.cardControllerList.lastIndexOf(cardController);
         // Remove card
         Node node = this.hand.getChildren().get(idx);
         this.hand.getChildren().remove((StackPane) node);
@@ -214,6 +245,21 @@ public class HandController implements Initializable {
     }
 
     /**
+     * Activate root pane event handler
+     */
+    public void activateRootEventHandler() {
+        this.activeRootHandler.setValue(true);
+    }
+
+    /**
+     * Deactivate root pane event handler
+     */
+    public void deactivateRootEventHandler() {
+        this.activeRootHandler.setValue(false);
+    }
+
+
+    /**
      * On click handler
      * @param handCardController The HandCard selected
      */
@@ -228,7 +274,7 @@ public class HandController implements Initializable {
             this.activeHandCard = null;
         } else { // Add active card
             this.activeHandCard = handCardController;
-            this.activeHandCard.getCardAncPane().setEffect(this.activeShadow);
+            this.activeHandCard.getCardAncPane().setEffect(this.shadowRed);
             this.activeHandCardSetSignal.setValue(true);
         }
     }
@@ -256,5 +302,23 @@ public class HandController implements Initializable {
         this.handField.setAlignment(Pos.CENTER);
         this.hand.setAlignment(Pos.CENTER);
         this.handBack.setAlignment(Pos.CENTER);
+        // Add event handler to rootPane
+        rootPane.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
+                if (e.getButton() == MouseButton.PRIMARY && activeRootHandler.get()) {
+                    turnOnDirectAttackLaunchedSignal();
+                }
+            }
+        });
+        // Add event listener to rootPane
+        this.activeRootHandler.addListener((observable, oldValue, newValue) -> {
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
+                if (oldValue == false && newValue == true) {
+                    rootPane.setEffect(shadowYellow);
+                } else {
+                    rootPane.setEffect(null);
+                }
+            }
+        });
     }
 }

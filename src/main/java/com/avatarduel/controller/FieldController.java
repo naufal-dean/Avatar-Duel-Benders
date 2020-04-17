@@ -64,7 +64,7 @@ public class FieldController implements Initializable {
     /**
      * Boolean property as signal emitter
      */
-    private BooleanProperty cardSummonedSignal, activeFieldCardSetSignal, directAttackSignal;
+    private BooleanProperty cardSummonedSignal, activeFieldCardSetSignal, directAttackReadySignal;
     /**
      * Integer property as damage emitter
      */
@@ -96,7 +96,7 @@ public class FieldController implements Initializable {
                     new SimpleBooleanProperty(false), new SimpleBooleanProperty(false)));
         this.cardSummonedSignal = new SimpleBooleanProperty(false);
         this.activeFieldCardSetSignal = new SimpleBooleanProperty(false);
-        this.directAttackSignal = new SimpleBooleanProperty(false);
+        this.directAttackReadySignal = new SimpleBooleanProperty(false);
         this.damageDealtSignal = new SimpleIntegerProperty(-1);
         this.cardDetailsController = cardDetailsController;
         // Cell available shadow
@@ -127,7 +127,7 @@ public class FieldController implements Initializable {
      * Getter for activeFieldCardController
      * @return  this.activeFieldCardController
      */
-    public CardController getActiveFieldCardController() {
+    public SummonedCharacterCardController getActiveFieldCardController() {
         return this.activeFieldCardController;
     }
 
@@ -170,25 +170,25 @@ public class FieldController implements Initializable {
     }
 
     /**
-     * Turn off direct attack signal
-     */
-    public void turnOffDirectAttackSignal() {
-        this.directAttackSignal.setValue(false);
-    }
-
-    /**
      * Getter for directAttackSignal property
      * @return this.directAttackSignal
      */
-    public BooleanProperty getDirectAttackSignalProperty() {
-        return this.directAttackSignal;
+    public BooleanProperty getDirectAttackSignalReadyProperty() {
+        return this.directAttackReadySignal;
     }
 
     /**
      * Turn on direct attack signal
      */
-    public void turnOnDirectAttackSignal() {
-        this.directAttackSignal.setValue(true);
+    public void turnOnDirectAttackReadySignal() {
+        this.directAttackReadySignal.setValue(true);
+    }
+
+    /**
+     * Turn off direct attack signal
+     */
+    public void turnOffDirectAttackReadySignal() {
+        this.directAttackReadySignal.setValue(false);
     }
 
     /**
@@ -227,6 +227,7 @@ public class FieldController implements Initializable {
         this.activeFieldCardController.getCardAncPane().setEffect(null);
         this.activeFieldCardController = null;
         this.activeFieldCardSetSignal.setValue(false);
+        this.turnOffDirectAttackReadySignal();
     }
 
     /**
@@ -386,6 +387,7 @@ public class FieldController implements Initializable {
         if (this.activeFieldCardController != null) {
             this.activeFieldCardController.getCardAncPane().setEffect(null);
             this.activeFieldCardSetSignal.setValue(false);
+            this.turnOffDirectAttackReadySignal();
         }
         // Check input
         if (this.activeFieldCardController == scCardController) { // Remove active card
@@ -395,12 +397,14 @@ public class FieldController implements Initializable {
             this.activeFieldCardController.getCardAncPane().setEffect(this.shadowRed);
             this.activeFieldCardSetSignal.setValue(true);
         }
-        // Turn on direct attack signal if enemy summoned char card is 0
+        // Turn on direct attack signal if enemy summoned char card is 0, and any active char card in field
+        if (this.activeFieldCardController == null)
+            return;
         int row = (GameStatus.getGameStatus().getGameActivePlayer() == Player.BOTTOM) ? (CHAR_ROW_TOP) : (CHAR_ROW_BOT);
         for (int col = 0; col < 6; col++)
-            if (cardControllerList.get(row).get(col) != null)
+            if (this.cardControllerList.get(col).get(row) != null)
                 return;
-        this.turnOnDirectAttackSignal();
+        this.turnOnDirectAttackReadySignal();
     }
 
     /**
