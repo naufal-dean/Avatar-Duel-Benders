@@ -1,24 +1,54 @@
 package com.avatarduel.controller;
 
-import com.avatarduel.model.Card;
 import com.avatarduel.model.Player;
-import com.avatarduel.model.SkillAura;
+import com.avatarduel.model.Skill;
 
 public class SummonedSkillCardController extends SummonedCardController {
     /**
-     *  Target of Skill Card
+     * Its target coordinate in field
      */
-    private Card targetCard;
+    private int targetX, targetY;
 
     /**
      * Constructor
-     * @param skillAuraCard The Skill Aura Card
+     * @param skillCard The Skill Card (Only AURA and POWER UP)
      * @param owner The owner of the card
      * @param x Card x coordinate in field
      * @param y Card y coordinate in field
      */
-    public SummonedSkillCardController(SkillAura skillAuraCard, Player owner, int x, int y, Card targetCard) {
-        super(skillAuraCard, owner, x, y);
-        this.targetCard = targetCard;
+    public SummonedSkillCardController(Skill skillCard, Player owner, int x, int y) {
+        super(skillCard, owner, x, y);
+    }
+
+    /**
+     * Getter for targetX
+     * @return this.targetX
+     */
+    public int getTargetX() {
+        return this.targetX;
+    }
+
+    /**
+     * Setter for targetX
+     * @param targetX The new targetX
+     */
+    public void setTargetX(int targetX) {
+        this.targetX = targetX;
+    }
+
+    /**
+     * Getter for targetY
+     * @return this.targetY
+     */
+    public int getTargetY() {
+        return this.targetY;
+    }
+
+    /**
+     * Setter for targetY
+     * @param targetY The new targetY
+     */
+    public void setTargetY(int targetY) {
+        this.targetY = targetY;
     }
 }

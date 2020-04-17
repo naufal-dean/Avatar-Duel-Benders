@@ -258,7 +258,6 @@ public class HandController implements Initializable {
         this.activeRootHandler.setValue(false);
     }
 
-
     /**
      * On click handler
      * @param handCardController The HandCard selected

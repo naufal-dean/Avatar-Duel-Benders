@@ -102,15 +102,15 @@ public class FieldController implements Initializable {
         // Cell available shadow
         this.shadowYellow = new DropShadow();
         this.shadowYellow.setColor(Color.YELLOW);
-        this.shadowYellow.setWidth(50);
-        this.shadowYellow.setHeight(50);
-        this.shadowYellow.setSpread(0.9);
+        this.shadowYellow.setWidth(40);
+        this.shadowYellow.setHeight(40);
+        this.shadowYellow.setSpread(0.85);
         // Cell hover shadow
         this.shadowRed = new DropShadow();
         this.shadowRed.setColor(Color.RED);
-        this.shadowRed.setWidth(50);
-        this.shadowRed.setHeight(50);
-        this.shadowRed.setSpread(0.9);
+        this.shadowRed.setWidth(40);
+        this.shadowRed.setHeight(40);
+        this.shadowRed.setSpread(0.85);
     }
 
     /**
@@ -254,12 +254,10 @@ public class FieldController implements Initializable {
             // Create loader
             FXMLLoader loader = new FXMLLoader();
             SummonedCardController cardController;
-            if (card.getCardType().equals(CardType.CHARACTER)) {
+            if (card instanceof Character) {
                 cardController = new SummonedCharacterCardController((Character) card, owner, x, y, isAttack);
-            } else if (card.getCardType().equals(CardType.SKILL)) {
-                if (((Skill) card).getEffect() != Effect.AURA) // TODO: add skill power up support
-                    return;
-                cardController = new SummonedSkillCardController((SkillAura) card, owner, x, y, null);
+            } else if (card instanceof SkillAura || card instanceof SkillPowerUp) {
+                cardController = new SummonedSkillCardController((Skill) card, owner, x, y);
             } else {
                 return;
             }
@@ -269,7 +267,7 @@ public class FieldController implements Initializable {
 
             // Add on click handler
             if (cardController != null) {
-                if (card.getCardType() == CardType.CHARACTER) {
+                if (card instanceof Character) {
                     SummonedCharacterCardController scCardController = (SummonedCharacterCardController) cardController;
                     // Add event handler
                     scCardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
@@ -306,23 +304,28 @@ public class FieldController implements Initializable {
                             }
                         }
                     });
-                } else if (card.getCardType() == CardType.SKILL) {
+                } else if (card instanceof SkillAura || card instanceof SkillPowerUp) {
                     cardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
                         if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                            // Set on right click remove card from field (on skill card)
+                            // Set on right click remove card from field
                             if (e.getButton() == MouseButton.SECONDARY &&
                                     GameStatus.getGameStatus().getGameActivePlayer() == cardController.getOwner()) {
-                                if (((Skill) cardController.getCard()).getEffect() == Effect.AURA) // TODO: add skill power up support
-                                    removeCardFromField(cardController.getX(), cardController.getY());
+                                removeCardFromField(cardController.getX(), cardController.getY());
                             }
                         }
                     });
                 }
                 // Add on hover handler
                 cardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+                    if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                        cardController.getCardAncPane().setEffect(this.shadowYellow);
+                    }
                     cardDetailsController.setCard(cardController.getCard());
                 });
                 cardController.getCardAncPane().onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+                    if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                        cardController.getCardAncPane().setEffect(null);
+                    }
                     cardDetailsController.removeCard();
                 });
             }
@@ -350,6 +353,23 @@ public class FieldController implements Initializable {
     public void removeCardFromField(int x, int y) {
         for (Node node : this.field.getChildren()) {
             if(node instanceof StackPane && this.field.getColumnIndex(node) == x && this.field.getRowIndex(node) == y) {
+                if (this.cardControllerList.get(x).get(y) instanceof SummonedCharacterCardController) {
+                    // If char card, recursively delete the attached skill aura and power up if any
+                    SummonedCharacterCardController scCardController = (SummonedCharacterCardController) this.cardControllerList.get(x).get(y);
+                    for (SummonedSkillCardController skillAuraController : scCardController.getAttachedAuraControllerList())
+                        this.removeCardFromField(skillAuraController.getX(), skillAuraController.getY());
+                    for (SummonedSkillCardController skillPowerUpController : scCardController.getAttachedPowerUpControllerList())
+                        this.removeCardFromField(skillPowerUpController.getX(), skillPowerUpController.getY());
+                } else if (this.cardControllerList.get(x).get(y) instanceof SummonedSkillCardController) {
+                    // If skill card, detach from its parent char card
+                    SummonedSkillCardController ssCardController = (SummonedSkillCardController) this.cardControllerList.get(x).get(y);
+                    int targetX = ssCardController.getTargetX();
+                    int targetY = ssCardController.getTargetY();
+                    if (this.cardControllerList.get(targetX).get(targetY) != null &&
+                            this.cardControllerList.get(targetX).get(targetY) instanceof SummonedCharacterCardController) {
+                        ((SummonedCharacterCardController) this.cardControllerList.get(targetX).get(targetY)).removeSkillCard(ssCardController);
+                    }
+                }
                 // Remove field children node
                 this.field.getChildren().remove((StackPane) node);
                 // Remove cardController
@@ -449,19 +469,19 @@ public class FieldController implements Initializable {
                 // On mouse clicked handler
                 emptyCell.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
                     if (activeCellHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                        CardType cardType = waitingHandCardController.getCard().getCardType();
+                        Card card = waitingHandCardController.getCard();
                         try {
-                            if (cardType == CardType.CHARACTER) {
+                            if (card instanceof Character) {
                                 if (e.getButton() == MouseButton.PRIMARY) {
-                                    setCardOnField(waitingHandCardController.getCard(), waitingHandCardController.getOwner(), true, col, row);
+                                    setCardOnField(card, waitingHandCardController.getOwner(), true, col, row);
                                     turnOnCardSummonedSignal();
                                 } else if (e.getButton() == MouseButton.SECONDARY) {
-                                    setCardOnField(waitingHandCardController.getCard(), waitingHandCardController.getOwner(), false, col, row);
+                                    setCardOnField(card, waitingHandCardController.getOwner(), false, col, row);
                                     turnOnCardSummonedSignal();
                                 }
-                            } else if (cardType == CardType.SKILL) {
+                            } else if (card instanceof SkillAura || card instanceof SkillPowerUp) {
                                 if (e.getButton() == MouseButton.PRIMARY) {
-                                    setCardOnField(waitingHandCardController.getCard(), waitingHandCardController.getOwner(), true, col, row);
+                                    setCardOnField(card, waitingHandCardController.getOwner(), true, col, row);
                                     turnOnCardSummonedSignal();
                                 }
                             }
