@@ -62,9 +62,13 @@ public class FieldController implements Initializable {
      */
     private SummonedCharacterCardController activeFieldCardController;
     /**
+     * Current summoned skill card that need to be attached
+     */
+    private SummonedSkillCardController skillCardControllerToBeAttached;
+    /**
      * Boolean property as signal emitter
      */
-    private BooleanProperty cardSummonedSignal, activeFieldCardSetSignal, directAttackReadySignal;
+    private BooleanProperty cardSummonedSignal, activeFieldCardSetSignal, directAttackReadySignal, attachSkillPeriodSignal;
     /**
      * Integer property as damage emitter
      */
@@ -101,6 +105,7 @@ public class FieldController implements Initializable {
         this.cardSummonedSignal = new SimpleBooleanProperty(false);
         this.activeFieldCardSetSignal = new SimpleBooleanProperty(false);
         this.directAttackReadySignal = new SimpleBooleanProperty(false);
+        this.attachSkillPeriodSignal = new SimpleBooleanProperty(false);
         this.damageDealtSignal = new SimpleIntegerProperty(-1);
         this.cardDetailsController = cardDetailsController;
         this.disableCardClick = false;
@@ -178,7 +183,7 @@ public class FieldController implements Initializable {
      * Getter for directAttackSignal property
      * @return this.directAttackSignal
      */
-    public BooleanProperty getDirectAttackSignalReadyProperty() {
+    public BooleanProperty getDirectAttackReadySignalProperty() {
         return this.directAttackReadySignal;
     }
 
@@ -194,6 +199,28 @@ public class FieldController implements Initializable {
      */
     public void turnOffDirectAttackReadySignal() {
         this.directAttackReadySignal.setValue(false);
+    }
+
+    /**
+     * Getter for attachSkillPeriodSignal property
+     * @return this.attachSkillPeriodSignal
+     */
+    public BooleanProperty getAttachSkillPeriodSignalProperty() {
+        return this.attachSkillPeriodSignal;
+    }
+
+    /**
+     * Turn on attachSkillPeriodSignal signal
+     */
+    public void turnOnAttachSkillPeriodSignal() {
+        this.attachSkillPeriodSignal.setValue(true);
+    }
+
+    /**
+     * Turn off attachSkillPeriodSignal signal
+     */
+    public void turnOffAttachSkillPeriodSignal() {
+        this.attachSkillPeriodSignal.setValue(false);
     }
 
     /**
@@ -244,6 +271,16 @@ public class FieldController implements Initializable {
     }
 
     /**
+     * Destroy skill card that failed to be attached, e.g. not attached before main phase end
+     */
+    public void destroySkillCardControllerToBeAttached() {
+        if (this.skillCardControllerToBeAttached == null)
+            return;
+        this.removeCardFromField(this.skillCardControllerToBeAttached.getX(), this.skillCardControllerToBeAttached.getY());
+        turnOffAttachSkillPeriodSignal();
+    }
+
+    /**
      * Reset summoned character card hadAttacked status
      */
     public void resetSummCardHadAttackedStatus() {
@@ -285,10 +322,17 @@ public class FieldController implements Initializable {
                     // Add event handler
                     scCardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
                         if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                            if (e.getButton() == MouseButton.SECONDARY &&
+                            if (e.getButton() == MouseButton.PRIMARY && activeSummCardHandler.get(x).get(y).get()) {
+                                // Attach skill
+                                scCardController.addSkillCard(skillCardControllerToBeAttached);
+                                skillCardControllerToBeAttached.setTargetX(x);
+                                skillCardControllerToBeAttached.setTargetY(y);
+                                skillCardControllerToBeAttached = null;
+                                turnOffAttachSkillPeriodSignal();
+                            } else if (e.getButton() == MouseButton.SECONDARY &&
                                     GameStatus.getGameStatus().getGameActivePlayer() == scCardController.getOwner() &&
                                     !disableCardClick) {
-                                scCardController.rotate();
+                                scCardController.rotate();  // Rotate card
                             }
                         } else if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
                             if (e.getButton() == MouseButton.PRIMARY &&
@@ -304,7 +348,18 @@ public class FieldController implements Initializable {
                         }
                     });
                     // Add event listener
-                    activeFieldCardSetSignal.addListener((observable, oldValue, newValue) -> {
+                    this.attachSkillPeriodSignal.addListener((observable, oldValue, newValue) -> {
+                        if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                            if (oldValue == false && newValue == true) {
+                                scCardController.getCardAncPane().setEffect(shadowYellow);
+                                activeSummCardHandler.get(x).get(y).setValue(true);
+                            } else {
+                                scCardController.getCardAncPane().setEffect(null);
+                                activeSummCardHandler.get(x).get(y).setValue(false);
+                            }
+                        }
+                    });
+                    this.activeFieldCardSetSignal.addListener((observable, oldValue, newValue) -> {
                         if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
                             if (GameStatus.getGameStatus().getGameActivePlayer() != cardController.getOwner()) {
                                 if (oldValue == false && newValue == true &&
@@ -325,7 +380,7 @@ public class FieldController implements Initializable {
                             if (e.getButton() == MouseButton.SECONDARY &&
                                     GameStatus.getGameStatus().getGameActivePlayer() == cardController.getOwner() &&
                                     !disableCardClick) {
-                                removeCardFromField(cardController.getX(), cardController.getY());
+                                removeCardFromField(cardController.getX(), cardController.getY()); // Remove card
                             }
                         }
                     });
@@ -369,20 +424,25 @@ public class FieldController implements Initializable {
         for (Node node : this.field.getChildren()) {
             if(node instanceof StackPane && this.field.getColumnIndex(node) == x && this.field.getRowIndex(node) == y) {
                 if (this.cardControllerList.get(x).get(y) instanceof SummonedCharacterCardController) {
-                    // If char card, recursively delete the attached skill aura and power up if any
+                    // If char card, delete the attached skill aura and power up if any
                     SummonedCharacterCardController scCardController = (SummonedCharacterCardController) this.cardControllerList.get(x).get(y);
-                    for (SummonedSkillCardController skillAuraController : scCardController.getAttachedAuraControllerList())
-                        this.removeCardFromField(skillAuraController.getX(), skillAuraController.getY());
-                    for (SummonedSkillCardController skillPowerUpController : scCardController.getAttachedPowerUpControllerList())
-                        this.removeCardFromField(skillPowerUpController.getX(), skillPowerUpController.getY());
+                    while (scCardController.getAttachedAuraControllerList().size() > 0) {
+                        SummonedSkillCardController aura = scCardController.getAttachedAuraControllerList().remove(0);
+                        this.removeCardFromField(aura.getX(), aura.getY());
+                    }
+                    while (scCardController.getAttachedPowerUpControllerList().size() > 0) {
+                        SummonedSkillCardController powerUp = scCardController.getAttachedPowerUpControllerList().remove(0);
+                        this.removeCardFromField(powerUp.getX(), powerUp.getY());
+                    }
                 } else if (this.cardControllerList.get(x).get(y) instanceof SummonedSkillCardController) {
                     // If skill card, detach from its parent char card
                     SummonedSkillCardController ssCardController = (SummonedSkillCardController) this.cardControllerList.get(x).get(y);
-                    int targetX = ssCardController.getTargetX();
-                    int targetY = ssCardController.getTargetY();
-                    if (this.cardControllerList.get(targetX).get(targetY) != null &&
-                            this.cardControllerList.get(targetX).get(targetY) instanceof SummonedCharacterCardController) {
-                        ((SummonedCharacterCardController) this.cardControllerList.get(targetX).get(targetY)).removeSkillCard(ssCardController);
+                    int targetX, targetY;
+                    if ((targetX = ssCardController.getTargetX()) != -1 && (targetY = ssCardController.getTargetY()) != -1) {
+                        if (this.cardControllerList.get(targetX).get(targetY) != null &&
+                                this.cardControllerList.get(targetX).get(targetY) instanceof SummonedCharacterCardController) {
+                            ((SummonedCharacterCardController) this.cardControllerList.get(targetX).get(targetY)).removeSkillCard(ssCardController);
+                        }
                     }
                 }
                 // Remove field children node
@@ -498,6 +558,16 @@ public class FieldController implements Initializable {
                                 if (e.getButton() == MouseButton.PRIMARY) {
                                     setCardOnField(card, waitingHandCardController.getOwner(), true, col, row);
                                     turnOnCardSummonedSignal();
+                                    for (int innerY = 1; innerY <= 2; innerY++) {
+                                        for (int innerX = 0; innerX < 6; innerX++) {
+                                            if (this.cardControllerList.get(innerX).get(innerY) != null) {
+                                                skillCardControllerToBeAttached = (SummonedSkillCardController) cardControllerList.get(col).get(row);
+                                                turnOnAttachSkillPeriodSignal();
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    removeCardFromField(col, row);  // No char card in field, destroy skill card
                                 }
                             }
                         } catch (IOException err) {

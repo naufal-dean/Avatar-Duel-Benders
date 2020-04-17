@@ -158,7 +158,7 @@ public class BattlePhase implements GamePhase {
         };
 
         // Add connector as listener to property
-        fieldController.getDirectAttackSignalReadyProperty().addListener(this.directAttackReadyHandler);
+        fieldController.getDirectAttackReadySignalProperty().addListener(this.directAttackReadyHandler);
         enemyHandController.getDirectAttackLaunchedSignalProperty().addListener(this.directAttackLaunchedHandler);
     }
 
@@ -171,7 +171,7 @@ public class BattlePhase implements GamePhase {
         FieldController fieldController = mainController.getFieldController();
         HandController enemyHandController = mainController.getHandControllerMap().get(enemyPlayer);
         // Remove listener
-        fieldController.getDirectAttackSignalReadyProperty().removeListener(this.directAttackReadyHandler);
+        fieldController.getDirectAttackReadySignalProperty().removeListener(this.directAttackReadyHandler);
         enemyHandController.getDirectAttackLaunchedSignalProperty().removeListener(this.directAttackLaunchedHandler);
     }
 

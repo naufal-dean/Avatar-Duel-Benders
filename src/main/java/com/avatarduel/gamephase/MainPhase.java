@@ -19,8 +19,8 @@ public class MainPhase implements GamePhase {
     /**
      * Connector
      */
-    ChangeListener<Boolean> handToFieldConnector, fieldToHandConnector, handToPowerConnector, powerToHandConnector,
-            battlePhaseChange, endPhaseChange;
+    ChangeListener<Boolean> handToFieldConnector, fieldToHandConnector, attachSkillHandler, handToPowerConnector,
+            powerToHandConnector, battlePhaseChange, endPhaseChange;
 
     /**
      * Constructor
@@ -71,10 +71,14 @@ public class MainPhase implements GamePhase {
             handCardController.getCardAncPane().setEffect(null);
         // Remove active hand card
         handController.resetActiveHandCard();
+
         // Deactivate event handler in entire field
         fieldController.clearCellEventHandler();
         // Deactivate event handler in power
         powerController.deactivateEventHandler();
+        // Destroy summoned skill card if it is not attached at this point, and unlock hand
+        if (fieldController.getAttachSkillPeriodSignalProperty().get())
+            fieldController.destroySkillCardControllerToBeAttached();
 
         // Disconnect hand-field, hand-power
         this.disconnectHandAndField(mainController);
@@ -110,7 +114,7 @@ public class MainPhase implements GamePhase {
                 if (card instanceof Land || card instanceof SkillDestroy)
                     return;
                 // LAND or SKILL AURA card in hand clicked, set waiting card then activate cell event handler in field
-                if (oldValue == false && newValue == true) {// TODO:  && enoughEnergy(handController.getActiveHandCard().getCard())
+                if (oldValue == false && newValue == true) { // TODO:  && enoughEnergy(handController.getActiveHandCard().getCard())
                     fieldController.setDisableCardClick(true);
                     fieldController.setWaitingHandCardController(handController.getActiveHandCard());
                 }
@@ -133,10 +137,21 @@ public class MainPhase implements GamePhase {
                 }
             }
         };
+        this.attachSkillHandler = new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                if (oldValue == false && newValue == true) {
+                    handController.setDisableCardClick(true);
+                } else if (oldValue == true && newValue == false) {
+                    handController.setDisableCardClick(false);
+                }
+            }
+        };
 
         // Add connector as listener to property
         handController.getActiveHandCardSetSignalProperty().addListener(this.handToFieldConnector);
         fieldController.getCardSummonedSignalProperty().addListener(this.fieldToHandConnector);
+        fieldController.getAttachSkillPeriodSignalProperty().addListener(this.attachSkillHandler);
     }
 
     /**
@@ -150,6 +165,7 @@ public class MainPhase implements GamePhase {
         // Remove listener
         handController.getActiveHandCardSetSignalProperty().removeListener(this.handToFieldConnector);
         fieldController.getCardSummonedSignalProperty().removeListener(this.fieldToHandConnector);
+        fieldController.getAttachSkillPeriodSignalProperty().removeListener(this.attachSkillHandler);
     }
 
     /**

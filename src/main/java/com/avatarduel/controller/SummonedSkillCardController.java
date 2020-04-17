@@ -18,6 +18,8 @@ public class SummonedSkillCardController extends SummonedCardController {
      */
     public SummonedSkillCardController(Skill skillCard, Player owner, int x, int y) {
         super(skillCard, owner, x, y);
+        this.targetX = -1;
+        this.targetY = -1;
     }
 
     /**
