@@ -231,6 +231,17 @@ public class FieldController implements Initializable {
     }
 
     /**
+     * Reset summoned character card hadAttacked status
+     */
+    public void resetSummCardHadAttackedStatus() {
+        int y = (GameStatus.getGameStatus().getGameActivePlayer() == Player.BOTTOM) ? (CHAR_ROW_BOT) : (CHAR_ROW_TOP);
+        for (int x = 0; x < 6; x++) {
+            if (this.cardControllerList.get(x).get(y) != null)
+                ((SummonedCharacterCardController) this.cardControllerList.get(x).get(y)).setHadAttacked(false);
+        }
+    }
+
+    /**
      * Set card on the cell x, y in field
      * @param card The card to be displayed (Card type only CHARACTER and SKILL AURA)
      * @param owner The owner of the card
@@ -270,7 +281,8 @@ public class FieldController implements Initializable {
                         } else if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
                             if (e.getButton() == MouseButton.PRIMARY &&
                                     GameStatus.getGameStatus().getGameActivePlayer() == scCardController.getOwner() &&
-                                    scCardController.getIsAttack()) {
+                                    scCardController.getIsAttack() &&
+                                    !(scCardController.getHadAttacked())) {
                                 onSummonedCharCardClickHandler(scCardController);
                             } else if (e.getButton() == MouseButton.PRIMARY &&
                                     GameStatus.getGameStatus().getGameActivePlayer() != scCardController.getOwner() &&
@@ -415,6 +427,7 @@ public class FieldController implements Initializable {
         if (scCardController.getIsAttack()) // TODO: add support to skill power up
             this.setDamageDealtSignal(this.activeFieldCardController.getCardValue() - scCardController.getCardValue());
         this.removeCardFromField(scCardController.getX(), scCardController.getY());
+        this.activeFieldCardController.setHadAttacked(true);
         this.resetActiveFieldCardController();
     }
 

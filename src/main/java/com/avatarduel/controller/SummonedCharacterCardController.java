@@ -5,17 +5,12 @@ import java.util.ResourceBundle;
 
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import com.avatarduel.model.Character;
 import com.avatarduel.model.Player;
-import com.avatarduel.gamephase.Phase;
-import com.avatarduel.gameutils.GameStatus;
 
 public class SummonedCharacterCardController extends SummonedCardController {
     /**
@@ -25,7 +20,7 @@ public class SummonedCharacterCardController extends SummonedCardController {
     /**
      * Is first time monster has summoned
      */
-    private boolean isFirstTime;
+    private boolean hadAttacked;
     /**
      * Rotate transition object
      */
@@ -42,8 +37,8 @@ public class SummonedCharacterCardController extends SummonedCardController {
     public SummonedCharacterCardController(Character characterCard, Player owner, int x, int y, boolean isAttack) {
         super(characterCard, owner, x, y);
         this.isAttack = isAttack;
-        rotate = new RotateTransition();
-        isFirstTime = true;
+        this.rotate = new RotateTransition();
+        this.hadAttacked = true;
     }
 
     /**
@@ -60,6 +55,22 @@ public class SummonedCharacterCardController extends SummonedCardController {
      */
     public int getCardValue() {
         return (this.isAttack) ? (((Character) this.card).getAttack()) : (((Character) this.card).getDefense());
+    }
+
+    /**
+     * Getter for hadAttacked status
+     * @return this.hadAttacked
+     */
+    public boolean getHadAttacked() {
+        return this.hadAttacked;
+    }
+
+    /**
+     * Setter for hadAttacked status
+     * @param hadAttacked The new hadAttacked
+     */
+    public void setHadAttacked(boolean hadAttacked) {
+        this.hadAttacked = hadAttacked;
     }
 
     /**

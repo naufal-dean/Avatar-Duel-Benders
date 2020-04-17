@@ -54,6 +54,9 @@ public class DrawPhase implements GamePhase {
         // Update power display
         mainController.getPowerControllerMap().get(activePlayer).init();
 
+        // Reset hadAttacked status on summoned char
+        mainController.getFieldController().resetSummCardHadAttackedStatus();
+
         // End phase
         this.endPhase(mainController);
     }
