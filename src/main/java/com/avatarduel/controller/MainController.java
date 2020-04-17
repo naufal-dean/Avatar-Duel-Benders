@@ -102,6 +102,14 @@ public class MainController implements Initializable {
     }
 
     /**
+     * Getter for healthControllerMap
+     * @return this.healthControllerMap
+     */
+    public HashMap<Player, HealthController> getHealthControllerMap() {
+        return this.healthControllerMap;
+    }
+
+    /**
      * Getter for phaseController
      * @return this.phaseController
      */

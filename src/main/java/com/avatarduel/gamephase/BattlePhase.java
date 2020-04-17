@@ -1,7 +1,13 @@
 package com.avatarduel.gamephase;
 
+import com.avatarduel.controller.FieldController;
+import com.avatarduel.controller.HandController;
 import com.avatarduel.controller.MainController;
 import com.avatarduel.gameutils.GameStatus;
+import com.avatarduel.model.CardType;
+import com.avatarduel.model.Effect;
+import com.avatarduel.model.Player;
+import com.avatarduel.model.Skill;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
@@ -10,10 +16,12 @@ public class BattlePhase implements GamePhase {
      * Class singleton instance
      */
     private static BattlePhase battlePhase;
+
     /**
      * Connector
      */
     ChangeListener<Boolean> endPhaseChange;
+    ChangeListener<Number> fieldDamageSignalListener;
 
     /**
      * Constructor
@@ -41,7 +49,8 @@ public class BattlePhase implements GamePhase {
         GameStatus.getGameStatus().setGamePhase(Phase.BATTLE);
 
         // TODO: implement
-
+        // Add connection between elements and GameStatus
+        this.connectFieldSignal(mainController);
 
         // Add event listener to phase change
         this.addPhaseChangeListener(mainController);
@@ -60,11 +69,50 @@ public class BattlePhase implements GamePhase {
     public void endPhase(MainController mainController) {
         // TODO: implement
 
+        // Clear field controller handler and active card
+        mainController.getFieldController().clearSummCardHandler();
+        mainController.getFieldController().resetActiveFieldCardController();
+
         // Disconnect phase change listener
         this.removePhaseChangeListener(mainController);
 
         // Proceed to end phase
         EndPhase.getEndPhase().startPhase(mainController);
+    }
+
+    /**
+     * Add connection that listen to field controller signal
+     * @param mainController The MainController
+     */
+    public void connectFieldSignal(MainController mainController) {
+        // Create ChangeListener object
+        this.fieldDamageSignalListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue observable, Number oldValue, Number newValue) {
+                if (newValue.intValue() > 0) {
+                    // Battle ended, damage dealt to enemy player
+                    Player enemyPlayer = GameStatus.getGameStatus().getGameNonActivePlayer();
+                    int enemyHealth = GameStatus.getGameStatus().getGameHealthMap().get(enemyPlayer);
+                    GameStatus.getGameStatus().getGameHealthMap().put(enemyPlayer, enemyHealth - newValue.intValue());
+                    // Update display
+                    mainController.getHealthControllerMap().get(enemyPlayer).init();
+                    // Turn off signal
+                    mainController.getFieldController().setDamageDealtSignal(-1);
+                }
+            }
+        };
+
+        // Add connector as listener to property
+        mainController.getFieldController().getDamageDealtSignalProperty().addListener(this.fieldDamageSignalListener);
+    }
+
+    /**
+     * Remove connection that listen to field controller signal
+     * @param mainController The MainController
+     */
+    public void disconnectFieldSignal(MainController mainController) {
+        // Remove listener
+        mainController.getFieldController().getDamageDealtSignalProperty().removeListener(this.fieldDamageSignalListener);
     }
 
     /**

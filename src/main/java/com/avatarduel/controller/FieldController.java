@@ -7,10 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -51,19 +48,27 @@ public class FieldController implements Initializable {
     /**
      * Cell active handler property list
      */
-    private List<List<BooleanProperty>> activeHandler;
+    private List<List<BooleanProperty>> activeCellHandler, activeSummCardHandler;
     /**
      * Shadow effect
      */
-    private DropShadow cellAvailableShadow, cellHoverShadow;
+    private DropShadow shadowYellow, shadowRed;
     /**
      * Card that waiting to be summoned
      */
-    private HandCardController waitingHandCard;
+    private HandCardController waitingHandCardController;
     /**
-     * Card summoned property
+     * Current selected character card controller in field
      */
-    private BooleanProperty cardSummonedSignal;
+    private SummonedCharacterCardController activeFieldCardController;
+    /**
+     * Boolean property as signal emitter
+     */
+    private BooleanProperty cardSummonedSignal, activeFieldCardSetSignal, directAttackSignal;
+    /**
+     * Integer property as damage emitter
+     */
+    private IntegerProperty damageDealtSignal;
     /**
      * Field grid
      */
@@ -81,25 +86,31 @@ public class FieldController implements Initializable {
         this.cardControllerList = new ArrayList<>();
         for (int i = 0; i < 6; i++)
             this.cardControllerList.add(Arrays.asList(null, null, null, null));
-        this.activeHandler = new ArrayList<>();;
+        this.activeCellHandler = new ArrayList<>();
         for (int i = 0; i < 6; i++)
-            this.activeHandler.add(Arrays.asList(new SimpleBooleanProperty(false), new SimpleBooleanProperty(false),
+            this.activeCellHandler.add(Arrays.asList(new SimpleBooleanProperty(false), new SimpleBooleanProperty(false),
                                                  new SimpleBooleanProperty(false), new SimpleBooleanProperty(false)));
-
+        this.activeSummCardHandler = new ArrayList<>();
+        for (int i = 0; i < 6; i++)
+            this.activeSummCardHandler.add(Arrays.asList(new SimpleBooleanProperty(false), new SimpleBooleanProperty(false),
+                    new SimpleBooleanProperty(false), new SimpleBooleanProperty(false)));
         this.cardSummonedSignal = new SimpleBooleanProperty(false);
+        this.activeFieldCardSetSignal = new SimpleBooleanProperty(false);
+        this.directAttackSignal = new SimpleBooleanProperty(false);
+        this.damageDealtSignal = new SimpleIntegerProperty(-1);
         this.cardDetailsController = cardDetailsController;
         // Cell available shadow
-        this.cellAvailableShadow = new DropShadow();
-        this.cellAvailableShadow.setColor(Color.YELLOW);
-        this.cellAvailableShadow.setWidth(50);
-        this.cellAvailableShadow.setHeight(50);
-        this.cellAvailableShadow.setSpread(0.9);
+        this.shadowYellow = new DropShadow();
+        this.shadowYellow.setColor(Color.YELLOW);
+        this.shadowYellow.setWidth(50);
+        this.shadowYellow.setHeight(50);
+        this.shadowYellow.setSpread(0.9);
         // Cell hover shadow
-        this.cellHoverShadow = new DropShadow();
-        this.cellHoverShadow.setColor(Color.RED);
-        this.cellHoverShadow.setWidth(50);
-        this.cellHoverShadow.setHeight(50);
-        this.cellHoverShadow.setSpread(0.9);
+        this.shadowRed = new DropShadow();
+        this.shadowRed.setColor(Color.RED);
+        this.shadowRed.setWidth(50);
+        this.shadowRed.setHeight(50);
+        this.shadowRed.setSpread(0.9);
     }
 
     /**
@@ -110,6 +121,14 @@ public class FieldController implements Initializable {
      */
     public CardController getCardController(int x, int y) {
         return this.cardControllerList.get(x).get(y);
+    }
+
+    /**
+     * Getter for activeFieldCardController
+     * @return  this.activeFieldCardController
+     */
+    public CardController getActiveFieldCardController() {
+        return this.activeFieldCardController;
     }
 
     /**
@@ -135,17 +154,55 @@ public class FieldController implements Initializable {
     }
 
     /**
-     * Setter for waiting hand card
-     * @param waitingHandCard The new waiting hand card (card type CHARACTER or SKILL AURA)
+     * Getter for directAttackSignal property
+     * @return this.directAttackSignal
      */
-    public void setWaitingHandCard(HandCardController waitingHandCard) {
-        this.waitingHandCard = waitingHandCard;
+    public IntegerProperty getDamageDealtSignalProperty() {
+        return this.damageDealtSignal;
+    }
+
+    /**
+     * Turn on direct attack signal
+     * @param damage The damage dealt, -1 means off
+     */
+    public void setDamageDealtSignal(int damage) {
+        this.damageDealtSignal.setValue(damage);
+    }
+
+    /**
+     * Turn off direct attack signal
+     */
+    public void turnOffDirectAttackSignal() {
+        this.directAttackSignal.setValue(false);
+    }
+
+    /**
+     * Getter for directAttackSignal property
+     * @return this.directAttackSignal
+     */
+    public BooleanProperty getDirectAttackSignalProperty() {
+        return this.directAttackSignal;
+    }
+
+    /**
+     * Turn on direct attack signal
+     */
+    public void turnOnDirectAttackSignal() {
+        this.directAttackSignal.setValue(true);
+    }
+
+    /**
+     * Setter for waiting hand card
+     * @param waitingHandCardController The new waiting hand card (card type CHARACTER or SKILL AURA)
+     */
+    public void setWaitingHandCardController(HandCardController waitingHandCardController) {
+        this.waitingHandCardController = waitingHandCardController;
         // Activate event handler on the right target cells
         int row;
-        if (waitingHandCard.getOwner() == Player.BOTTOM) {
-            row = (waitingHandCard.getCard().getCardType() == CardType.CHARACTER) ? (CHAR_ROW_BOT) : (SKILL_ROW_BOT);
+        if (waitingHandCardController.getOwner() == Player.BOTTOM) {
+            row = (waitingHandCardController.getCard().getCardType() == CardType.CHARACTER) ? (CHAR_ROW_BOT) : (SKILL_ROW_BOT);
         } else {
-            row = (waitingHandCard.getCard().getCardType() == CardType.CHARACTER) ? (CHAR_ROW_TOP) : (SKILL_ROW_TOP);
+            row = (waitingHandCardController.getCard().getCardType() == CardType.CHARACTER) ? (CHAR_ROW_TOP) : (SKILL_ROW_TOP);
         }
         for (int col = 0; col < 6; col++) {
             if (this.cardControllerList.get(col).get(row) == null) {
@@ -157,8 +214,19 @@ public class FieldController implements Initializable {
     /**
      * Reset waiting hand card
      */
-    public void resetWaitingHandCard() {
-        this.waitingHandCard = null;
+    public void resetWaitingHandCardController() {
+        this.waitingHandCardController = null;
+    }
+
+    /**
+     * Reset active field card
+     */
+    public void resetActiveFieldCardController() {
+        if (this.activeFieldCardController == null)
+            return;
+        this.activeFieldCardController.getCardAncPane().setEffect(null);
+        this.activeFieldCardController = null;
+        this.activeFieldCardSetSignal.setValue(false);
     }
 
     /**
@@ -177,6 +245,8 @@ public class FieldController implements Initializable {
             if (card.getCardType().equals(CardType.CHARACTER)) {
                 cardController = new SummonedCharacterCardController((Character) card, owner, x, y, isAttack);
             } else if (card.getCardType().equals(CardType.SKILL)) {
+                if (((Skill) card).getEffect() != Effect.AURA) // TODO: add skill power up support
+                    return;
                 cardController = new SummonedSkillCardController((SkillAura) card, owner, x, y, null);
             } else {
                 return;
@@ -185,18 +255,57 @@ public class FieldController implements Initializable {
             loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
             StackPane root = loader.load();
 
-            // Add event handler
+            // Add on click handler
             if (cardController != null) {
-                if (card.getCardType() == CardType.SKILL) {
-                    // Set on right click remove card from field (on skill card)
+                if (card.getCardType() == CardType.CHARACTER) {
+                    SummonedCharacterCardController scCardController = (SummonedCharacterCardController) cardController;
+                    // Add event handler
+                    scCardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+                        if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                            if (e.getButton() == MouseButton.SECONDARY &&
+                                    GameStatus.getGameStatus().getGameActivePlayer() == scCardController.getOwner()) {
+                                scCardController.rotate();
+                            }
+                        } else if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
+                            if (e.getButton() == MouseButton.PRIMARY &&
+                                    GameStatus.getGameStatus().getGameActivePlayer() == scCardController.getOwner() &&
+                                    scCardController.getIsAttack()) {
+                                onSummonedCharCardClickHandler(scCardController);
+                            } else if (e.getButton() == MouseButton.PRIMARY &&
+                                    GameStatus.getGameStatus().getGameActivePlayer() != scCardController.getOwner() &&
+                                    activeSummCardHandler.get(x).get(y).get()) {
+                                initBattle(scCardController);
+                            }
+                        }
+                    });
+                    // Add event listener
+                    activeFieldCardSetSignal.addListener((observable, oldValue, newValue) -> {
+                        if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
+                            if (GameStatus.getGameStatus().getGameActivePlayer() != cardController.getOwner()) {
+                                if (oldValue == false && newValue == true &&
+                                        activeFieldCardController.getCardValue() > scCardController.getCardValue()) {
+                                    scCardController.getCardAncPane().setEffect(shadowYellow);
+                                    activeSummCardHandler.get(x).get(y).setValue(true);
+                                } else {
+                                    scCardController.getCardAncPane().setEffect(null);
+                                    activeSummCardHandler.get(x).get(y).setValue(false);
+                                }
+                            }
+                        }
+                    });
+                } else if (card.getCardType() == CardType.SKILL) {
                     cardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-                        if (e.getButton() == MouseButton.SECONDARY && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN &&
-                                GameStatus.getGameStatus().getGameActivePlayer() == cardController.getOwner()) {
-                            if (((Skill) cardController.getCard()).getEffect() == Effect.AURA) // TODO: add skill power up support
-                                removeCardFromField(cardController.getX(), cardController.getY());
+                        if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                            // Set on right click remove card from field (on skill card)
+                            if (e.getButton() == MouseButton.SECONDARY &&
+                                    GameStatus.getGameStatus().getGameActivePlayer() == cardController.getOwner()) {
+                                if (((Skill) cardController.getCard()).getEffect() == Effect.AURA) // TODO: add skill power up support
+                                    removeCardFromField(cardController.getX(), cardController.getY());
+                            }
                         }
                     });
                 }
+                // Add on hover handler
                 cardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
                     cardDetailsController.setCard(cardController.getCard());
                 });
@@ -243,18 +352,66 @@ public class FieldController implements Initializable {
      * @param y The column coordinate
      */
     public void activateCellEventHandler(int x, int y) {
-        this.activeHandler.get(x).get(y).setValue(true);
+        this.activeCellHandler.get(x).get(y).setValue(true);
     }
 
     /**
-     * Deactivate event handler on entire field
+     * Deactivate cell event handler on entire field
      */
     public void clearCellEventHandler() {
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 6; x++) {
-                this.activeHandler.get(x).get(y).setValue(false);
+                this.activeCellHandler.get(x).get(y).setValue(false);
             }
         }
+    }
+
+    /**
+     * Deactivate summoned card event handler on entire field
+     */
+    public void clearSummCardHandler() {
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 6; x++) {
+                this.activeSummCardHandler.get(x).get(y).setValue(false);
+            }
+        }
+    }
+
+    /**
+     * On summoned click handler
+     * @param scCardController The SummonedCharacterCardController selected
+     */
+    public void onSummonedCharCardClickHandler(SummonedCharacterCardController scCardController) {
+        // Remove old effect if any
+        if (this.activeFieldCardController != null) {
+            this.activeFieldCardController.getCardAncPane().setEffect(null);
+            this.activeFieldCardSetSignal.setValue(false);
+        }
+        // Check input
+        if (this.activeFieldCardController == scCardController) { // Remove active card
+            this.activeFieldCardController = null;
+        } else { // Add active card
+            this.activeFieldCardController = scCardController;
+            this.activeFieldCardController.getCardAncPane().setEffect(this.shadowRed);
+            this.activeFieldCardSetSignal.setValue(true);
+        }
+        // Turn on direct attack signal if enemy summoned char card is 0
+        int row = (GameStatus.getGameStatus().getGameActivePlayer() == Player.BOTTOM) ? (CHAR_ROW_TOP) : (CHAR_ROW_BOT);
+        for (int col = 0; col < 6; col++)
+            if (cardControllerList.get(row).get(col) != null)
+                return;
+        this.turnOnDirectAttackSignal();
+    }
+
+    /**
+     * Initialize battle, this.activeFieldCardController attack scCardController
+     * @param scCardController Attack target char card
+     */
+    public void initBattle(SummonedCharacterCardController scCardController) {
+        if (scCardController.getIsAttack()) // TODO: add support to skill power up
+            this.setDamageDealtSignal(this.activeFieldCardController.getCardValue() - scCardController.getCardValue());
+        this.removeCardFromField(scCardController.getX(), scCardController.getY());
+        this.resetActiveFieldCardController();
     }
 
     /**
@@ -274,20 +431,20 @@ public class FieldController implements Initializable {
                 int row = y, col = x;
                 // On mouse clicked handler
                 emptyCell.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-                    if (activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                        CardType cardType = waitingHandCard.getCard().getCardType();
+                    if (activeCellHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                        CardType cardType = waitingHandCardController.getCard().getCardType();
                         try {
                             if (cardType == CardType.CHARACTER) {
                                 if (e.getButton() == MouseButton.PRIMARY) {
-                                    setCardOnField(waitingHandCard.getCard(), waitingHandCard.getOwner(), true, col, row);
+                                    setCardOnField(waitingHandCardController.getCard(), waitingHandCardController.getOwner(), true, col, row);
                                     turnOnCardSummonedSignal();
                                 } else if (e.getButton() == MouseButton.SECONDARY) {
-                                    setCardOnField(waitingHandCard.getCard(), waitingHandCard.getOwner(), false, col, row);
+                                    setCardOnField(waitingHandCardController.getCard(), waitingHandCardController.getOwner(), false, col, row);
                                     turnOnCardSummonedSignal();
                                 }
                             } else if (cardType == CardType.SKILL) {
                                 if (e.getButton() == MouseButton.PRIMARY) {
-                                    setCardOnField(waitingHandCard.getCard(), waitingHandCard.getOwner(), true, col, row);
+                                    setCardOnField(waitingHandCardController.getCard(), waitingHandCardController.getOwner(), true, col, row);
                                     turnOnCardSummonedSignal();
                                 }
                             }
@@ -298,23 +455,23 @@ public class FieldController implements Initializable {
                 });
                 // On mouse entered handler
                 emptyCell.onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-                    if (activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                        emptyCell.setEffect(cellHoverShadow);
+                    if (activeCellHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                        emptyCell.setEffect(shadowRed);
                     }
                 });
                 // On mouse exited handler
                 emptyCell.onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-                    if (activeHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                        emptyCell.setEffect(cellAvailableShadow);
+                    if (activeCellHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                        emptyCell.setEffect(shadowYellow);
                     }
                 });
 
                 // Add event listener
-                this.activeHandler.get(col).get(row).addListener((observable, oldValue, newValue) -> {
+                this.activeCellHandler.get(col).get(row).addListener((observable, oldValue, newValue) -> {
                     if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                         // Field effect
                         if (oldValue == false && newValue == true) {
-                            emptyCell.setEffect(cellAvailableShadow);
+                            emptyCell.setEffect(shadowYellow);
                         } else {
                             emptyCell.setEffect(null);
                         }

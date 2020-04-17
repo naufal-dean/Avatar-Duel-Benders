@@ -47,6 +47,14 @@ public class SummonedCharacterCardController extends SummonedCardController {
     }
 
     /**
+     * Getter for isAttack status
+     * @return this.isAttack
+     */
+    public boolean getIsAttack() {
+        return this.isAttack;
+    }
+
+    /**
      * Return this card attack / defense based on card position
      * @return This card attack / defense
      */
@@ -87,13 +95,6 @@ public class SummonedCharacterCardController extends SummonedCardController {
      */
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
-        // Set on click handler
-        this.cardAncPane.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-            if (e.getButton() == MouseButton.SECONDARY && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN &&
-                    GameStatus.getGameStatus().getGameActivePlayer() == this.owner) {
-                this.rotate();
-            }
-        });
         this.init();
     }
 }

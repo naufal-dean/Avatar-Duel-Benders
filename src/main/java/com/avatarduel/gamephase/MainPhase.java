@@ -111,8 +111,8 @@ public class MainPhase implements GamePhase {
                         return;
                 }
                 // LAND or SKILL AURA card in hand clicked, set waiting card then activate cell event handler in field
-                if (oldValue == false && newValue == true && enoughEnergy(handController.getActiveHandCard().getCard()))
-                    fieldController.setWaitingHandCard(handController.getActiveHandCard());
+                if (oldValue == false && newValue == true) // TODO:  && enoughEnergy(handController.getActiveHandCard().getCard())
+                    fieldController.setWaitingHandCardController(handController.getActiveHandCard());
             }
         };
         this.fieldToHandConnector = new ChangeListener<Boolean>() {
@@ -125,7 +125,7 @@ public class MainPhase implements GamePhase {
                               .subCurrPower(handController.getActiveHandCard().getCard().getElement(),
                                             handController.getActiveHandCard().getCard().getPower());
                     mainController.getPowerControllerMap().get(activePlayer).init();
-                    fieldController.resetWaitingHandCard();
+                    fieldController.resetWaitingHandCardController();
                     fieldController.clearCellEventHandler();
                     handController.removeActiveCardFromHand();
                     fieldController.turnOffCardSummonedSignal();
