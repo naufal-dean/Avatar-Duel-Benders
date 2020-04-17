@@ -323,12 +323,14 @@ public class FieldController implements Initializable {
                     scCardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
                         if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                             if (e.getButton() == MouseButton.PRIMARY && activeSummCardHandler.get(x).get(y).get()) {
-                                // Attach skill
-                                scCardController.addSkillCard(skillCardControllerToBeAttached);
-                                skillCardControllerToBeAttached.setTargetX(x);
-                                skillCardControllerToBeAttached.setTargetY(y);
-                                skillCardControllerToBeAttached = null;
-                                turnOffAttachSkillPeriodSignal();
+                                if (this.attachSkillPeriodSignal.get()) {
+                                    // Attach skill
+                                    scCardController.addSkillCard(skillCardControllerToBeAttached);
+                                    skillCardControllerToBeAttached.setTargetX(x);
+                                    skillCardControllerToBeAttached.setTargetY(y);
+                                    skillCardControllerToBeAttached = null;
+                                    turnOffAttachSkillPeriodSignal();
+                                }
                             } else if (e.getButton() == MouseButton.SECONDARY &&
                                     GameStatus.getGameStatus().getGameActivePlayer() == scCardController.getOwner() &&
                                     !disableCardClick) {
