@@ -70,6 +70,10 @@ public class FieldController implements Initializable {
      */
     private IntegerProperty damageDealtSignal;
     /**
+     * Card click lock
+     */
+    private boolean disableCardClick;
+    /**
      * Field grid
      */
     @FXML private GridPane field;
@@ -99,6 +103,7 @@ public class FieldController implements Initializable {
         this.directAttackReadySignal = new SimpleBooleanProperty(false);
         this.damageDealtSignal = new SimpleIntegerProperty(-1);
         this.cardDetailsController = cardDetailsController;
+        this.disableCardClick = false;
         // Cell available shadow
         this.shadowYellow = new DropShadow();
         this.shadowYellow.setColor(Color.YELLOW);
@@ -192,6 +197,14 @@ public class FieldController implements Initializable {
     }
 
     /**
+     * Setter for disableCardClick
+     * @param disableCardClick The new disableCardClick value
+     */
+    public void setDisableCardClick(boolean disableCardClick) {
+        this.disableCardClick = disableCardClick;
+    }
+
+    /**
      * Setter for waiting hand card
      * @param waitingHandCardController The new waiting hand card (card type CHARACTER or SKILL AURA)
      */
@@ -273,7 +286,8 @@ public class FieldController implements Initializable {
                     scCardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
                         if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                             if (e.getButton() == MouseButton.SECONDARY &&
-                                    GameStatus.getGameStatus().getGameActivePlayer() == scCardController.getOwner()) {
+                                    GameStatus.getGameStatus().getGameActivePlayer() == scCardController.getOwner() &&
+                                    !disableCardClick) {
                                 scCardController.rotate();
                             }
                         } else if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
@@ -309,7 +323,8 @@ public class FieldController implements Initializable {
                         if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                             // Set on right click remove card from field
                             if (e.getButton() == MouseButton.SECONDARY &&
-                                    GameStatus.getGameStatus().getGameActivePlayer() == cardController.getOwner()) {
+                                    GameStatus.getGameStatus().getGameActivePlayer() == cardController.getOwner() &&
+                                    !disableCardClick) {
                                 removeCardFromField(cardController.getX(), cardController.getY());
                             }
                         }
@@ -418,13 +433,13 @@ public class FieldController implements Initializable {
         // Remove old effect if any
         if (this.activeFieldCardController != null) {
             this.activeFieldCardController.getCardAncPane().setEffect(null);
-            this.activeFieldCardSetSignal.setValue(false);
-            this.turnOffDirectAttackReadySignal();
         }
         // Check input
         if (this.activeFieldCardController == scCardController) { // Remove active card
-            this.activeFieldCardController = null;
+            this.resetActiveFieldCardController();
         } else { // Add active card
+            this.activeFieldCardSetSignal.setValue(false);
+            this.turnOffDirectAttackReadySignal();
             this.activeFieldCardController = scCardController;
             this.activeFieldCardController.getCardAncPane().setEffect(this.shadowRed);
             this.activeFieldCardSetSignal.setValue(true);
@@ -444,7 +459,7 @@ public class FieldController implements Initializable {
      * @param scCardController Attack target char card
      */
     public void initBattle(SummonedCharacterCardController scCardController) {
-        if (scCardController.getIsAttack()) // TODO: add support to skill power up
+        if (scCardController.getIsAttack() || scCardController.isPoweredUp())
             this.setDamageDealtSignal(this.activeFieldCardController.getCardValue() - scCardController.getCardValue());
         this.removeCardFromField(scCardController.getX(), scCardController.getY());
         this.activeFieldCardController.setHadAttacked(true);

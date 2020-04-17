@@ -51,6 +51,10 @@ public class HandController implements Initializable {
      */
     private BooleanProperty activeHandCardSetSignal, directAttackLaunchedSignal, activeRootHandler;
     /**
+     * Card click lock
+     */
+    private boolean disableCardClick;
+    /**
      * Shadow effect
      */
     private DropShadow shadowRed, shadowYellow;
@@ -86,6 +90,7 @@ public class HandController implements Initializable {
         this.activeRootHandler = new SimpleBooleanProperty(false);
         this.directAttackLaunchedSignal = new SimpleBooleanProperty(false);
         this.cardDetailsController = cardDetailsController;
+        this.disableCardClick = false;
         // Setup red shadow effect
         this.shadowRed = new DropShadow();
         this.shadowRed.setColor(Color.RED);
@@ -145,6 +150,14 @@ public class HandController implements Initializable {
     }
 
     /**
+     * Setter for disableCardClick
+     * @param disableCardClick The new disableCardClick value
+     */
+    public void setDisableCardClick(boolean disableCardClick) {
+        this.disableCardClick = disableCardClick;
+    }
+
+    /**
      * Add card to player hands
      * @param card The card to be displayed
      * @param owner The owner of the card
@@ -186,7 +199,7 @@ public class HandController implements Initializable {
         // Add event handler
         // On mouse clicked handler
         cardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-            if (e.getButton() == MouseButton.PRIMARY && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN)
+            if (e.getButton() == MouseButton.PRIMARY && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN && !disableCardClick)
                 onHandCardClickedHandler(cardController); // Set active hand card
         });
         // On mouse entered handler
@@ -266,12 +279,12 @@ public class HandController implements Initializable {
         // Remove old effect if any
         if (this.activeHandCard != null) {
             this.activeHandCard.getCardAncPane().setEffect(null);
-            this.activeHandCardSetSignal.setValue(false);
         }
         // Check input
         if (this.activeHandCard == handCardController) { // Remove active card
-            this.activeHandCard = null;
+            this.resetActiveHandCard();
         } else { // Add active card
+            this.activeHandCardSetSignal.setValue(false);
             this.activeHandCard = handCardController;
             this.activeHandCard.getCardAncPane().setEffect(this.shadowRed);
             this.activeHandCardSetSignal.setValue(true);

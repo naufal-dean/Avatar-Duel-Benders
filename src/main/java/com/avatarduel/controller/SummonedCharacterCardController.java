@@ -60,7 +60,7 @@ public class SummonedCharacterCardController extends SummonedCardController {
     public int getCardValue() {
         Character character = (Character) this.card;
         int attack = character.getAttack();
-        int defense = character.getAttack();
+        int defense = character.getDefense();
         for (SummonedSkillCardController ssCardController : this.attachedAuraControllerList) {
             SkillAura skillAura = (SkillAura) ssCardController.getCard();
             attack += skillAura.getAttack();

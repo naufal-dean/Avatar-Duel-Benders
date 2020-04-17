@@ -101,18 +101,19 @@ public class MainPhase implements GamePhase {
             public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
                 fieldController.clearCellEventHandler();
                 // Zeroth check
-                if (handController.getActiveHandCard() == null)
+                if (handController.getActiveHandCard() == null) {
+                    fieldController.setDisableCardClick(false);
                     return;
-                // Summon CHARACTER and SKILL AURA card
-                if (handController.getActiveHandCard().getCard().getCardType() == CardType.LAND) {
-                    return;
-                } else if (handController.getActiveHandCard().getCard().getCardType() == CardType.SKILL) {
-                    if (((Skill) handController.getActiveHandCard().getCard()).getEffect() != Effect.AURA)
-                        return;
                 }
+                // Summon only for CHARACTER, SKILL AURA, SKILL POWER UP
+                Card card = handController.getActiveHandCard().getCard();
+                if (card instanceof Land || card instanceof SkillDestroy)
+                    return;
                 // LAND or SKILL AURA card in hand clicked, set waiting card then activate cell event handler in field
-                if (oldValue == false && newValue == true) // TODO:  && enoughEnergy(handController.getActiveHandCard().getCard())
+                if (oldValue == false && newValue == true) {// TODO:  && enoughEnergy(handController.getActiveHandCard().getCard())
+                    fieldController.setDisableCardClick(true);
                     fieldController.setWaitingHandCardController(handController.getActiveHandCard());
+                }
             }
         };
         this.fieldToHandConnector = new ChangeListener<Boolean>() {
@@ -159,20 +160,26 @@ public class MainPhase implements GamePhase {
         Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
         HandController handController = mainController.getHandControllerMap().get(activePlayer);
         PowerController powerController = mainController.getPowerControllerMap().get(activePlayer);
+        FieldController fieldController = mainController.getFieldController();
         // Create ChangeListener object
         this.handToPowerConnector = new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
                 powerController.deactivateEventHandler();
                 // Zeroth check
-                if (handController.getActiveHandCard() == null || landCardPlaced > 0)
+                if (handController.getActiveHandCard() == null) {
+                    fieldController.setDisableCardClick(false);
                     return;
-                // Summon LAND card
-                if (handController.getActiveHandCard().getCard().getCardType() != CardType.LAND)
+                }
+                // Summon LAND card, max 1 per turn
+                if (!(handController.getActiveHandCard().getCard() instanceof Land) || landCardPlaced > 0) {
                     return;
+                }
                 // LAND card in hand clicked, activate event handler in power display
-                if (oldValue == false && newValue == true)
+                if (oldValue == false && newValue == true) {
+                    fieldController.setDisableCardClick(true);
                     powerController.activateEventHandler();
+                }
             }
         };
         this.powerToHandConnector = new ChangeListener<Boolean>() {
