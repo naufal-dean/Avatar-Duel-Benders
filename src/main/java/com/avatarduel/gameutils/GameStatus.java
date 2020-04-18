@@ -18,9 +18,9 @@ public class GameStatus {
      */
     private Player gameActivePlayer;
     /**
-     * Is game over yet
+     * Game winner
      */
-    private boolean gameOverStatus;
+    private Player gameWinner;
     /**
      * Game phase now
      */
@@ -45,7 +45,7 @@ public class GameStatus {
         // Initialize active player
         this.gameActivePlayer = Player.BOTTOM;
         // Initialize game over status
-        this.gameOverStatus = false;
+        this.gameWinner = null;
         // Initialize game phase
         this.gamePhase = Phase.DRAW;
         // Initialize game health
@@ -55,7 +55,7 @@ public class GameStatus {
         // Initialize game deck
         this.gameDeckMap = new HashMap<>();
         this.gameDeckMap.put(Player.BOTTOM, new GameDeck(60));
-        this.gameDeckMap.put(Player.TOP, new GameDeck((60)));
+        this.gameDeckMap.put(Player.TOP, new GameDeck(60));
         // Initialize game power
         this.gamePowerMap = new HashMap<>();
         this.gamePowerMap.put(Player.BOTTOM, new GamePower());
@@ -98,19 +98,19 @@ public class GameStatus {
     }
 
     /**
-     * Getter for gameOverStatus
-     * @return this.gameOverStatus
+     * Getter for gameWinner
+     * @return this.gameWinner
      */
-    public boolean getGameOverStatus() {
-        return this.gameOverStatus;
+    public Player getGameWinner() {
+        return this.gameWinner;
     }
 
     /**
-     * Setter for gameOverStatus
-     * @param gameOverStatus The new gameOverStatus
+     * Setter for gameWinner
+     * @param gameWinner The new gameWinner
      */
-    public void setGameOverStatus(boolean gameOverStatus) {
-        this.gameOverStatus = gameOverStatus;
+    public void setGameWinner(Player gameWinner) {
+        this.gameWinner = gameWinner;
     }
 
     /**

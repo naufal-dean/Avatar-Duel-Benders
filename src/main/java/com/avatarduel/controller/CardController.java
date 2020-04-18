@@ -120,8 +120,10 @@ public class CardController implements Initializable {
             elementPath = "card/template/element_earth.png";
         else if (this.card.getElement() == Element.FIRE)
             elementPath = "card/template/element_fire.png";
-        else // this.card.getElement() == Element.WATER
+        else if (this.card.getElement() == Element.WATER)
             elementPath = "card/template/element_water.png";
+        else // this.card.getElement() == Element.ENERGY
+            elementPath = "card/template/element_energy.png";
         this.element.setImage(new Image(AvatarDuel.class.getResource(elementPath).toString()));
 
         // Set decorator if any
