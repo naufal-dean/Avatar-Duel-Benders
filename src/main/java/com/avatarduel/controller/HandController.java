@@ -49,7 +49,7 @@ public class HandController implements Initializable {
     /**
      * Active card in hand set property
      */
-    private BooleanProperty activeHandCardSetSignal, directAttackLaunchedSignal, activeRootHandler;
+    private BooleanProperty activeHandCardSetSignal, directAttackLaunchedSignal, activeRootHandler, discardCardPeriodSignal;
     /**
      * Card click lock
      */
@@ -89,6 +89,7 @@ public class HandController implements Initializable {
         this.activeHandCardSetSignal = new SimpleBooleanProperty(false);
         this.activeRootHandler = new SimpleBooleanProperty(false);
         this.directAttackLaunchedSignal = new SimpleBooleanProperty(false);
+        this.discardCardPeriodSignal = new SimpleBooleanProperty(false);
         this.cardDetailsController = cardDetailsController;
         this.disableCardClick = false;
         // Setup red shadow effect
@@ -150,6 +151,28 @@ public class HandController implements Initializable {
     }
 
     /**
+     * Getter for directAttackLaunched property
+     * @return this.directAttackLaunched
+     */
+    public BooleanProperty getDiscardCardPeriodSignalProperty() {
+        return this.discardCardPeriodSignal;
+    }
+
+    /**
+     * Turn on direct attack signal
+     */
+    public void turnOnDiscardCardPeriodSignal() {
+        this.discardCardPeriodSignal.setValue(true);
+    }
+
+    /**
+     * Turn off direct attack signal
+     */
+    public void turnOffDiscardCardPeriodSignal() {
+        this.discardCardPeriodSignal.setValue(false);
+    }
+
+    /**
      * Setter for disableCardClick
      * @param disableCardClick The new disableCardClick value
      */
@@ -199,8 +222,15 @@ public class HandController implements Initializable {
         // Add event handler
         // On mouse clicked handler
         cardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-            if (e.getButton() == MouseButton.PRIMARY && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN && !disableCardClick)
-                onHandCardClickedHandler(cardController); // Set active hand card
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                if (e.getButton() == MouseButton.PRIMARY && !disableCardClick)
+                    onHandCardClickedHandler(cardController); // Set active hand card
+            } else if (GameStatus.getGameStatus().getGamePhase() == Phase.END) {
+                if (e.getButton() == MouseButton.PRIMARY && discardCardPeriodSignal.get()) {
+                    removeCardFromHand(cardController); // Remove card from hand
+                    turnOffDiscardCardPeriodSignal();
+                }
+            }
         });
         // On mouse entered handler
         cardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
@@ -216,6 +246,15 @@ public class HandController implements Initializable {
                     cardController.getCardAncPane().setEffect(null);
             }
             cardDetailsController.removeCard();
+        });
+        // Add event listener
+        this.discardCardPeriodSignal.addListener((observable, oldValue, newValue) -> {
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.END) {
+                if (oldValue == false && newValue == true)
+                    cardController.getCardAncPane().setEffect(shadowRed);
+                else
+                    cardController.getCardAncPane().setEffect(null);
+            }
         });
         // Set root as hand children node
         this.hand.getChildren().add(root);

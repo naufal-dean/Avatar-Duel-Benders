@@ -324,7 +324,7 @@ public class FieldController implements Initializable {
                         if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                             if (e.getButton() == MouseButton.PRIMARY && activeSummCardHandler.get(x).get(y).get()) {
                                 if (this.attachSkillPeriodSignal.get()) {
-                                    // Attach skill
+                                    // Attach skill aura or power up to char
                                     scCardController.addSkillCard(skillCardControllerToBeAttached);
                                     skillCardControllerToBeAttached.setTargetX(x);
                                     skillCardControllerToBeAttached.setTargetY(y);
