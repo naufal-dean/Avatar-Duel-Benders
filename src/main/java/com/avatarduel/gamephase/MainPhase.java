@@ -109,9 +109,9 @@ public class MainPhase implements GamePhase {
                     fieldController.setDisableCardClick(false);
                     return;
                 }
-                // Summon only for CHARACTER, SKILL AURA, SKILL POWER UP
+                // Summon only for CHARACTER or SKILL
                 Card card = handController.getActiveHandCard().getCard();
-                if (card instanceof Land || card instanceof SkillDestroy)
+                if (card instanceof Land)
                     return;
                 // LAND, SKILL AURA, or SKILL POWER UP card in hand clicked, set waiting card then activate cell event handler in field
                 if (oldValue == false && newValue == true) { // TODO:  && enoughEnergy(handController.getActiveHandCard().getCard())
