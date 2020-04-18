@@ -235,7 +235,7 @@ public class HandController implements Initializable {
         // On mouse entered handler
         cardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                cardController.getCardAncPane().setEffect(this.shadowRed);
+                cardController.getCardAncPane().setEffect(this.shadowYellow);
             }
             cardDetailsController.setCard(cardController.getCard());
         });
@@ -325,7 +325,7 @@ public class HandController implements Initializable {
         } else { // Add active card
             this.activeHandCardSetSignal.setValue(false);
             this.activeHandCard = handCardController;
-            this.activeHandCard.getCardAncPane().setEffect(this.shadowRed);
+            this.activeHandCard.getCardAncPane().setEffect(this.shadowYellow);
             this.activeHandCardSetSignal.setValue(true);
         }
     }
