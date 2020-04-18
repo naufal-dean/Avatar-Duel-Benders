@@ -46,6 +46,8 @@ public class HealthController implements Initializable {
     public void init() {
         // Set background
         int healthPoint = GameStatus.getGameStatus().getGameHealthMap().get(this.owner);
+        if (healthPoint < 0) healthPoint = 0;
+        if (healthPoint > 80) healthPoint = 80;
         String templatePath = "img/health/health_bar_" + healthPoint + ".png";
         this.healthVisual.setImage(new Image(AvatarDuel.class.getResource(templatePath).toString()));
         this.healthRemain.setText(String.valueOf(healthPoint) + "/80");

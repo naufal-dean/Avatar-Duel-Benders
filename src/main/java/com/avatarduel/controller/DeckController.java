@@ -57,7 +57,10 @@ public class DeckController implements Initializable {
         } else {
             templatePath = "img/deck/" + midPath + "_deck_equal_1.png";
         }
-        this.deckVisual.setImage(new Image(AvatarDuel.class.getResource(templatePath).toString()));
+        if (0 == cardQuantity) // Remove image if card in deck is zero
+            this.deckVisual.setImage(null);
+        else
+            this.deckVisual.setImage(new Image(AvatarDuel.class.getResource(templatePath).toString()));
         this.cardsCount.setText(String.valueOf(cardQuantity));
         // Rotate if the owner is Player TOP
         if (this.owner == Player.TOP) {

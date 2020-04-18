@@ -52,7 +52,7 @@ public class FieldController implements Initializable {
     /**
      * Shadow effect
      */
-    private DropShadow shadowYellow, shadowRed;
+    private DropShadow shadowYellow, shadowRed, shadowGreen;
     /**
      * Card that waiting to be summoned
      */
@@ -109,18 +109,24 @@ public class FieldController implements Initializable {
         this.damageDealtSignal = new SimpleIntegerProperty(-1);
         this.cardDetailsController = cardDetailsController;
         this.disableCardClick = false;
-        // Cell available shadow
+        // Shadow yellow
         this.shadowYellow = new DropShadow();
         this.shadowYellow.setColor(Color.YELLOW);
         this.shadowYellow.setWidth(40);
         this.shadowYellow.setHeight(40);
         this.shadowYellow.setSpread(0.85);
-        // Cell hover shadow
+        // Shadow red
         this.shadowRed = new DropShadow();
         this.shadowRed.setColor(Color.RED);
         this.shadowRed.setWidth(40);
         this.shadowRed.setHeight(40);
         this.shadowRed.setSpread(0.85);
+        // Shadow green
+        this.shadowGreen = new DropShadow();
+        this.shadowGreen.setColor(Color.GREEN);
+        this.shadowGreen.setWidth(40);
+        this.shadowGreen.setHeight(40);
+        this.shadowGreen.setSpread(0.85);
     }
 
     /**
@@ -390,13 +396,31 @@ public class FieldController implements Initializable {
                 // Add on hover handler
                 cardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
                     if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                        cardController.getCardAncPane().setEffect(this.shadowYellow);
+                        if (attachSkillPeriodSignal.get() && skillCardControllerToBeAttached != null) {
+                            if (card instanceof Character) {
+                                Card c = skillCardControllerToBeAttached.getCard();
+                                if (c instanceof SkillAura)
+                                    if (((SkillAura) c).getAttack() + ((SkillAura) c).getDefense() >= 0)
+                                        cardController.getCardAncPane().setEffect(shadowGreen);
+                                    else
+                                        cardController.getCardAncPane().setEffect(shadowRed);
+                                else if (c instanceof SkillPowerUp)
+                                    cardController.getCardAncPane().setEffect(shadowGreen);
+                                else
+                                    cardController.getCardAncPane().setEffect(shadowRed);
+                            }
+                        } else {
+                            cardController.getCardAncPane().setEffect(shadowYellow);
+                        }
                     }
                     cardDetailsController.setCard(cardController.getCard());
                 });
                 cardController.getCardAncPane().onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
                     if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                        cardController.getCardAncPane().setEffect(null);
+                        if (attachSkillPeriodSignal.get() && card instanceof Character)
+                            cardController.getCardAncPane().setEffect(shadowYellow);
+                        else
+                            cardController.getCardAncPane().setEffect(null);
                     }
                     cardDetailsController.removeCard();
                 });

@@ -73,9 +73,16 @@ public class EndPhase implements GamePhase {
         // Flip card in both hand
         mainController.getHandControllerMap().get(Player.TOP).flipCardInHand();
         mainController.getHandControllerMap().get(Player.BOTTOM).flipCardInHand();
-        // If not game over next turn
-        if (!GameStatus.getGameStatus().getGameOverStatus())
-            DrawPhase.getDrawPhase().startPhase(mainController);
+        // If not game over yet, next turn
+        DrawPhase.getDrawPhase().startPhase(mainController);
+    }
+
+    /**
+     * Game over
+     */
+    public void gameEnd() {
         // TODO: render game winner
+        GameStatus.getGameStatus().setGamePhase(Phase.END);
+        System.out.println("game end, winner: " + GameStatus.getGameStatus().getGameWinner());
     }
 }

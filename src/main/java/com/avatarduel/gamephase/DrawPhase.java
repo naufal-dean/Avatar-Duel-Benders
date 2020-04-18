@@ -39,9 +39,16 @@ public class DrawPhase implements GamePhase {
 
         // Draw card
         GameDeck deck = GameStatus.getGameStatus().getGameDeckMap().get(activePlayer);
+        // If no cards left, end game
+        if (deck.getCardQuantity() == 0) {
+            GameStatus.getGameStatus().setGameWinner(GameStatus.getGameStatus().getGameNonActivePlayer());
+            this.endPhase(mainController);
+            return;
+        }
+        // Else draw card
         HandController handController = mainController.getHandControllerMap().get(activePlayer);
         try {
-            if (handController.getCardControllerList().size() < 10) // TODO: discard 1 card if card size = 10 at the end of end phase
+            if (handController.getCardControllerList().size() < 10)
                 handController.addCardOnHand(deck.draw(), activePlayer);
         } catch (Exception e) {
             System.out.println(e.toString());
@@ -67,7 +74,13 @@ public class DrawPhase implements GamePhase {
      */
     @Override
     public void endPhase(MainController mainController) {
-        // Proceed to main phase
-        MainPhase.getMainPhase().startPhase(mainController);
+        // End draw phase
+        if (GameStatus.getGameStatus().getGameWinner() == null) {
+            // Proceed to main phase
+            MainPhase.getMainPhase().startPhase(mainController);
+        } else {
+            // Render game winner
+            EndPhase.getEndPhase().gameEnd();
+        }
     }
 }

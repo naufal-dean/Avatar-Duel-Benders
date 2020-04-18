@@ -79,8 +79,14 @@ public class BattlePhase implements GamePhase {
         // Disconnect phase change listener
         this.removePhaseChangeListener(mainController);
 
-        // Proceed to end phase
-        EndPhase.getEndPhase().startPhase(mainController);
+        // End battle phase
+        if (GameStatus.getGameStatus().getGameWinner() == null) {
+            // Proceed to end phase
+            EndPhase.getEndPhase().startPhase(mainController);
+        } else {
+            // Render game winner
+            EndPhase.getEndPhase().gameEnd();
+        }
     }
 
     /**
@@ -96,11 +102,16 @@ public class BattlePhase implements GamePhase {
                     // Battle ended, damage dealt to enemy player
                     Player enemyPlayer = GameStatus.getGameStatus().getGameNonActivePlayer();
                     int enemyHealth = GameStatus.getGameStatus().getGameHealthMap().get(enemyPlayer);
-                    GameStatus.getGameStatus().getGameHealthMap().put(enemyPlayer, enemyHealth - newValue.intValue());
+                    GameStatus.getGameStatus().getGameHealthMap().put(enemyPlayer, Math.max(enemyHealth - newValue.intValue(), 0));
                     // Update display
                     mainController.getHealthControllerMap().get(enemyPlayer).init();
                     // Turn off signal
                     mainController.getFieldController().setDamageDealtSignal(-1);
+                    // Check if health == 0
+                    if (GameStatus.getGameStatus().getGameHealthMap().get(enemyPlayer) == 0) {
+                        GameStatus.getGameStatus().setGameWinner(GameStatus.getGameStatus().getGameActivePlayer());
+                        endPhase(mainController);
+                    }
                 }
             }
         };
@@ -153,6 +164,11 @@ public class BattlePhase implements GamePhase {
                     // Deactivate handler and turn off signal
                     enemyHandController.deactivateRootEventHandler();
                     enemyHandController.turnOffDirectAttackLaunchedSignal();
+                    // Check if health == 0
+                    if (GameStatus.getGameStatus().getGameHealthMap().get(enemyPlayer) == 0) {
+                        GameStatus.getGameStatus().setGameWinner(GameStatus.getGameStatus().getGameActivePlayer());
+                        endPhase(mainController);
+                    }
                 }
             }
         };
