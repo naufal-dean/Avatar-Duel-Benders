@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
 <?import javafx.scene.image.*?>
@@ -46,5 +47,7 @@
             </VBox>
          </children>
       </HBox>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#14080a" height="100.0" layoutY="-100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1550.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#14080a" height="100.0" layoutY="800.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1550.0" />
    </children>
 </AnchorPane>

@@ -114,6 +114,7 @@ public class CardDetailsController implements Initializable {
         this.card.setOpacity(0);
         // Setup desc, stats, and background
         this.description.setDisable(true);
+//        this.description.
         this.description.setWrapText(true);
         this.description.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), 14));
         this.description.getStylesheets().add(AvatarDuel.class.getResource("css/transparent-bg-text-area.css").toString());

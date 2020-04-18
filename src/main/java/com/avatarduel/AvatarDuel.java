@@ -1,15 +1,18 @@
 package com.avatarduel;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.*;
+import java.awt.*;
 
 import javafx.application.Application;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Group;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -19,62 +22,10 @@ import com.avatarduel.gamephase.DrawPhase;
 import com.avatarduel.gameutils.GameDeck;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
-import com.avatarduel.model.Character;
-import com.avatarduel.util.*;
 
 public class AvatarDuel extends Application {
-  private static final String LAND_CSV_FILE_PATH = "card/data/land.csv";
-  private static final String CHARACTER_CSV_FILE_PATH = "card/data/character.csv";
-  private static final String SKILL_AURA_CSV_FILE_PATH = "card/data/skill_aura.csv";
-  private static final String SKILL_DESTROY_CSV_FILE_PATH = "card/data/skill_destroy.csv";
-  private static final int INITIAL_CARD_IN_HAND = 7;
-  private List<Card> cardList;
-
-  // TODO: remove loadCards as it is not used
-  /**
-   * Function to load card from csv
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  public void loadCards() throws IOException, URISyntaxException {
-    this.cardList = new ArrayList<>();
-
-    // Read land cards
-    File landCSVFile = new File(getClass().getResource(LAND_CSV_FILE_PATH).toURI());
-    CSVReader landReader = new CSVReader(landCSVFile, "\t");
-    landReader.setSkipHeader(true);
-    List<String[]> landRows = landReader.read();
-    for (String[] row : landRows) {
-      cardList.add(new Land(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4]));
-    }
-
-    // Read character cards
-    File characterCSVFile = new File(getClass().getResource(CHARACTER_CSV_FILE_PATH).toURI());
-    CSVReader characterReader = new CSVReader(characterCSVFile, "\t");
-    characterReader.setSkipHeader(true);
-    List<String[]> characterRows = characterReader.read();
-    for (String[] row : characterRows) {
-      cardList.add(new Character(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4], Integer.valueOf(row[5]), Integer.valueOf(row[6]), Integer.valueOf(row[7])));
-    }
-
-    // Read skillDestroy cards
-    File skillDestroyCSVFile = new File(getClass().getResource(SKILL_DESTROY_CSV_FILE_PATH).toURI());
-    CSVReader skillDestroyReader = new CSVReader(skillDestroyCSVFile, "\t");
-    skillDestroyReader.setSkipHeader(true);
-    List<String[]> skillDestroyRows = skillDestroyReader.read();
-    for (String[] row : skillDestroyRows) {
-      cardList.add(new SkillDestroy(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4], Integer.valueOf(row[5])));
-    }
-
-    // Read skillAura cards
-    File skillAuraCSVFile = new File(getClass().getResource(SKILL_AURA_CSV_FILE_PATH).toURI());
-    CSVReader skillAuraReader = new CSVReader(skillAuraCSVFile, "\t");
-    skillAuraReader.setSkipHeader(true);
-    List<String[]> skillAuraRows = skillAuraReader.read();
-    for (String[] row : skillAuraRows) {
-      cardList.add(new SkillAura(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4], Integer.valueOf(row[5]), Integer.valueOf(row[6]), Integer.valueOf(row[7])));
-    }
-  }
+  private final Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+  private final int INITIAL_CARD_IN_HAND = 7;
 
   /**
    * Render game
@@ -88,15 +39,26 @@ public class AvatarDuel extends Application {
       MainController mainController = new MainController();
       loader.setLocation(getClass().getResource("view/Main.fxml"));
       loader.setController(mainController);
-      Parent root = loader.load();
+      Node root = loader.load();
       // Load game
       loadGame(mainController);
+      // Set main UI in wrapper
+      GridPane wrapper = new GridPane();
+      wrapper.setAlignment(Pos.CENTER);
+      GridPane.setHalignment(root, HPos.CENTER);
+      GridPane.setValignment(root, VPos.CENTER);
+      wrapper.add(root, 0, 0);
+      // Scale main UI
+      // Create scale for root
+      DoubleProperty scale = new SimpleDoubleProperty(screenDimension.getWidth() / 1550d);
+      root.scaleXProperty().bind(scale);
+      root.scaleYProperty().bind(scale);
       // Present game
-      Scene scene = new Scene(root, 1550, 800);
+      Scene scene = new Scene(wrapper, 1920, 1080);
       stage.setTitle("Avatar Duel");
       stage.setScene(scene);
       stage.show();
-      // TODO: stage.setFullScreen(true);
+      stage.setFullScreen(true);
       // Start the game logic
       startGame(mainController);
     } catch (Exception e) {
