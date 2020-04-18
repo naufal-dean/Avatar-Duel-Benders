@@ -61,18 +61,17 @@ public class CardDetailsController implements Initializable {
 
          // Set stats display
          this.stats.setText("");
-         if (card.getCardType() == CardType.CHARACTER) {
+         if (card instanceof Character) {
              Character character = (Character) card;
              this.stats.setText("ATK/" + character.getAttack() + "  DEF/" + character.getDefense()
                                 + "  POW/" + character.getPower());
-         } else if (card.getCardType() == CardType.SKILL) {
+         } else if (card instanceof Skill) {
              String stats = "";
-             if (((Skill) card).getEffect() == Effect.AURA) {
+             if (card instanceof SkillAura) {
                  SkillAura skillAura = (SkillAura) card;
                  stats += "ATK/" + skillAura.getAttack() + "  DEF/" + skillAura.getDefense();
                  stats += "  POW/" + skillAura.getPower();
-             }
-             else {
+             } else {
                  SkillDestroy skillDestroy = (SkillDestroy) card;
                  stats += "POW/" + skillDestroy.getPower();
              }
@@ -115,6 +114,7 @@ public class CardDetailsController implements Initializable {
         this.card.setOpacity(0);
         // Setup desc, stats, and background
         this.description.setDisable(true);
+//        this.description.
         this.description.setWrapText(true);
         this.description.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), 14));
         this.description.getStylesheets().add(AvatarDuel.class.getResource("css/transparent-bg-text-area.css").toString());

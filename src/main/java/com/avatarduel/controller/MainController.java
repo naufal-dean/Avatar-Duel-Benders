@@ -55,9 +55,9 @@ public class MainController implements Initializable {
      */
     @FXML private Pane mainHBox;
     /**
-     * Main background
+     * Background
      */
-    @FXML private ImageView mainBackground;
+    @FXML private ImageView mainBackground, sideBackground;
     /**
      * Health display
      */
@@ -224,7 +224,7 @@ public class MainController implements Initializable {
      */
     public void initField() {
         // Set background image
-        this.fieldBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/field_background.jpg").toString()));
+        this.fieldBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/field_background.png").toString()));
         // Create loader
         FXMLLoader fieldLoader = new FXMLLoader();
         FieldController fieldController = new FieldController(this.cardDetailsController);
@@ -335,17 +335,13 @@ public class MainController implements Initializable {
      */
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
-//        this.mainBackground.setImage(new Image(AvatarDuel.class.getResource("background/main2.png").toString()));
+        this.mainBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/main_background.png").toString()));
+        this.sideBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/side_background.png").toString()));
         this.initHealth();
         this.initCardDetails();
-        this.phase.setStyle("-fx-border-color: black");
         this.initPhase();
         this.initField();
-        this.deckBottom.setStyle("-fx-border-color: black");
-        this.deckTop.setStyle("-fx-border-color: black");
         this.initDeck();
-        this.powerBottom.setStyle("-fx-border-color: black");
-        this.powerTop.setStyle("-fx-border-color: black");
         this.initPower();
         this.initHand();
     }

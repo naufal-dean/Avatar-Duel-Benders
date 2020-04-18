@@ -22,6 +22,11 @@ public class PhaseController implements Initializable {
      */
     private BooleanProperty battlePhaseSignal, endPhaseSignal;
     /**
+     * Button image
+     */
+    private Image dpButtonImg, mpButtonImg, bpButtonImg, epButtonImg, dpButtonActiveImg, mpButtonActiveImg,
+            bpButtonActiveImg, epButtonActiveImg;
+    /**
      * Background display
      */
     @FXML private ImageView background;
@@ -83,18 +88,38 @@ public class PhaseController implements Initializable {
     }
 
     /**
+     * Update FXML using current phase
+     */
+    public void init() {
+        Phase gamePhase = GameStatus.getGameStatus().getGamePhase();
+        this.drawPhase.setImage((gamePhase == Phase.DRAW) ? (dpButtonActiveImg) : (dpButtonImg));
+        this.mainPhase.setImage((gamePhase == Phase.MAIN) ? (mpButtonActiveImg) : (mpButtonImg));
+        this.battlePhase.setImage((gamePhase == Phase.BATTLE) ? (bpButtonActiveImg) : (bpButtonImg));
+        this.endPhase.setImage((gamePhase == Phase.END) ? (epButtonActiveImg) : (epButtonImg));
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // TODO: add background
-//        this.background.setImage(new Image(AvatarDuel.class.getResource("...").toString()));
-        this.drawPhase.setImage(new Image(AvatarDuel.class.getResource("img/phase/dp_button.png").toString()));
-        this.mainPhase.setImage(new Image(AvatarDuel.class.getResource("img/phase/mp_button.png").toString()));
-        this.battlePhase.setImage(new Image(AvatarDuel.class.getResource("img/phase/bp_button.png").toString()));
-        this.endPhase.setImage(new Image(AvatarDuel.class.getResource("img/phase/ep_button.png").toString()));
+        this.background.setImage(new Image(AvatarDuel.class.getResource("img/background/phase_background.png").toString()));
+        // Init button image
+        this.dpButtonImg = new Image(AvatarDuel.class.getResource("img/phase/dp_button.png").toString());
+        this.mpButtonImg = new Image(AvatarDuel.class.getResource("img/phase/mp_button.png").toString());
+        this.bpButtonImg = new Image(AvatarDuel.class.getResource("img/phase/bp_button.png").toString());
+        this.epButtonImg = new Image(AvatarDuel.class.getResource("img/phase/ep_button.png").toString());
+        this.dpButtonActiveImg = new Image(AvatarDuel.class.getResource("img/phase/dp_button_active.png").toString());
+        this.mpButtonActiveImg = new Image(AvatarDuel.class.getResource("img/phase/mp_button_active.png").toString());
+        this.bpButtonActiveImg = new Image(AvatarDuel.class.getResource("img/phase/bp_button_active.png").toString());
+        this.epButtonActiveImg = new Image(AvatarDuel.class.getResource("img/phase/ep_button_active.png").toString());
+        // Set button image
+        this.drawPhase.setImage(dpButtonImg);
+        this.mainPhase.setImage(mpButtonImg);
+        this.battlePhase.setImage(bpButtonImg);
+        this.endPhase.setImage(epButtonImg);
 
-        // Add event handler
+        // Add click event handler
         this.battlePhase.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                 turnOnBattlePhaseSignal();
@@ -103,6 +128,27 @@ public class PhaseController implements Initializable {
         this.endPhase.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN || GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
                 turnOnEndPhaseSignal();
+            }
+        });
+        // Add hover event handler
+        this.battlePhase.onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                battlePhase.setImage(bpButtonActiveImg);
+            }
+        });
+        this.battlePhase.onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                battlePhase.setImage(bpButtonImg);
+            }
+        });
+        this.endPhase.onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN || GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
+                endPhase.setImage(epButtonActiveImg);
+            }
+        });
+        this.endPhase.onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
+            if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN || GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
+                endPhase.setImage(epButtonImg);
             }
         });
     }

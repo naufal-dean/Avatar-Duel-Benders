@@ -9,7 +9,7 @@
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="50.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fx:id="background" fitHeight="800.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="background" fitHeight="800.0" fitWidth="50.0" pickOnBounds="true" />
       <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="50.0" spacing="60.0">
          <children>
             <ImageView fx:id="drawPhase" fitHeight="72.8" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />

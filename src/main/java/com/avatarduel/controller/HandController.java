@@ -113,6 +113,14 @@ public class HandController implements Initializable {
     }
 
     /**
+     * Get card back controller list
+     * @return this.cardBackControllerList
+     */
+    public List<CardBackController> getCardBackControllerList() {
+        return this.cardBackControllerList;
+    }
+
+    /**
      * Getter for active hand card
      * @return this.activeHandCard
      */
@@ -235,7 +243,7 @@ public class HandController implements Initializable {
         // On mouse entered handler
         cardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                cardController.getCardAncPane().setEffect(this.shadowRed);
+                cardController.getCardAncPane().setEffect(this.shadowYellow);
             }
             cardDetailsController.setCard(cardController.getCard());
         });
@@ -251,7 +259,7 @@ public class HandController implements Initializable {
         this.discardCardPeriodSignal.addListener((observable, oldValue, newValue) -> {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.END) {
                 if (oldValue == false && newValue == true)
-                    cardController.getCardAncPane().setEffect(shadowRed);
+                    cardController.getCardAncPane().setEffect(shadowYellow);
                 else
                     cardController.getCardAncPane().setEffect(null);
             }
@@ -325,7 +333,7 @@ public class HandController implements Initializable {
         } else { // Add active card
             this.activeHandCardSetSignal.setValue(false);
             this.activeHandCard = handCardController;
-            this.activeHandCard.getCardAncPane().setEffect(this.shadowRed);
+            this.activeHandCard.getCardAncPane().setEffect(this.shadowYellow);
             this.activeHandCardSetSignal.setValue(true);
         }
     }

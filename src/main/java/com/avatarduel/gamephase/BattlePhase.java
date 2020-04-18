@@ -1,12 +1,13 @@
 package com.avatarduel.gamephase;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
 import com.avatarduel.controller.FieldController;
 import com.avatarduel.controller.HandController;
 import com.avatarduel.controller.MainController;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.Player;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 public class BattlePhase implements GamePhase {
     /**
@@ -42,8 +43,9 @@ public class BattlePhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
-        // Update game status
+        // Update game status and phase button display
         GameStatus.getGameStatus().setGamePhase(Phase.BATTLE);
+        mainController.getPhaseController().init();
 
         // Add connection between elements and GameStatus
         this.connectFieldSignal(mainController);

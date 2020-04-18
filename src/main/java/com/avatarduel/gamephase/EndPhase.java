@@ -3,6 +3,8 @@ package com.avatarduel.gamephase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
+import com.avatarduel.controller.CardBackController;
+import com.avatarduel.controller.HandCardController;
 import com.avatarduel.controller.HandController;
 import com.avatarduel.controller.MainController;
 import com.avatarduel.gameutils.GameStatus;
@@ -39,8 +41,10 @@ public class EndPhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
-        // Update game status
+        // Update game status and phase button display
         GameStatus.getGameStatus().setGamePhase(Phase.END);
+        mainController.getPhaseController().init();
+
         // Check if card > 9
         Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
         HandController handController = mainController.getHandControllerMap().get(activePlayer);
@@ -69,12 +73,52 @@ public class EndPhase implements GamePhase {
      */
     @Override
     public void endPhase(MainController mainController) {
-        GameStatus.getGameStatus().nextTurn();
-        // Flip card in both hand
-        mainController.getHandControllerMap().get(Player.TOP).flipCardInHand();
-        mainController.getHandControllerMap().get(Player.BOTTOM).flipCardInHand();
-        // If not game over yet, next turn
-        DrawPhase.getDrawPhase().startPhase(mainController);
+        // Execute flip animation in both player hands
+        // Pre calculation
+        Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
+        HandController actHandController = mainController.getHandControllerMap().get(activePlayer);
+        CardBackController actLastCB = null;
+        if (actHandController.getCardBackControllerList().size() > 0)
+            actLastCB = actHandController.getCardBackControllerList().get(0);
+
+        Player enemyPlayer = GameStatus.getGameStatus().getGameNonActivePlayer();
+        HandController enHandController = mainController.getHandControllerMap().get(enemyPlayer);
+        HandCardController enLastC = null;
+        if (enHandController.getCardControllerList().size() > 0)
+            enLastC = enHandController.getCardControllerList().get(0);
+
+        // Flip active player hand if any
+        if (actLastCB != null) {
+            actHandController.flipCardInHand();
+            HandCardController tempEnLastC = enLastC;
+            actLastCB.getFlipUp().setOnFinished(e -> {
+                // Flip enemy hand if any
+                if (tempEnLastC != null) {
+                    enHandController.flipCardInHand();
+                    tempEnLastC.getFlipUp().setOnFinished(innerE -> {
+                        // If not game over yet, next turn
+                        GameStatus.getGameStatus().nextTurn();
+                        DrawPhase.getDrawPhase().startPhase(mainController);
+                    });
+                } else {
+                    GameStatus.getGameStatus().nextTurn();
+                    DrawPhase.getDrawPhase().startPhase(mainController);
+                }
+            });
+        } else {
+            // Flip enemy hand if any
+            if (enLastC != null) {
+                enHandController.flipCardInHand();
+                enLastC.getFlipUp().setOnFinished(e -> {
+                    // If not game over yet, next turn
+                    GameStatus.getGameStatus().nextTurn();
+                    DrawPhase.getDrawPhase().startPhase(mainController);
+                });
+            } else {
+                GameStatus.getGameStatus().nextTurn();
+                DrawPhase.getDrawPhase().startPhase(mainController);
+            }
+        }
     }
 
     /**

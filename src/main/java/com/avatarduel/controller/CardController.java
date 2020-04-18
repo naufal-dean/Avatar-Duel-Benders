@@ -189,6 +189,9 @@ public class CardController implements Initializable {
                 this.attack.setText(String.valueOf((((SkillAura) skill).getAttack())));
                 this.defense.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 8));
                 this.defense.setText(String.valueOf((((SkillAura) skill).getDefense())));
+            } else {
+                this.attack.setText("");
+                this.defense.setText("");
             }
             this.power.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 8));
             this.power.setText(String.valueOf(skill.getPower()));

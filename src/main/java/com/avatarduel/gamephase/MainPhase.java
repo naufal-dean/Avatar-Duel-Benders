@@ -45,9 +45,12 @@ public class MainPhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
-        this.landCardPlaced = 0;
-        // Update game status
+        // Update game status and phase button display
         GameStatus.getGameStatus().setGamePhase(Phase.MAIN);
+        mainController.getPhaseController().init();
+
+        // Reset counter
+        this.landCardPlaced = 0;
         // Add connector hand-field, hand-power
         this.connectHandAndField(mainController);
         this.connectHandAndPower(mainController);
@@ -109,12 +112,12 @@ public class MainPhase implements GamePhase {
                     fieldController.setDisableCardClick(false);
                     return;
                 }
-                // Summon only for CHARACTER, SKILL AURA, SKILL POWER UP
+                // Summon only for CHARACTER or SKILL
                 Card card = handController.getActiveHandCard().getCard();
-                if (card instanceof Land || card instanceof SkillDestroy)
+                if (card instanceof Land)
                     return;
                 // LAND, SKILL AURA, or SKILL POWER UP card in hand clicked, set waiting card then activate cell event handler in field
-                if (oldValue == false && newValue == true) { // TODO:  && enoughEnergy(handController.getActiveHandCard().getCard())
+                if (oldValue == false && newValue == true && enoughEnergy(handController.getActiveHandCard().getCard())) {
                     fieldController.setDisableCardClick(true);
                     fieldController.setWaitingHandCardController(handController.getActiveHandCard());
                 }

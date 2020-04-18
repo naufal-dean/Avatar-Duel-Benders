@@ -312,7 +312,7 @@ public class FieldController implements Initializable {
             SummonedCardController cardController;
             if (card instanceof Character) {
                 cardController = new SummonedCharacterCardController((Character) card, owner, x, y, isAttack);
-            } else if (card instanceof SkillAura || card instanceof SkillPowerUp) {
+            } else if (card instanceof Skill) {
                 cardController = new SummonedSkillCardController((Skill) card, owner, x, y);
             } else {
                 return;
@@ -332,16 +332,15 @@ public class FieldController implements Initializable {
                                 if (this.attachSkillPeriodSignal.get()) {
                                     // Attach skill
                                     if (skillCardControllerToBeAttached.getCard() instanceof SkillDestroy) {
-                                        removeCardFromField(scCardController.getX(),scCardController.getY());
-                                        skillCardControllerToBeAttached = null;
-                                        turnOffAttachSkillPeriodSignal();
+                                        removeCardFromField(scCardController.getX(), scCardController.getY());
+                                        removeCardFromField(skillCardControllerToBeAttached.getX(), skillCardControllerToBeAttached.getY());
                                     } else {
                                         scCardController.addSkillCard(skillCardControllerToBeAttached);
                                         skillCardControllerToBeAttached.setTargetX(x);
                                         skillCardControllerToBeAttached.setTargetY(y);
-                                        skillCardControllerToBeAttached = null;
-                                        turnOffAttachSkillPeriodSignal();
                                     }
+                                    skillCardControllerToBeAttached = null;
+                                    turnOffAttachSkillPeriodSignal();
                                 }
                             } else if (e.getButton() == MouseButton.SECONDARY &&
                                     GameStatus.getGameStatus().getGameActivePlayer() == scCardController.getOwner() &&
@@ -586,7 +585,7 @@ public class FieldController implements Initializable {
                                     setCardOnField(card, waitingHandCardController.getOwner(), false, col, row);
                                     turnOnCardSummonedSignal();
                                 }
-                            } else if (card instanceof SkillAura || card instanceof SkillPowerUp) {
+                            } else if (card instanceof Skill) {
                                 if (e.getButton() == MouseButton.PRIMARY) {
                                     setCardOnField(card, waitingHandCardController.getOwner(), true, col, row);
                                     turnOnCardSummonedSignal();
@@ -610,7 +609,7 @@ public class FieldController implements Initializable {
                 // On mouse entered handler
                 emptyCell.onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
                     if (activeCellHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                        emptyCell.setEffect(shadowRed);
+                        emptyCell.setEffect(shadowGreen);
                     }
                 });
                 // On mouse exited handler
