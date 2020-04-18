@@ -15,6 +15,7 @@ public class GameDeck {
     private static final String LAND_CSV_FILE_PATH = "../card/data/land.csv";
     private static final String CHARACTER_CSV_FILE_PATH = "../card/data/character.csv";
     private static final String SKILL_AURA_CSV_FILE_PATH = "../card/data/skill_aura.csv";
+    private static final String SKILL_DESTROY_CSV_FILE_PATH = "../card/data/skill_destroy.csv";
     /**
      * List of cards on the deck
      */
@@ -76,6 +77,17 @@ public class GameDeck {
             rand_int = rand.nextInt(characterRows.size());
             String[] row = characterRows.get(rand_int);
             cardList.add(new Character(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4], Integer.valueOf(row[5]), Integer.valueOf(row[6]), Integer.valueOf(row[7])));
+        }
+
+        // Read skillDestroy cards
+        File skillDestroyCSVFile = new File(getClass().getResource(SKILL_DESTROY_CSV_FILE_PATH).toURI());
+        CSVReader skillDestroyReader = new CSVReader(skillDestroyCSVFile, "\t");
+        skillDestroyReader.setSkipHeader(true);
+        List<String[]> skillDestroyRows = skillDestroyReader.read();
+        for (int i = 0; i < Math.round(this.capacity/5f); i++) {
+            rand_int = rand.nextInt(skillDestroyRows.size());
+            String[] row = skillDestroyRows.get(rand_int);
+            cardList.add(new SkillDestroy(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4], Integer.valueOf(row[5])));
         }
 
         // Read skillAura cards

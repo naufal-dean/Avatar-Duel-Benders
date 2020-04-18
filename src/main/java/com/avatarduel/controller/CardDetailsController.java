@@ -66,11 +66,16 @@ public class CardDetailsController implements Initializable {
              this.stats.setText("ATK/" + character.getAttack() + "  DEF/" + character.getDefense()
                                 + "  POW/" + character.getPower());
          } else if (card.getCardType() == CardType.SKILL) {
-             SkillAura skillAura = (SkillAura) card;
              String stats = "";
-             if (((Skill) card).getEffect() == Effect.AURA)
+             if (((Skill) card).getEffect() == Effect.AURA) {
+                 SkillAura skillAura = (SkillAura) card;
                  stats += "ATK/" + skillAura.getAttack() + "  DEF/" + skillAura.getDefense();
-             stats += "  POW/" + skillAura.getPower();
+                 stats += "  POW/" + skillAura.getPower();
+             }
+             else {
+                 SkillDestroy skillDestroy = (SkillDestroy) card;
+                 stats += "POW/" + skillDestroy.getPower();
+             }
              this.stats.setText(stats);
          }
      }

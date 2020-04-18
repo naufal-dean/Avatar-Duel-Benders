@@ -330,12 +330,18 @@ public class FieldController implements Initializable {
                         if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
                             if (e.getButton() == MouseButton.PRIMARY && activeSummCardHandler.get(x).get(y).get()) {
                                 if (this.attachSkillPeriodSignal.get()) {
-                                    // Attach skill aura or power up to char
-                                    scCardController.addSkillCard(skillCardControllerToBeAttached);
-                                    skillCardControllerToBeAttached.setTargetX(x);
-                                    skillCardControllerToBeAttached.setTargetY(y);
-                                    skillCardControllerToBeAttached = null;
-                                    turnOffAttachSkillPeriodSignal();
+                                    // Attach skill
+                                    if (skillCardControllerToBeAttached.getCard() instanceof SkillDestroy) {
+                                        removeCardFromField(scCardController.getX(),scCardController.getY());
+                                        skillCardControllerToBeAttached = null;
+                                        turnOffAttachSkillPeriodSignal();
+                                    } else {
+                                        scCardController.addSkillCard(skillCardControllerToBeAttached);
+                                        skillCardControllerToBeAttached.setTargetX(x);
+                                        skillCardControllerToBeAttached.setTargetY(y);
+                                        skillCardControllerToBeAttached = null;
+                                        turnOffAttachSkillPeriodSignal();
+                                    }
                                 }
                             } else if (e.getButton() == MouseButton.SECONDARY &&
                                     GameStatus.getGameStatus().getGameActivePlayer() == scCardController.getOwner() &&
