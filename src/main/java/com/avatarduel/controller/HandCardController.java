@@ -53,6 +53,14 @@ public class HandCardController extends CardController implements Flippable {
     }
 
     /**
+     * Getter for flipUp timeline
+     * @return this.flipUp
+     */
+    public Timeline getFlipUp() {
+        return this.flipUp;
+    }
+
+    /**
      * Flip the card display
      */
     public void flipCard() {

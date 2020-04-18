@@ -34,6 +34,14 @@ public class CardBackController implements Initializable, Flippable {
     }
 
     /**
+     * Getter for flipUp timeline
+     * @return this.flipUp
+     */
+    public Timeline getFlipUp() {
+        return this.flipUp;
+    }
+
+    /**
      * Getter for flipDown timeline
      * @return this.flipDown
      */

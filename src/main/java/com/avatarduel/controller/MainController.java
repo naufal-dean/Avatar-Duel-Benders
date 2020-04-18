@@ -224,7 +224,7 @@ public class MainController implements Initializable {
      */
     public void initField() {
         // Set background image
-        this.fieldBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/field_background.jpg").toString()));
+//        this.fieldBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/field_background.jpg").toString()));
         // Create loader
         FXMLLoader fieldLoader = new FXMLLoader();
         FieldController fieldController = new FieldController(this.cardDetailsController);
@@ -335,8 +335,8 @@ public class MainController implements Initializable {
      */
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
-        this.mainBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/main_background.png").toString()));
-        this.sideBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/side_background.png").toString()));
+//        this.mainBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/main_background.png").toString()));
+//        this.sideBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/side_background.png").toString()));
         this.initHealth();
         this.initCardDetails();
         this.initPhase();

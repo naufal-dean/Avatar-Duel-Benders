@@ -113,6 +113,14 @@ public class HandController implements Initializable {
     }
 
     /**
+     * Get card back controller list
+     * @return this.cardBackControllerList
+     */
+    public List<CardBackController> getCardBackControllerList() {
+        return this.cardBackControllerList;
+    }
+
+    /**
      * Getter for active hand card
      * @return this.activeHandCard
      */
