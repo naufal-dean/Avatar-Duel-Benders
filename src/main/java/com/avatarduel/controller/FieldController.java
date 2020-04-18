@@ -325,6 +325,17 @@ public class FieldController implements Initializable {
                             if (e.getButton() == MouseButton.PRIMARY && activeSummCardHandler.get(x).get(y).get()) {
                                 if (this.attachSkillPeriodSignal.get()) {
                                     // Attach skill
+                                    if (skillCardControllerToBeAttached.getCard() instanceof SkillDestroy) {
+                                        removeCardFromField(scCardController.getX(),scCardController.getY());
+                                        skillCardControllerToBeAttached = null;
+                                        turnOffAttachSkillPeriodSignal();
+                                    } else {
+                                        scCardController.addSkillCard(skillCardControllerToBeAttached);
+                                        skillCardControllerToBeAttached.setTargetX(x);
+                                        skillCardControllerToBeAttached.setTargetY(y);
+                                        skillCardControllerToBeAttached = null;
+                                        turnOffAttachSkillPeriodSignal();
+                                    }
                                     scCardController.addSkillCard(skillCardControllerToBeAttached);
                                     skillCardControllerToBeAttached.setTargetX(x);
                                     skillCardControllerToBeAttached.setTargetY(y);
