@@ -89,10 +89,10 @@ public class PhaseController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // TODO: add background
 //        this.background.setImage(new Image(AvatarDuel.class.getResource("...").toString()));
-        this.drawPhase.setImage(new Image(AvatarDuel.class.getResource("phase/dp_button.png").toString()));
-        this.mainPhase.setImage(new Image(AvatarDuel.class.getResource("phase/mp_button.png").toString()));
-        this.battlePhase.setImage(new Image(AvatarDuel.class.getResource("phase/bp_button.png").toString()));
-        this.endPhase.setImage(new Image(AvatarDuel.class.getResource("phase/ep_button.png").toString()));
+        this.drawPhase.setImage(new Image(AvatarDuel.class.getResource("img/phase/dp_button.png").toString()));
+        this.mainPhase.setImage(new Image(AvatarDuel.class.getResource("img/phase/mp_button.png").toString()));
+        this.battlePhase.setImage(new Image(AvatarDuel.class.getResource("img/phase/bp_button.png").toString()));
+        this.endPhase.setImage(new Image(AvatarDuel.class.getResource("img/phase/ep_button.png").toString()));
 
         // Add event handler
         this.battlePhase.onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {

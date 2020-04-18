@@ -533,7 +533,7 @@ public class FieldController implements Initializable {
      */
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
-        this.fieldGrid.setImage(new Image(AvatarDuel.class.getResource("background/field_grid.png").toString()));
+        this.fieldGrid.setImage(new Image(AvatarDuel.class.getResource("img/background/field_grid.png").toString()));
         this.field.setAlignment(Pos.CENTER);
         // Fill empty cell with pane
         for (int y = 0; y < 4; y++) {

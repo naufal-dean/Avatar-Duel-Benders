@@ -114,6 +114,6 @@ public class CardDetailsController implements Initializable {
         this.description.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), 14));
         this.description.getStylesheets().add(AvatarDuel.class.getResource("css/transparent-bg-text-area.css").toString());
         this.stats.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), 15));
-        this.background.setImage(new Image(AvatarDuel.class.getResource("background/card_details_background.png").toString()));
+        this.background.setImage(new Image(AvatarDuel.class.getResource("img/background/card_details_background.png").toString()));
     }
 }

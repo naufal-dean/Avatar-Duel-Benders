@@ -49,13 +49,13 @@ public class DeckController implements Initializable {
         String templatePath;
         String midPath = (this.owner == Player.BOTTOM) ? ("bot") : ("top");
         if (40 <= cardQuantity) {
-            templatePath = "card/template/" + midPath + "_deck_default.png";
+            templatePath = "img/deck/" + midPath + "_deck_default.png";
         } else if((20 <= cardQuantity) && (cardQuantity < 40)) {
-            templatePath = "card/template/" + midPath + "_deck_below_40.png";
+            templatePath = "img/deck/" + midPath + "_deck_below_40.png";
         } else if ((1 < cardQuantity) && (cardQuantity < 20)) {
-            templatePath = "card/template/" + midPath + "_deck_below_20.png";
+            templatePath = "img/deck/" + midPath + "_deck_below_20.png";
         } else {
-            templatePath = "card/template/" + midPath + "_deck_equal_1.png";
+            templatePath = "img/deck/" + midPath + "_deck_equal_1.png";
         }
         this.deckVisual.setImage(new Image(AvatarDuel.class.getResource(templatePath).toString()));
         this.cardsCount.setText(String.valueOf(cardQuantity));

@@ -224,7 +224,7 @@ public class MainController implements Initializable {
      */
     public void initField() {
         // Set background image
-        this.fieldBackground.setImage(new Image(AvatarDuel.class.getResource("background/field_background.jpg").toString()));
+        this.fieldBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/field_background.jpg").toString()));
         // Create loader
         FXMLLoader fieldLoader = new FXMLLoader();
         FieldController fieldController = new FieldController(this.cardDetailsController);
