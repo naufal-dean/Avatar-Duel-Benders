@@ -55,9 +55,9 @@ public class MainController implements Initializable {
      */
     @FXML private Pane mainHBox;
     /**
-     * Main background
+     * Background
      */
-    @FXML private ImageView mainBackground;
+    @FXML private ImageView mainBackground, sideBackground;
     /**
      * Health display
      */
@@ -336,9 +336,9 @@ public class MainController implements Initializable {
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
         this.mainBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/main_background.png").toString()));
+        this.sideBackground.setImage(new Image(AvatarDuel.class.getResource("img/background/side_background.png").toString()));
         this.initHealth();
         this.initCardDetails();
-        this.phase.setStyle("-fx-border-color: black");
         this.initPhase();
         this.initField();
         this.initDeck();

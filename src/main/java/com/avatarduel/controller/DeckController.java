@@ -13,6 +13,7 @@ import javafx.scene.layout.StackPane;
 
 import com.avatarduel.AvatarDuel;
 import com.avatarduel.gameutils.GameStatus;
+import javafx.scene.text.Font;
 
 
 public class DeckController implements Initializable {
@@ -75,6 +76,7 @@ public class DeckController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.cardsCount.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 14));
         this.init();
     }
 }

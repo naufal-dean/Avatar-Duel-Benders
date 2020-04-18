@@ -251,7 +251,7 @@ public class HandController implements Initializable {
         this.discardCardPeriodSignal.addListener((observable, oldValue, newValue) -> {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.END) {
                 if (oldValue == false && newValue == true)
-                    cardController.getCardAncPane().setEffect(shadowRed);
+                    cardController.getCardAncPane().setEffect(shadowYellow);
                 else
                     cardController.getCardAncPane().setEffect(null);
             }

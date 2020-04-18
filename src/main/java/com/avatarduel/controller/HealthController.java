@@ -13,6 +13,7 @@ import javafx.scene.layout.StackPane;
 
 import com.avatarduel.AvatarDuel;
 import com.avatarduel.gameutils.GameStatus;
+import javafx.scene.text.Font;
 
 
 public class HealthController implements Initializable {
@@ -29,9 +30,9 @@ public class HealthController implements Initializable {
      */
     @FXML private ImageView healthVisual;
     /**
-     * Health Bar remain
+     * Health text label
      */
-    @FXML private Label healthRemain;
+    @FXML private Label healthLabel, healthRemain;
 
     /**
      * Constructor
@@ -58,6 +59,8 @@ public class HealthController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.healthLabel.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 48));
+        this.healthRemain.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), 48));
         this.init();
     }
 }
