@@ -43,8 +43,9 @@ public class BattlePhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
-        // Update game status
+        // Update game status and phase button display
         GameStatus.getGameStatus().setGamePhase(Phase.BATTLE);
+        mainController.getPhaseController().init();
 
         // Add connection between elements and GameStatus
         this.connectFieldSignal(mainController);

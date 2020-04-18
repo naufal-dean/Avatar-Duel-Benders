@@ -33,11 +33,12 @@ public class DrawPhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
-        Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
-        // Update game status
+        // Update game status and phase button display
         GameStatus.getGameStatus().setGamePhase(Phase.DRAW);
+        mainController.getPhaseController().init();
 
         // Draw card
+        Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
         GameDeck deck = GameStatus.getGameStatus().getGameDeckMap().get(activePlayer);
         // If no cards left, end game
         if (deck.getCardQuantity() == 0) {

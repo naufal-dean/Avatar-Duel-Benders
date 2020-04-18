@@ -41,8 +41,10 @@ public class EndPhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
-        // Update game status
+        // Update game status and phase button display
         GameStatus.getGameStatus().setGamePhase(Phase.END);
+        mainController.getPhaseController().init();
+
         // Check if card > 9
         Player activePlayer = GameStatus.getGameStatus().getGameActivePlayer();
         HandController handController = mainController.getHandControllerMap().get(activePlayer);

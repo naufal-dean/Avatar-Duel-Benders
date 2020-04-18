@@ -45,9 +45,12 @@ public class MainPhase implements GamePhase {
      */
     @Override
     public void startPhase(MainController mainController) {
-        this.landCardPlaced = 0;
-        // Update game status
+        // Update game status and phase button display
         GameStatus.getGameStatus().setGamePhase(Phase.MAIN);
+        mainController.getPhaseController().init();
+
+        // Reset counter
+        this.landCardPlaced = 0;
         // Add connector hand-field, hand-power
         this.connectHandAndField(mainController);
         this.connectHandAndPower(mainController);
