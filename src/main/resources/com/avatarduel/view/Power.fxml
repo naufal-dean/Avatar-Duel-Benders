@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -8,15 +9,29 @@
 
 <AnchorPane fx:id="rootPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="55.0" layoutY="61.0" text="AIR" />
-      <Label layoutX="55.0" layoutY="88.0" text="EARTH" />
-      <Label layoutX="55.0" layoutY="116.0" text="ENERGY" />
-      <Label layoutX="55.0" layoutY="142.0" text="FIRE" />
-      <Label layoutX="55.0" layoutY="169.0" text="WATER" />
-      <Label fx:id="water" layoutX="122.0" layoutY="169.0" />
-      <Label fx:id="fire" layoutX="122.0" layoutY="142.0" />
-      <Label fx:id="energy" layoutX="122.0" layoutY="116.0" />
-      <Label fx:id="earth" layoutX="122.0" layoutY="88.0" />
-      <Label fx:id="air" layoutX="122.0" layoutY="61.0" />
+      <HBox fx:id="mainHBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="200.0">
+         <children>
+            <Pane minWidth="-Infinity" prefHeight="250.0" prefWidth="100.0" />
+            <VBox fx:id="iconVBox" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="30.0" spacing="10.0">
+               <children>
+                  <ImageView fx:id="airIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="earthIcon" fitHeight="30.0" fitWidth="30.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="energyIcon" fitHeight="30.0" fitWidth="30.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="fireIcon" fitHeight="30.0" fitWidth="30.0" layoutX="10.0" layoutY="215.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="waterIcon" fitHeight="30.0" fitWidth="30.0" layoutX="10.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </VBox>
+            <VBox fx:id="valueVBox" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="60.0" spacing="10.0">
+               <children>
+                  <Label fx:id="air" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="40.0" textAlignment="CENTER" textFill="#bf9b30" />
+                  <Label fx:id="earth" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="40.0" textAlignment="CENTER" textFill="#bf9b30" />
+                  <Label fx:id="energy" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="40.0" textAlignment="CENTER" textFill="#bf9b30" />
+                  <Label fx:id="fire" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="40.0" textAlignment="CENTER" textFill="#bf9b30" />
+                  <Label fx:id="water" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="40.0" textAlignment="CENTER" textFill="#bf9b30" />
+               </children>
+            </VBox>
+            <Pane prefHeight="250.0" prefWidth="200.0" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

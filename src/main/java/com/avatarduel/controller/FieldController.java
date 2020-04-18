@@ -609,7 +609,7 @@ public class FieldController implements Initializable {
                 // On mouse entered handler
                 emptyCell.onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
                     if (activeCellHandler.get(col).get(row).get() && GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                        emptyCell.setEffect(shadowRed);
+                        emptyCell.setEffect(shadowGreen);
                     }
                 });
                 // On mouse exited handler
