@@ -168,6 +168,7 @@ public class BattlePhase implements GamePhase {
                     mainController.getHealthControllerMap().get(enemyPlayer).init();
                     // Reset active field card controller
                     fieldController.getActiveFieldCardController().setHadAttacked(true);
+                    fieldController.getActiveFieldCardController().setShowSword(false);
                     fieldController.resetActiveFieldCardController();
                     // Deactivate handler and turn off signal
                     enemyHandController.deactivateRootEventHandler();
