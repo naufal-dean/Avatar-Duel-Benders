@@ -9,7 +9,6 @@ import com.avatarduel.controller.HandController;
 import com.avatarduel.controller.MainController;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.Player;
-import jdk.tools.jaotc.Main;
 
 public class EndPhase implements GamePhase {
     /**
