@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
@@ -22,11 +23,11 @@
                <image>
                   <Image url="@../card/template/template_character.png" />
                </image></ImageView>
-            <TextArea fx:id="description" layoutX="14.0" layoutY="215.0" prefHeight="49.0" prefWidth="171.0">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </TextArea>
+            <Label fx:id="description" layoutX="14.0" layoutY="215.0" prefHeight="49.0" prefWidth="171.0">
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+            </Label>
             <Label fx:id="name" layoutX="20.0" layoutY="13.0" text="Label" />
             <ImageView fx:id="element" fitHeight="18.0" fitWidth="18.0" layoutX="163.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
                <image>
