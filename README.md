@@ -35,13 +35,13 @@ These instructions will get you a copy of the project up and running on your loc
 ### Program GUI
 
 <kbd>
-<img src="image\beginning.png" width="300">
+<img src="image\beginning.jpg" width="300">
 </kbd>
 
 ### Battle Begins
 
 <kbd>
-<img src="image\in-battle.png" width="300">
+<img src="image\in-battle.jpg" width="300">
 </kbd>
 
 
@@ -51,4 +51,3 @@ These instructions will get you a copy of the project up and running on your loc
 3. [Muhammad Daru Darmakusuma](https://github.com/mdarud)
 4. [Muchammad Ibnu Sidqi](https://github.com/muchammadibnu)
 5. [Ahadi Ihsan Rasyidin](https://github.com/ahadirasy)
-
