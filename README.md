@@ -35,13 +35,13 @@ These instructions will get you a copy of the project up and running on your loc
 ### Program GUI
 
 <kbd>
-<img src="image\beginning.jpg" width="300">
+<img src="image\beginning.jpg" width="1000">
 </kbd>
 
 ### Battle Begins
 
 <kbd>
-<img src="image\in-battle.jpg" width="300">
+<img src="image\in-battle.jpg" width="1000">
 </kbd>
 
 
