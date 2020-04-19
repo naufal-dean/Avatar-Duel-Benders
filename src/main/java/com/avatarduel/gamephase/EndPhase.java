@@ -9,6 +9,7 @@ import com.avatarduel.controller.HandController;
 import com.avatarduel.controller.MainController;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.Player;
+import jdk.tools.jaotc.Main;
 
 public class EndPhase implements GamePhase {
     /**
@@ -124,9 +125,8 @@ public class EndPhase implements GamePhase {
     /**
      * Game over
      */
-    public void gameEnd() {
-        // TODO: render game winner
+    public void gameEnd(MainController mainController) {
         GameStatus.getGameStatus().setGamePhase(Phase.END);
-        System.out.println("game end, winner: " + GameStatus.getGameStatus().getGameWinner());
+        mainController.setGameWinner(GameStatus.getGameStatus().getGameWinner());
     }
 }

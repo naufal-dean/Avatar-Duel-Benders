@@ -93,7 +93,7 @@ public class BattlePhase implements GamePhase {
             EndPhase.getEndPhase().startPhase(mainController);
         } else {
             // Render game winner
-            EndPhase.getEndPhase().gameEnd();
+            EndPhase.getEndPhase().gameEnd(mainController);
         }
     }
 

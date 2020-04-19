@@ -5,14 +5,19 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 import com.avatarduel.AvatarDuel;
 import com.avatarduel.model.Player;
@@ -57,7 +62,7 @@ public class MainController implements Initializable {
     /**
      * Background
      */
-    @FXML private ImageView mainBackground, sideBackground;
+    @FXML private ImageView mainBackground, sideBackground, gameEndImage;
     /**
      * Health display
      */
@@ -90,6 +95,10 @@ public class MainController implements Initializable {
      * Player hands display
      */
     @FXML private Pane handBottom, handTop;
+    /**
+     * Label
+     */
+    @FXML private Label gameEndLabel;
 
     /**
      * Constructor
@@ -329,6 +338,37 @@ public class MainController implements Initializable {
         this.handControllerMap.put(Player.BOTTOM, handBottomController);
         this.handControllerMap.put(Player.TOP, handTopController);
     }
+
+    /**
+     * Render game end image
+     */
+    public void setGameWinner(Player winner) {
+        this.gameEndImage.toFront();
+        this.gameEndLabel.toFront();
+        if (winner == Player.TOP)
+            this.gameEndLabel.setText("Player TOP Wins");
+        else
+            this.gameEndLabel.setText("Player BOTTOM Wins");
+        Timeline endGame = new Timeline(
+                new KeyFrame(
+                        Duration.ZERO,
+                        new KeyValue(this.gameEndImage.opacityProperty(), 0)
+                ),
+                new KeyFrame(
+                        Duration.millis(5000),
+                        new KeyValue(this.gameEndImage.opacityProperty(), 1)
+                ),
+                new KeyFrame(
+                        Duration.ZERO,
+                        new KeyValue(this.gameEndLabel.opacityProperty(), 0)
+                ),
+                new KeyFrame(
+                        Duration.millis(1000),
+                        new KeyValue(this.gameEndLabel.opacityProperty(), 1)
+                )
+        );
+        endGame.play();
+    }
     
     /**
      * {@inheritDoc}
@@ -344,5 +384,8 @@ public class MainController implements Initializable {
         this.initDeck();
         this.initPower();
         this.initHand();
+        this.gameEndImage.setImage(new Image(AvatarDuel.class.getResource("img/end/end.png").toString()));
+        this.gameEndImage.setOpacity(0);
+        this.gameEndLabel.setOpacity(0);
     }
 }

@@ -81,7 +81,7 @@ public class DrawPhase implements GamePhase {
             MainPhase.getMainPhase().startPhase(mainController);
         } else {
             // Render game winner
-            EndPhase.getEndPhase().gameEnd();
+            EndPhase.getEndPhase().gameEnd(mainController);
         }
     }
 }
