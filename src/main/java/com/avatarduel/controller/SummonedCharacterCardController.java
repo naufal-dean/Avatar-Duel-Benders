@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.avatarduel.AvatarDuel;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -35,6 +39,10 @@ public class SummonedCharacterCardController extends SummonedCardController {
      * Rotate transition object
      */
     private RotateTransition rotate;
+    /**
+     * Sword image
+     */
+    private ImageView sword;
 
     /**
      * Constructor
@@ -140,6 +148,14 @@ public class SummonedCharacterCardController extends SummonedCardController {
     }
 
     /**
+     * Show/hide sword
+     * @param showSword The new show sword status
+     */
+    public void setShowSword(boolean showSword) {
+        this.sword.setOpacity((showSword) ? (100) : (0));
+    }
+
+    /**
      * Switch the card position
      */
     public void rotate() {
@@ -172,6 +188,10 @@ public class SummonedCharacterCardController extends SummonedCardController {
      */
     @Override @FXML
     public void initialize(URL url, ResourceBundle resources) {
+        this.sword = new ImageView(new Image(AvatarDuel.class.getResource("img/etc/sword.png").toString()));
+        this.sword.setMouseTransparent(true);
+        this.sword.setOpacity(0);
+        this.cardRootPane.getChildren().add(sword);
         this.init();
     }
 }

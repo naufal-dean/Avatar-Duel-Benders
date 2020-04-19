@@ -298,6 +298,19 @@ public class FieldController implements Initializable {
     }
 
     /**
+     * Set sword show status in summoned character card
+     */
+    public void setSummCardShowSword(boolean showSword) {
+        int y = (GameStatus.getGameStatus().getGameActivePlayer() == Player.BOTTOM) ? (CHAR_ROW_BOT) : (CHAR_ROW_TOP);
+        for (int x = 0; x < 6; x++) {
+            if (this.cardControllerList.get(x).get(y) != null) {
+                SummonedCharacterCardController sc = (SummonedCharacterCardController) this.cardControllerList.get(x).get(y);
+                sc.setShowSword(showSword && !sc.getHadAttacked() && sc.getIsAttack());
+            }
+        }
+    }
+
+    /**
      * Set card on the cell x, y in field
      * @param card The card to be displayed (Card type only CHARACTER and SKILL AURA)
      * @param owner The owner of the card
@@ -417,6 +430,14 @@ public class FieldController implements Initializable {
                         } else {
                             cardController.getCardAncPane().setEffect(shadowYellow);
                         }
+                    } else if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
+                        if (card instanceof Character) {
+                            if (!((SummonedCharacterCardController) cardController).getHadAttacked() &&
+                                    ((SummonedCharacterCardController) cardController).getIsAttack())
+                                cardController.getCardAncPane().setEffect(shadowRed);
+                            else if (activeSummCardHandler.get(x).get(y).get())
+                                cardController.getCardAncPane().setEffect(shadowRed);
+                        }
                     }
                     cardDetailsController.setCard(cardController.getCard());
                 });
@@ -426,6 +447,13 @@ public class FieldController implements Initializable {
                             cardController.getCardAncPane().setEffect(shadowYellow);
                         else
                             cardController.getCardAncPane().setEffect(null);
+                    } else if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
+                        if (card instanceof Character) {
+                            if (cardController != activeFieldCardController && !activeSummCardHandler.get(x).get(y).get())
+                                cardController.getCardAncPane().setEffect(null);
+                            else if (activeSummCardHandler.get(x).get(y).get())
+                                cardController.getCardAncPane().setEffect(shadowYellow);
+                        }
                     }
                     cardDetailsController.removeCard();
                 });
@@ -554,6 +582,7 @@ public class FieldController implements Initializable {
             this.setDamageDealtSignal(this.activeFieldCardController.getCardValue() - scCardController.getCardValue());
         this.removeCardFromField(scCardController.getX(), scCardController.getY());
         this.activeFieldCardController.setHadAttacked(true);
+        this.activeFieldCardController.setShowSword(false);
         this.resetActiveFieldCardController();
     }
 

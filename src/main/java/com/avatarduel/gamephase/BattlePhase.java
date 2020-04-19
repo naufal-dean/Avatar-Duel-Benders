@@ -51,6 +51,9 @@ public class BattlePhase implements GamePhase {
         this.connectFieldSignal(mainController);
         this.connectFieldAndHand(mainController);
 
+        // Show sword to char that can attack
+        mainController.getFieldController().setSummCardShowSword(true);
+
         // Add event listener to phase change
         this.addPhaseChangeListener(mainController);
         // Check if battle phase skipped
@@ -77,6 +80,9 @@ public class BattlePhase implements GamePhase {
         // Remove connection between elements and GameStatus
         this.disconnectFieldSignal(mainController);
         this.disconnectFieldAndHand(mainController);
+
+        // Hide sword from summoned char
+        mainController.getFieldController().setSummCardShowSword(false);
 
         // Disconnect phase change listener
         this.removePhaseChangeListener(mainController);
