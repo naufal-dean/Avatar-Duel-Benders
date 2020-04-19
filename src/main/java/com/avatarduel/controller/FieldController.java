@@ -550,7 +550,7 @@ public class FieldController implements Initializable {
      * @param scCardController Attack target char card
      */
     public void initBattle(SummonedCharacterCardController scCardController) {
-        if (scCardController.getIsAttack() || scCardController.isPoweredUp())
+        if (scCardController.getIsAttack() || this.activeFieldCardController.isPoweredUp())
             this.setDamageDealtSignal(this.activeFieldCardController.getCardValue() - scCardController.getCardValue());
         this.removeCardFromField(scCardController.getX(), scCardController.getY());
         this.activeFieldCardController.setHadAttacked(true);
