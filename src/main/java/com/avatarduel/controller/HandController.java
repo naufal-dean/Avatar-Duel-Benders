@@ -22,9 +22,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 import com.avatarduel.AvatarDuel;
+import com.avatarduel.gameassets.GameDropShadow;
 import com.avatarduel.gamephase.Phase;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
@@ -57,7 +57,7 @@ public class HandController implements Initializable {
     /**
      * Shadow effect
      */
-    private DropShadow shadowRed, shadowYellow;
+    private DropShadow shadowYellow;
     /**
      * The root pane
      */
@@ -92,16 +92,8 @@ public class HandController implements Initializable {
         this.discardCardPeriodSignal = new SimpleBooleanProperty(false);
         this.cardDetailsController = cardDetailsController;
         this.disableCardClick = false;
-        // Setup red shadow effect
-        this.shadowRed = new DropShadow();
-        this.shadowRed.setColor(Color.RED);
-        this.shadowRed.setWidth(70);
-        this.shadowRed.setHeight(70);
-        // Setup yellow shadow effect
-        this.shadowYellow = new DropShadow();
-        this.shadowYellow.setColor(Color.YELLOW);
-        this.shadowYellow.setWidth(70);
-        this.shadowYellow.setHeight(70);
+        // Drop Shadow
+        this.shadowYellow = GameDropShadow.getGameDropShadow().getShadowYellowHand();
     }
 
     /**

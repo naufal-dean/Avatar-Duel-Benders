@@ -21,9 +21,9 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 
 import com.avatarduel.AvatarDuel;
+import com.avatarduel.gameassets.GameDropShadow;
 import com.avatarduel.gamephase.Phase;
 import com.avatarduel.gameutils.GamePower;
 import com.avatarduel.gameutils.GameStatus;
@@ -68,18 +68,9 @@ public class PowerController implements Initializable {
         this.owner = owner;
         this.activeHandler = new SimpleBooleanProperty(false);
         this.cardSummonedSignal = new SimpleBooleanProperty(false);
-        // Cell available shadow
-        this.availableShadow = new DropShadow();
-        this.availableShadow.setColor(Color.YELLOW);
-        this.availableShadow.setWidth(30);
-        this.availableShadow.setHeight(30);
-        this.availableShadow.setSpread(0.7);
-        // Cell hover shadow
-        this.hoverShadow = new DropShadow();
-        this.hoverShadow.setColor(Color.GREENYELLOW);
-        this.hoverShadow.setWidth(30);
-        this.hoverShadow.setHeight(30);
-        this.hoverShadow.setSpread(0.7);
+        // Drop Shadow
+        this.availableShadow = GameDropShadow.getGameDropShadow().getShadowYellowPower();
+        this.hoverShadow = GameDropShadow.getGameDropShadow().getShadowGreenPower();
     }
 
     /**

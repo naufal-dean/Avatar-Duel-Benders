@@ -24,9 +24,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 
 import com.avatarduel.AvatarDuel;
+import com.avatarduel.gameassets.GameDropShadow;
 import com.avatarduel.gamephase.Phase;
 import com.avatarduel.gameutils.GameStatus;
 import com.avatarduel.model.*;
@@ -109,24 +109,10 @@ public class FieldController implements Initializable {
         this.damageDealtSignal = new SimpleIntegerProperty(-1);
         this.cardDetailsController = cardDetailsController;
         this.disableCardClick = false;
-        // Shadow yellow
-        this.shadowYellow = new DropShadow();
-        this.shadowYellow.setColor(Color.YELLOW);
-        this.shadowYellow.setWidth(40);
-        this.shadowYellow.setHeight(40);
-        this.shadowYellow.setSpread(0.85);
-        // Shadow red
-        this.shadowRed = new DropShadow();
-        this.shadowRed.setColor(Color.RED);
-        this.shadowRed.setWidth(40);
-        this.shadowRed.setHeight(40);
-        this.shadowRed.setSpread(0.85);
-        // Shadow green
-        this.shadowGreen = new DropShadow();
-        this.shadowGreen.setColor(Color.GREEN);
-        this.shadowGreen.setWidth(40);
-        this.shadowGreen.setHeight(40);
-        this.shadowGreen.setSpread(0.85);
+        // Drop Shadow
+        this.shadowRed = GameDropShadow.getGameDropShadow().getShadowRedField();
+        this.shadowYellow = GameDropShadow.getGameDropShadow().getShadowYellowField();
+        this.shadowGreen = GameDropShadow.getGameDropShadow().getShadowGreenField();
     }
 
     /**
@@ -145,6 +131,38 @@ public class FieldController implements Initializable {
      */
     public SummonedCharacterCardController getActiveFieldCardController() {
         return this.activeFieldCardController;
+    }
+
+    /**
+     * Getter for activeSummCardHandler
+     * @return this.activeSummCardHandler
+     */
+    public List<List<BooleanProperty>> getActiveSummCardHandler() {
+        return this.activeSummCardHandler;
+    }
+
+    /**
+     * Getter for skillCardControllerToBeAttached
+     * @return this.skillCardControllerToBeAttached
+     */
+    public SummonedSkillCardController getSkillCardControllerToBeAttached() {
+        return this.skillCardControllerToBeAttached;
+    }
+
+    /**
+     * Getter for cardDetailsController
+     * @return this.cardDetailsController
+     */
+    public CardDetailsController getCardDetailsController() {
+        return this.cardDetailsController;
+    }
+
+    /**
+     * Setter for skillCardControllerToBeAttached
+     * @param skillCardControllerToBeAttached The new skillCardControllerToBeAttached
+     */
+    public void setSkillCardControllerToBeAttached(SummonedSkillCardController skillCardControllerToBeAttached) {
+        this.skillCardControllerToBeAttached = skillCardControllerToBeAttached;
     }
 
     /**
@@ -227,6 +245,22 @@ public class FieldController implements Initializable {
      */
     public void turnOffAttachSkillPeriodSignal() {
         this.attachSkillPeriodSignal.setValue(false);
+    }
+
+    /**
+     * Getter for activeFieldCardSetSignal property
+     * @return this.activeFieldCardSetSignal
+     */
+    public BooleanProperty getActiveFieldCardSetSignalProperty() {
+        return this.activeFieldCardSetSignal;
+    }
+
+    /**
+     * Getter for disableCardClick
+     * @return this.disableCardClick
+     */
+    public boolean getDisableCardClick() {
+        return this.disableCardClick;
     }
 
     /**
@@ -333,130 +367,9 @@ public class FieldController implements Initializable {
             loader.setController(cardController);
             loader.setLocation(AvatarDuel.class.getResource("view/Card.fxml"));
             StackPane root = loader.load();
-
-            // Add on click handler
+            // Setup event handler for the controller
             if (cardController != null) {
-                if (card instanceof Character) {
-                    SummonedCharacterCardController scCardController = (SummonedCharacterCardController) cardController;
-                    // Add event handler
-                    scCardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-                        if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                            if (e.getButton() == MouseButton.PRIMARY && activeSummCardHandler.get(x).get(y).get()) {
-                                if (this.attachSkillPeriodSignal.get()) {
-                                    // Attach skill
-                                    if (skillCardControllerToBeAttached.getCard() instanceof SkillDestroy) {
-                                        removeCardFromField(scCardController.getX(), scCardController.getY());
-                                        removeCardFromField(skillCardControllerToBeAttached.getX(), skillCardControllerToBeAttached.getY());
-                                    } else {
-                                        scCardController.addSkillCard(skillCardControllerToBeAttached);
-                                        skillCardControllerToBeAttached.setTargetX(x);
-                                        skillCardControllerToBeAttached.setTargetY(y);
-                                    }
-                                    skillCardControllerToBeAttached = null;
-                                    turnOffAttachSkillPeriodSignal();
-                                }
-                            } else if (e.getButton() == MouseButton.SECONDARY &&
-                                    GameStatus.getGameStatus().getGameActivePlayer() == scCardController.getOwner() &&
-                                    !disableCardClick) {
-                                scCardController.rotate();  // Rotate card
-                            }
-                        } else if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
-                            if (e.getButton() == MouseButton.PRIMARY &&
-                                    GameStatus.getGameStatus().getGameActivePlayer() == scCardController.getOwner() &&
-                                    scCardController.getIsAttack() &&
-                                    !(scCardController.getHadAttacked())) {
-                                onSummonedCharCardClickHandler(scCardController);
-                            } else if (e.getButton() == MouseButton.PRIMARY &&
-                                    GameStatus.getGameStatus().getGameActivePlayer() != scCardController.getOwner() &&
-                                    activeSummCardHandler.get(x).get(y).get()) {
-                                initBattle(scCardController);
-                            }
-                        }
-                    });
-                    // Add event listener
-                    this.attachSkillPeriodSignal.addListener((observable, oldValue, newValue) -> {
-                        if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                            if (oldValue == false && newValue == true) {
-                                scCardController.getCardAncPane().setEffect(shadowYellow);
-                                activeSummCardHandler.get(x).get(y).setValue(true);
-                            } else {
-                                scCardController.getCardAncPane().setEffect(null);
-                                activeSummCardHandler.get(x).get(y).setValue(false);
-                            }
-                        }
-                    });
-                    this.activeFieldCardSetSignal.addListener((observable, oldValue, newValue) -> {
-                        if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
-                            if (GameStatus.getGameStatus().getGameActivePlayer() != cardController.getOwner()) {
-                                if (oldValue == false && newValue == true &&
-                                        activeFieldCardController.getCardValue() > scCardController.getCardValue()) {
-                                    scCardController.getCardAncPane().setEffect(shadowYellow);
-                                    activeSummCardHandler.get(x).get(y).setValue(true);
-                                } else {
-                                    scCardController.getCardAncPane().setEffect(null);
-                                    activeSummCardHandler.get(x).get(y).setValue(false);
-                                }
-                            }
-                        }
-                    });
-                } else if (card instanceof SkillAura || card instanceof SkillPowerUp) {
-                    cardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-                        if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                            // Set on right click remove card from field
-                            if (e.getButton() == MouseButton.SECONDARY &&
-                                    GameStatus.getGameStatus().getGameActivePlayer() == cardController.getOwner() &&
-                                    !disableCardClick) {
-                                removeCardFromField(cardController.getX(), cardController.getY()); // Remove card
-                            }
-                        }
-                    });
-                }
-                // Add on hover handler
-                cardController.getCardAncPane().onMouseEnteredProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-                    if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                        if (attachSkillPeriodSignal.get() && skillCardControllerToBeAttached != null) {
-                            if (card instanceof Character) {
-                                Card c = skillCardControllerToBeAttached.getCard();
-                                if (c instanceof SkillAura)
-                                    if (((SkillAura) c).getAttack() + ((SkillAura) c).getDefense() >= 0)
-                                        cardController.getCardAncPane().setEffect(shadowGreen);
-                                    else
-                                        cardController.getCardAncPane().setEffect(shadowRed);
-                                else if (c instanceof SkillPowerUp)
-                                    cardController.getCardAncPane().setEffect(shadowGreen);
-                                else
-                                    cardController.getCardAncPane().setEffect(shadowRed);
-                            }
-                        } else {
-                            cardController.getCardAncPane().setEffect(shadowYellow);
-                        }
-                    } else if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
-                        if (card instanceof Character) {
-                            if (!((SummonedCharacterCardController) cardController).getHadAttacked() &&
-                                    ((SummonedCharacterCardController) cardController).getIsAttack())
-                                cardController.getCardAncPane().setEffect(shadowRed);
-                            else if (activeSummCardHandler.get(x).get(y).get())
-                                cardController.getCardAncPane().setEffect(shadowRed);
-                        }
-                    }
-                    cardDetailsController.setCard(cardController.getCard());
-                });
-                cardController.getCardAncPane().onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
-                    if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
-                        if (attachSkillPeriodSignal.get() && card instanceof Character)
-                            cardController.getCardAncPane().setEffect(shadowYellow);
-                        else
-                            cardController.getCardAncPane().setEffect(null);
-                    } else if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
-                        if (card instanceof Character) {
-                            if (cardController != activeFieldCardController && !activeSummCardHandler.get(x).get(y).get())
-                                cardController.getCardAncPane().setEffect(null);
-                            else if (activeSummCardHandler.get(x).get(y).get())
-                                cardController.getCardAncPane().setEffect(shadowYellow);
-                        }
-                    }
-                    cardDetailsController.removeCard();
-                });
+                cardController = SummonedCardControllerFactory.setupSummonedCardController(this, cardController);
             }
             // Create scale for root
             DoubleProperty scale = new SimpleDoubleProperty(0.4);
@@ -580,6 +493,8 @@ public class FieldController implements Initializable {
     public void initBattle(SummonedCharacterCardController scCardController) {
         if (scCardController.getIsAttack() || this.activeFieldCardController.isPoweredUp())
             this.setDamageDealtSignal(this.activeFieldCardController.getCardValue() - scCardController.getCardValue());
+        if (GameStatus.getGameStatus().getGameWinner() != null)
+            return;
         this.removeCardFromField(scCardController.getX(), scCardController.getY());
         this.activeFieldCardController.setHadAttacked(true);
         this.activeFieldCardController.setShowSword(false);
