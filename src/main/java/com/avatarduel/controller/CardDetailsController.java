@@ -31,7 +31,7 @@ public class CardDetailsController implements Initializable {
     /**
      * Card description and stats
      */
-    @FXML private Label description, stats;
+    @FXML private Label description, stats, addStats;
     /**
      * Card details background
      */
@@ -41,6 +41,24 @@ public class CardDetailsController implements Initializable {
      * Constructor
      */
      public CardDetailsController() {}
+
+    /**
+     * Set the card to be shown and add additional stats if any
+     * @param cardController The Summoned Card Controller
+     */
+     public void setSummonedCardController(SummonedCardController cardController) {
+        if (cardController instanceof SummonedCharacterCardController) {
+            SummonedCharacterCardController scCardController = (SummonedCharacterCardController) cardController;
+            int attack = 0, defense = 0;
+            for (SummonedSkillCardController ssCardController : scCardController.getAttachedAuraControllerList()) {
+                SkillAura skillAura = (SkillAura) ssCardController.getCard();
+                attack += skillAura.getAttack();
+                defense += skillAura.getDefense();
+            }
+            this.addStats.setText("ATK+/" + attack + "  DEF+/" + defense);
+        }
+        this.setCard(cardController.getCard());
+     }
 
     /**
      * Set the card to be shown
@@ -80,6 +98,7 @@ public class CardDetailsController implements Initializable {
         this.card.setOpacity(0);
         this.description.setText("");
         this.stats.setText("");
+        this.addStats.setText("");
     }
 
     @Override
@@ -110,7 +129,8 @@ public class CardDetailsController implements Initializable {
         this.description.setWrapText(true);
         this.description.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), 14));
         this.description.getStylesheets().add(AvatarDuel.class.getResource("css/transparent-bg-text-area.css").toString());
-        this.stats.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), 15));
+        this.stats.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), 14.5));
+        this.addStats.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), 14.5));
         this.background.setImage(new Image(AvatarDuel.class.getResource("img/background/card_details_background.png").toString()));
     }
 }

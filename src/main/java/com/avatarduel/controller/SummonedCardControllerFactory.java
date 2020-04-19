@@ -143,7 +143,7 @@ public class SummonedCardControllerFactory {
                         cardController.getCardAncPane().setEffect(shadowRed);
                 }
             }
-            fieldController.getCardDetailsController().setCard(cardController.getCard());
+            fieldController.getCardDetailsController().setSummonedCardController(cardController);
             if (card instanceof Character)
                 ((SummonedCharacterCardController) cardController).setShowAttachedSkill(true);
         });
