@@ -7,12 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.avatarduel.AvatarDuel;
-import com.avatarduel.controller.CardController;
 import com.avatarduel.model.*;
 import com.avatarduel.model.Character;
 import com.avatarduel.util.CSVReader;
-import javafx.fxml.FXMLLoader;
 
 public class GameDeck {
     private static final String LAND_CSV_FILE_PATH = "../card/data/land.csv";
