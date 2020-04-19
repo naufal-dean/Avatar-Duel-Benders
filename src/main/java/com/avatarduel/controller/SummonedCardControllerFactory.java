@@ -1,15 +1,15 @@
 package com.avatarduel.controller;
 
-import com.avatarduel.gameassets.GameDropShadow;
-import com.avatarduel.model.*;
-import com.avatarduel.model.Character;
-import com.avatarduel.gamephase.Phase;
-import com.avatarduel.gameutils.GameStatus;
-
 import javafx.event.EventHandler;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+
+import com.avatarduel.gameassets.GameDropShadow;
+import com.avatarduel.gamephase.Phase;
+import com.avatarduel.gameutils.GameStatus;
+import com.avatarduel.model.*;
+import com.avatarduel.model.Character;
 
 public class SummonedCardControllerFactory {
     public static SummonedCardController setupSummonedCardController(FieldController fieldController, SummonedCardController cardController) {
@@ -33,6 +33,7 @@ public class SummonedCardControllerFactory {
         // Mouse clicked
         scCardController.getCardAncPane().onMouseClickedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
             if (GameStatus.getGameStatus().getGamePhase() == Phase.MAIN) {
+                // Main phase
                 if (e.getButton() == MouseButton.PRIMARY && fieldController.getActiveSummCardHandler().get(x).get(y).get()) {
                     if (fieldController.getAttachSkillPeriodSignalProperty().get()) {
                         // Attach skill
@@ -53,6 +54,7 @@ public class SummonedCardControllerFactory {
                     scCardController.rotate();  // Rotate card
                 }
             } else if (GameStatus.getGameStatus().getGamePhase() == Phase.BATTLE) {
+                // Battle phase
                 if (e.getButton() == MouseButton.PRIMARY &&
                         GameStatus.getGameStatus().getGameActivePlayer() == scCardController.getOwner() &&
                         scCardController.getIsAttack() &&
@@ -142,6 +144,8 @@ public class SummonedCardControllerFactory {
                 }
             }
             fieldController.getCardDetailsController().setCard(cardController.getCard());
+            if (card instanceof Character)
+                ((SummonedCharacterCardController) cardController).setShowAttachedSkill(true);
         });
         // Mouse exited
         cardController.getCardAncPane().onMouseExitedProperty().set((EventHandler<MouseEvent>) (MouseEvent e) -> {
@@ -159,6 +163,8 @@ public class SummonedCardControllerFactory {
                 }
             }
             fieldController.getCardDetailsController().removeCard();
+            if (card instanceof Character)
+                ((SummonedCharacterCardController) cardController).setShowAttachedSkill(false);
         });
     }
 }

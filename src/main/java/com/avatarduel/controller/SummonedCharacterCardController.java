@@ -40,9 +40,9 @@ public class SummonedCharacterCardController extends SummonedCardController {
      */
     private RotateTransition rotate;
     /**
-     * Sword image
+     * Additional image
      */
-    private ImageView sword;
+    private ImageView sword, attach;
 
     /**
      * Constructor
@@ -156,6 +156,17 @@ public class SummonedCharacterCardController extends SummonedCardController {
     }
 
     /**
+     * Show/hide attachment icon in the attached skill
+     * @param showAttachedSkill
+     */
+    public void setShowAttachedSkill(boolean showAttachedSkill) {
+        for (SummonedSkillCardController s : this.attachedAuraControllerList)
+            s.setShowAttach(showAttachedSkill);
+        for (SummonedSkillCardController s : this.attachedPowerUpControllerList)
+            s.setShowAttach(showAttachedSkill);
+    }
+
+    /**
      * Switch the card position
      */
     public void rotate() {
@@ -191,7 +202,10 @@ public class SummonedCharacterCardController extends SummonedCardController {
         this.sword = new ImageView(new Image(AvatarDuel.class.getResource("img/etc/sword.png").toString()));
         this.sword.setMouseTransparent(true);
         this.sword.setOpacity(0);
+        if (this.owner == Player.TOP)
+            this.sword.setRotate(this.sword.getRotate() + 180);
         this.cardRootPane.getChildren().add(sword);
+
         this.init();
     }
 }

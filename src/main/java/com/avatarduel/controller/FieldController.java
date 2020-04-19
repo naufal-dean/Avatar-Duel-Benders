@@ -116,16 +116,6 @@ public class FieldController implements Initializable {
     }
 
     /**
-     * Getter for card controller
-     * @param x The grid column index
-     * @param y The grid row index
-     * @return Controller for the (x, y) Card
-     */
-    public CardController getCardController(int x, int y) {
-        return this.cardControllerList.get(x).get(y);
-    }
-
-    /**
      * Getter for activeFieldCardController
      * @return  this.activeFieldCardController
      */

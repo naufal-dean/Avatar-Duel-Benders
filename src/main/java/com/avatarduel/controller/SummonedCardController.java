@@ -1,5 +1,9 @@
 package com.avatarduel.controller;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import com.avatarduel.AvatarDuel;
 import com.avatarduel.model.Card;
 import com.avatarduel.model.Player;
 
@@ -12,6 +16,10 @@ public class SummonedCardController extends CardController {
      * Card coordinate in field
      */
     private int x, y;
+    /**
+     * Additional image
+     */
+    private ImageView attach;
 
     /**
      * Constructor
@@ -52,6 +60,14 @@ public class SummonedCardController extends CardController {
     }
 
     /**
+     * Show/hide attachment icon
+     * @param showAttach The new show attach status
+     */
+    public void setShowAttach(boolean showAttach) {
+        this.attach.setOpacity((showAttach) ? (30) : (0));
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -60,5 +76,9 @@ public class SummonedCardController extends CardController {
         // Rotate card if owned by Player.TOP
         if (this.owner == Player.TOP)
             this.cardAncPane.setRotate(this.cardAncPane.getRotate() + 180);
+        this.attach = new ImageView(new Image(AvatarDuel.class.getResource("img/etc/attach.png").toString()));
+        this.attach.setMouseTransparent(true);
+        this.attach.setOpacity(0);
+        this.cardRootPane.getChildren().add(attach);
     }
 }
