@@ -124,7 +124,7 @@ public class PowerController implements Initializable {
     public void init() {
         GamePower gamePower = GameStatus.getGameStatus().getGamePowerMap().get(this.owner);
         this.air.setText(String.valueOf(gamePower.getCurrPowerList().get(Element.AIR)) + "/"
-                       + String.valueOf(gamePower.getCurrPowerList().get(Element.AIR)));
+                       + String.valueOf(gamePower.getMaxPowerList().get(Element.AIR)));
         this.earth.setText(String.valueOf(gamePower.getCurrPowerList().get(Element.EARTH)) + "/"
                          + String.valueOf(gamePower.getMaxPowerList().get(Element.EARTH)));
         this.energy.setText(String.valueOf(gamePower.getCurrPowerList().get(Element.ENERGY)) + "/"

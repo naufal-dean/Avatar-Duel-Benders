@@ -54,7 +54,7 @@ public class AvatarDuel extends Application {
       root.scaleXProperty().bind(scale);
       root.scaleYProperty().bind(scale);
       // Present game
-      Scene scene = new Scene(wrapper, 1920, 1080);
+      Scene scene = new Scene(wrapper, screenDimension.getWidth(), screenDimension.getHeight());
       stage.setTitle("Avatar Duel");
       stage.setScene(scene);
       stage.show();
