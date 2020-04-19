@@ -27,3 +27,6 @@ id	name	element	description	imagepath	power	attack	defense
 90	Ice Prison	WATER	This technique covers an opponent in a prison made of ice.	src/res/image/Ice Prison.png	3	-4	2
 91	Tangle Mine	WATER	Military weapons invented by Hakoda to aid the Southern Water Tribe's quest to defeat the Fire Nation.	src/res/image/Tangle Mine.png	2	2	-1
 92	Wolf Armor	WATER	Protective battle gear worn by the warriors of the Southern Water Tribe.	src/res/image/Wolf Armor.png	2	2	1
+93	Astral Projection	ENERGY	The projection was able to both inflict and sustain great physical damage	src/res/image/Astral Projection.png	3	1	4
+94	Cosmic Energy	ENERGY	Metaphysical energy source employed primarily by Avatars to reach their ultimatum of power, the Avatar State	src/res/image/Cosmic Energy.png	4	4	2
+95	Spirit Energy Manipulation	ENERGY	The ability to manipulate energy originating from the Spirit World	src/res/image/Spirit Energy Manipulation.png	3	3	3
