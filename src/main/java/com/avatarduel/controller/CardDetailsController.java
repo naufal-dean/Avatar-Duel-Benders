@@ -10,7 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -30,13 +29,9 @@ public class CardDetailsController implements Initializable {
      */
     @FXML private StackPane card;
     /**
-     * Card description
+     * Card description and stats
      */
-    @FXML private TextArea description;
-    /**
-     * Card stats
-     */
-    @FXML private Label stats;
+    @FXML private Label description, stats;
     /**
      * Card details background
      */
@@ -113,8 +108,6 @@ public class CardDetailsController implements Initializable {
         }
         this.card.setOpacity(0);
         // Setup desc, stats, and background
-        this.description.setDisable(true);
-//        this.description.
         this.description.setWrapText(true);
         this.description.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype.ttf"), 14));
         this.description.getStylesheets().add(AvatarDuel.class.getResource("css/transparent-bg-text-area.css").toString());

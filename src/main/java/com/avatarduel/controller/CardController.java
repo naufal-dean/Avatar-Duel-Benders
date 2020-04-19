@@ -5,8 +5,9 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -48,13 +49,9 @@ public class CardController implements Initializable {
      */
     @FXML private ImageView image;
     /**
-     * Display description
+     * Display card description and stats
      */
-    @FXML private TextArea description;
-    /**
-     * Display card stats
-     */
-    @FXML private Label attack, defense, power;
+    @FXML private Label description, attack, defense, power;
 
     /**
      * Default constructor
@@ -163,8 +160,8 @@ public class CardController implements Initializable {
         this.image.setImage(new Image(this.card.getImagePath()));
 
         // Set description
-        this.description.setDisable(true);
         this.description.setWrapText(true);
+        this.description.setContentDisplay(ContentDisplay.TOP);
         double descTextSize = 9;
         if (this.card.getDescription().length() > 120) descTextSize--;
         if (this.card.getDescription().length() > 135) descTextSize--;
