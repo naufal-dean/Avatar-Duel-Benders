@@ -148,7 +148,7 @@ public class CardController implements Initializable {
             nameTextSize -= Math.max((this.card.getName().length() - 17), 0);
         else
             nameTextSize = 8.5;
-        if (this.card.getName().toUpperCase().equals("CABBAGE MERCHANT"))
+        if (this.card.getName().toUpperCase().equals("CABBAGE MERCHANT") || this.card.getName().toUpperCase().equals("GRANTING BENDING"))
             nameTextSize = 12;
         this.name.setFont(Font.loadFont(AvatarDuel.class.getResourceAsStream("font/palatino-linotype-bold.ttf"), nameTextSize));
         this.name.setText(this.card.getName().toUpperCase());

@@ -23,6 +23,14 @@ public class SkillPowerUp extends Skill {
 
     /**
      * {@inheritDoc}
+     */
+    @Override
+    public String getImagePath() {
+        return "com/avatarduel/card/image/skill/power up/" + super.getImagePath();
+    }
+
+    /**
+     * {@inheritDoc}
 s     */
     @Override
     public Effect getEffect() {

@@ -67,8 +67,7 @@ public class CardDetailsController implements Initializable {
                  stats += "ATK/" + skillAura.getAttack() + "  DEF/" + skillAura.getDefense();
                  stats += "  POW/" + skillAura.getPower();
              } else {
-                 SkillDestroy skillDestroy = (SkillDestroy) card;
-                 stats += "POW/" + skillDestroy.getPower();
+                 stats += "POW/" + card.getPower();
              }
              this.stats.setText(stats);
          }

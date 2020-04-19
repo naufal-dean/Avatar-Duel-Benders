@@ -19,11 +19,6 @@ public abstract class Skill extends Card {
     }
 
     @Override
-    public String getImagePath() {
-        return "com/avatarduel/card/image/skill/" + super.getImagePath();
-    }
-
-    @Override
     public CardType getCardType() {
         return CardType.SKILL;
     }

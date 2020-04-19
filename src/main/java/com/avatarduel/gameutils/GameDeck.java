@@ -7,15 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.avatarduel.AvatarDuel;
+import com.avatarduel.controller.CardController;
 import com.avatarduel.model.*;
 import com.avatarduel.model.Character;
 import com.avatarduel.util.CSVReader;
+import javafx.fxml.FXMLLoader;
 
 public class GameDeck {
     private static final String LAND_CSV_FILE_PATH = "../card/data/land.csv";
     private static final String CHARACTER_CSV_FILE_PATH = "../card/data/character.csv";
     private static final String SKILL_AURA_CSV_FILE_PATH = "../card/data/skill_aura.csv";
     private static final String SKILL_DESTROY_CSV_FILE_PATH = "../card/data/skill_destroy.csv";
+    private static final String SKILL_POWER_UP_CSV_FILE_PATH = "../card/data/skill_power_up.csv";
     /**
      * List of cards on the deck
      */
@@ -62,7 +66,7 @@ public class GameDeck {
         CSVReader landReader = new CSVReader(landCSVFile, "\t");
         landReader.setSkipHeader(true);
         List<String[]> landRows = landReader.read();
-        for (int i = 0; i < Math.round((this.capacity/5f)*2); i++){
+        for (int i = 0; i < Math.round((this.capacity / 9f) * 3); i++){
             rand_int = rand.nextInt(landRows.size());
             String[] row = landRows.get(rand_int);
             cardList.add(new Land(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4]));
@@ -73,21 +77,10 @@ public class GameDeck {
         CSVReader characterReader = new CSVReader(characterCSVFile, "\t");
         characterReader.setSkipHeader(true);
         List<String[]> characterRows = characterReader.read();
-        for (int i = 0; i < Math.round((this.capacity/5f)*2); i++) {
+        for (int i = 0; i < Math.round((this.capacity / 9f) * 3); i++) {
             rand_int = rand.nextInt(characterRows.size());
             String[] row = characterRows.get(rand_int);
             cardList.add(new Character(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4], Integer.valueOf(row[5]), Integer.valueOf(row[6]), Integer.valueOf(row[7])));
-        }
-
-        // Read skillDestroy cards
-        File skillDestroyCSVFile = new File(getClass().getResource(SKILL_DESTROY_CSV_FILE_PATH).toURI());
-        CSVReader skillDestroyReader = new CSVReader(skillDestroyCSVFile, "\t");
-        skillDestroyReader.setSkipHeader(true);
-        List<String[]> skillDestroyRows = skillDestroyReader.read();
-        for (int i = 0; i < Math.round(this.capacity/5f); i++) {
-            rand_int = rand.nextInt(skillDestroyRows.size());
-            String[] row = skillDestroyRows.get(rand_int);
-            cardList.add(new SkillDestroy(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4], Integer.valueOf(row[5])));
         }
 
         // Read skillAura cards
@@ -95,10 +88,32 @@ public class GameDeck {
         CSVReader skillAuraReader = new CSVReader(skillAuraCSVFile, "\t");
         skillAuraReader.setSkipHeader(true);
         List<String[]> skillAuraRows = skillAuraReader.read();
-        for (int i = 0; i < Math.round(this.capacity/5f); i++) {
+        for (int i = 0; i < Math.round(this.capacity / 9f); i++) {
             rand_int = rand.nextInt(skillAuraRows.size());
             String[] row = skillAuraRows.get(rand_int);
             cardList.add(new SkillAura(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4], Integer.valueOf(row[5]), Integer.valueOf(row[6]), Integer.valueOf(row[7])));
+        }
+
+        // Read skillDestroy cards
+        File skillDestroyCSVFile = new File(getClass().getResource(SKILL_DESTROY_CSV_FILE_PATH).toURI());
+        CSVReader skillDestroyReader = new CSVReader(skillDestroyCSVFile, "\t");
+        skillDestroyReader.setSkipHeader(true);
+        List<String[]> skillDestroyRows = skillDestroyReader.read();
+        for (int i = 0; i < Math.round(this.capacity / 9f); i++) {
+            rand_int = rand.nextInt(skillDestroyRows.size());
+            String[] row = skillDestroyRows.get(rand_int);
+            cardList.add(new SkillDestroy(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4], Integer.valueOf(row[5])));
+        }
+
+        // Read skillPowerUp cards
+        File skillPowerUpCSVFile = new File(getClass().getResource(SKILL_POWER_UP_CSV_FILE_PATH).toURI());
+        CSVReader skillPowerUpReader = new CSVReader(skillPowerUpCSVFile, "\t");
+        skillPowerUpReader.setSkipHeader(true);
+        List<String[]> skillPowerUpRows = skillPowerUpReader.read();
+        for (int i = 0; i < Math.round(this.capacity / 9f); i++) {
+            rand_int = rand.nextInt(skillPowerUpRows.size());
+            String[] row = skillPowerUpRows.get(rand_int);
+            cardList.add(new SkillPowerUp(Integer.valueOf(row[0]), row[1], Element.valueOf(row[2]), row[3], row[4], Integer.valueOf(row[5])));
         }
     }
 

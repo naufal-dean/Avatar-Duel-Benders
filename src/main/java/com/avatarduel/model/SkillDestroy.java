@@ -23,7 +23,15 @@ public class SkillDestroy extends Skill {
 
     /**
      * {@inheritDoc}
-     s     */
+     */
+    @Override
+    public String getImagePath() {
+        return "com/avatarduel/card/image/skill/destroy/" + super.getImagePath();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Effect getEffect() {
         return Effect.DESTROY;

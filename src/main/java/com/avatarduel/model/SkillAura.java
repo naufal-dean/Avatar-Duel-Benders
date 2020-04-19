@@ -25,6 +25,11 @@ public class SkillAura extends Skill {
     }
 
     @Override
+    public String getImagePath() {
+        return "com/avatarduel/card/image/skill/aura/" + super.getImagePath();
+    }
+
+    @Override
     public Effect getEffect() {
         return Effect.AURA;
     }
