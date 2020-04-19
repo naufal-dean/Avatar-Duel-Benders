@@ -21,6 +21,10 @@ These instructions will get you a copy of the project up and running on your loc
 [Java Fx](https://www.oracle.com/java/technologies/javase-downloads.html)
 
 
+## Code structure
+```
+```
+
 ## Usage
 
 ### Using Intellij IDEA
